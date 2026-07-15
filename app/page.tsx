@@ -41,6 +41,8 @@ const speakers: Speaker[] = [
     facts: ["Психолог в сфере сексологии", "Член Ассоциации сексологов России"],
     initials: "АР",
     tone: "plum",
+    image: "/speakers/anna-ratsun.webp",
+    imagePosition: "center 6%",
   },
   {
     name: "Инна Мартынова",
@@ -56,7 +58,7 @@ const speakers: Speaker[] = [
     initials: "ИМ",
     tone: "coral",
     image: "/speakers/inna-martynova.webp",
-    imagePosition: "center 32%",
+    imagePosition: "center 14%",
   },
   {
     name: "Евгения Цапина",
@@ -97,8 +99,6 @@ const speakers: Speaker[] = [
     ],
     initials: "СШ",
     tone: "violet",
-    image: "/speakers/sergey-shits.webp",
-    imagePosition: "center 32%",
   },
   {
     name: "Таня Щербакова",
@@ -138,7 +138,7 @@ const speakers: Speaker[] = [
     initials: "АК",
     tone: "night",
     image: "/speakers/alexander-kardashov.webp",
-    imagePosition: "center 20%",
+    imagePosition: "center 6%",
   },
   {
     name: "Ольга Жильникова",
@@ -228,7 +228,7 @@ const speakers: Speaker[] = [
     initials: "ЛС",
     tone: "plum",
     image: "/speakers/larisa-sokolova.webp",
-    imagePosition: "center 24%",
+    imagePosition: "center 38%",
   },
 ];
 
