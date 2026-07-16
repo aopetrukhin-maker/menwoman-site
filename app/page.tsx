@@ -29,6 +29,12 @@ type ConnectionQuestion = {
   answers: ConnectionAnswer[];
 };
 
+type SpeakerRoute = {
+  name: string;
+  reason: string;
+  question: string;
+};
+
 const ticketUrl = "https://qtickets.ru/organizer/50526?base_color=ea1e63";
 const telegramUrl = "https://t.me/aopetrukhin";
 
@@ -412,7 +418,7 @@ const connectionResults: Record<ConnectionCode, {
   summary: string;
   blindSpot: string;
   questions: string[];
-  route: string[];
+  route: SpeakerRoute[];
 }> = {
   dialogue: {
     label: "Диалог",
@@ -425,7 +431,18 @@ const connectionResults: Record<ConnectionCode, {
       "По каким словам и поступкам ты понимаешь, что человеку можно доверять?",
       "Как выглядит хороший конфликт, после которого пара становится ближе?",
     ],
-    route: ["Александр Кардашов", "Виктория Орженевская"],
+    route: [
+      {
+        name: "Александр Кардашов",
+        reason: "Его тема о сценариях ссор поможет понять, как сохранить прямой разговор, когда эмоции уже мешают слышать друг друга.",
+        question: "Как остановить привычный сценарий ссоры до того, как оба закроются?",
+      },
+      {
+        name: "Виктория Орженевская",
+        reason: "Её выступление поможет отделить реальные признаки совместимости от ожиданий, догадок и надежды изменить партнёра.",
+        question: "Как отличить несовместимость от страха близости или завышенных ожиданий?",
+      },
+    ],
   },
   support: {
     label: "Опора",
@@ -438,7 +455,18 @@ const connectionResults: Record<ConnectionCode, {
       "В какой момент забота начинает ощущаться как контроль?",
       "Как ты обычно показываешь человеку: на меня можно положиться?",
     ],
-    route: ["Инна Мартынова", "Александра Кардаш"],
+    route: [
+      {
+        name: "Инна Мартынова",
+        reason: "Её тема показывает, как забота незаметно превращается в гиперответственность, спасательство и контроль.",
+        question: "Как перестать быть партнёру «мамой», не становясь при этом холодным человеком?",
+      },
+      {
+        name: "Александра Кардаш",
+        reason: "Телесная практика поможет заметить момент, когда поддержка перестаёт быть партнёрством и начинает истощать вас обоих.",
+        question: "Как телом почувствовать, что поддержка уже превратилась в спасательство?",
+      },
+    ],
   },
   spark: {
     label: "Искра",
@@ -451,7 +479,18 @@ const connectionResults: Record<ConnectionCode, {
       "Какое совместное приключение ты хотел бы прожить в ближайший год?",
       "Что для тебя важнее в притяжении: телесность, юмор или восхищение человеком?",
     ],
-    route: ["Мария Соломатина", "Ольга Жильникова"],
+    route: [
+      {
+        name: "Мария Соломатина",
+        reason: "Её тема связывает желание с состоянием тела, эмоциональным контактом и тем, что происходит между партнёрами вне спальни.",
+        question: "Что возвращает желание, если отношения стали слишком предсказуемыми?",
+      },
+      {
+        name: "Ольга Жильникова",
+        reason: "Её подход поможет увидеть, где именно блокируется живость: в теле, накопленной усталости или отношениях.",
+        question: "Как понять, где пропало желание: в теле, отношениях или накопленной усталости?",
+      },
+    ],
   },
   space: {
     label: "Пространство",
@@ -464,7 +503,18 @@ const connectionResults: Record<ConnectionCode, {
       "Как понять, что человеку нужно пространство, а не дистанция?",
       "В какой ситуации тебе особенно сложно попросить о помощи?",
     ],
-    route: ["Светлана Федосеева", "Люси Беликова"],
+    route: [
+      {
+        name: "Светлана Федосеева",
+        reason: "Её тема подойдёт тем, кто хочет сохранять границы и собственный голос, не разрушая близость и доверие.",
+        question: "Как отстаивать свои границы и не превращать разговор в дистанцию или конфликт?",
+      },
+      {
+        name: "Люси Беликова",
+        reason: "Её практика помогает заметить, где жизнь в режиме «надо» вытеснила собственные желания и личный ритм.",
+        question: "Как снова выбирать себя, если я привыкла быть сильной и удобной для всех?",
+      },
+    ],
   },
   depth: {
     label: "Глубина",
@@ -477,7 +527,18 @@ const connectionResults: Record<ConnectionCode, {
       "Какая часть тебя редко получает место в отношениях?",
       "Что для тебя значит быть эмоционально доступным?",
     ],
-    route: ["Дмитрий Елунин", "Алёна Пересада"],
+    route: [
+      {
+        name: "Дмитрий Елунин",
+        reason: "Его выступление поможет отличить настоящую эмоциональную глубину от повторения знакомого болезненного сценария.",
+        question: "Как понять, что это глубокая связь, а не очередное повторение старого сценария?",
+      },
+      {
+        name: "Алёна Пересада",
+        reason: "Её тема раскрывает, чего сейчас не хватает союзу, чтобы оба партнёра могли развиваться и усиливать друг друга.",
+        question: "Чего чаще всего не хватает паре, чтобы оба росли и не подавляли друг друга?",
+      },
+    ],
   },
 };
 
@@ -635,7 +696,6 @@ export default function Home() {
   const [cookieVisible, setCookieVisible] = useState(false);
   const [heroSlideIndex, setHeroSlideIndex] = useState(0);
   const [heroPaused, setHeroPaused] = useState(false);
-  const [connectionQuizStarted, setConnectionQuizStarted] = useState(false);
   const [connectionStep, setConnectionStep] = useState(0);
   const [connectionStatus, setConnectionStatus] = useState<ConnectionStatus | null>(null);
   const [connectionScores, setConnectionScores] = useState<Record<ConnectionCode, number>>({
@@ -646,7 +706,6 @@ export default function Home() {
     depth: 0,
   });
   const [connectionResult, setConnectionResult] = useState<{ primary: ConnectionCode; secondary: ConnectionCode } | null>(null);
-  const [connectionShared, setConnectionShared] = useState(false);
   const heroPointerStart = useRef<number | null>(null);
   const connectionQuizRef = useRef<HTMLDivElement>(null);
   const formatsRef = useRef<HTMLDivElement>(null);
@@ -695,12 +754,10 @@ export default function Home() {
   };
 
   const startConnectionQuiz = () => {
-    setConnectionQuizStarted(true);
     setConnectionStep(0);
     setConnectionStatus(null);
     setConnectionScores({ dialogue: 0, support: 0, spark: 0, space: 0, depth: 0 });
     setConnectionResult(null);
-    setConnectionShared(false);
     window.requestAnimationFrame(() => connectionQuizRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }));
   };
 
@@ -724,26 +781,6 @@ export default function Home() {
     }
 
     setConnectionStep((current) => current + 1);
-  };
-
-  const shareConnectionResult = async () => {
-    if (!connectionResult) return;
-    const primary = connectionResults[connectionResult.primary];
-    const secondary = connectionResults[connectionResult.secondary];
-    const shareText = `Мой код связи — ${primary.label} × ${secondary.label}. ${primary.title}. Узнайте свой код на фестивале «Мужчина и Женщина. Перезагрузка».`;
-
-    try {
-      if (navigator.share) {
-        await navigator.share({ title: "Мой код связи", text: shareText, url: `${window.location.origin}${window.location.pathname}#connection-code` });
-      } else {
-        await navigator.clipboard.writeText(`${shareText} ${window.location.origin}${window.location.pathname}#connection-code`);
-        setConnectionShared(true);
-      }
-    } catch (error) {
-      if (error instanceof DOMException && error.name === "AbortError") return;
-      await navigator.clipboard.writeText(`${shareText} ${window.location.origin}${window.location.pathname}#connection-code`);
-      setConnectionShared(true);
-    }
   };
 
   const acceptCookies = () => {
@@ -923,38 +960,21 @@ export default function Home() {
           <div className="connection-pitch">
             <p className="section-label">Интерактив фестиваля · 90 секунд</p>
             <h2>С кем вам <span>действительно</span> по пути?</h2>
-            <p className="connection-lead">Сделайте семь честных выборов и получите свой код связи — без гороскопов, банальных типологий и оценки «правильно» или «неправильно».</p>
+            <p className="connection-lead">Узнайте свой код связи — без гороскопов, банальных типологий и оценки «правильно» или «неправильно». Пройдите короткий тест.</p>
             <div className="connection-promises" aria-label="Что вы получите">
               <span>Ваш способ строить близость</span>
               <span>Возможная слепая зона</span>
               <span>3 вопроса для живого разговора</span>
               <span>Маршрут по спикерам фестиваля</span>
             </div>
-            <div className="connection-signals" aria-hidden="true">
-              {(Object.keys(connectionResults) as ConnectionCode[]).map((code) => (
-                <span key={code}>{connectionResults[code].symbol}<small>{connectionResults[code].label}</small></span>
-              ))}
-            </div>
+            <button className="connection-flow-cue" type="button" onClick={() => connectionQuizRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })}>
+              <span>Начните здесь — пройдите короткий тест</span>
+              <i><ArrowIcon /></i>
+            </button>
           </div>
 
-          <div className="connection-experience" ref={connectionQuizRef}>
-            {!connectionQuizStarted && (
-              <div className="connection-intro-card">
-                <div className="connection-bracelet-preview" aria-hidden="true">
-                  <i />
-                  <span>?</span>
-                  <i />
-                </div>
-                <p>Ваш персональный код</p>
-                <h3>Не ищите идеального человека. Узнайте, какая связь подходит именно вам.</h3>
-                <button className="connection-start" type="button" onClick={startConnectionQuiz}>
-                  <span>Расшифровать мой код</span><i className="button-icon"><ArrowIcon /></i>
-                </button>
-                <small>Ответы никуда не отправляются и не сохраняются</small>
-              </div>
-            )}
-
-            {connectionQuizStarted && !connectionResult && (
+          <div className="connection-experience" id="connection-quiz" ref={connectionQuizRef}>
+            {!connectionResult && (
               <div className="connection-question-card" aria-live="polite">
                 <div className="connection-progress-head">
                   <span>Код связи</span>
@@ -964,8 +984,8 @@ export default function Home() {
 
                 {connectionStep === 0 ? (
                   <div className="connection-question-copy">
-                    <p>Точка, в которой вы сейчас</p>
-                    <h3>С чего начинается ваш маршрут?</h3>
+                    <p>Сначала о вас</p>
+                    <h3>Какое описание подходит вам сейчас?</h3>
                     <div className="connection-answers">
                       {connectionStatusOptions.map((option) => (
                         <button type="button" key={option.value} onClick={() => chooseConnectionStatus(option.value)}>
@@ -1025,17 +1045,36 @@ export default function Home() {
                 </div>
 
                 <div className="connection-festival-bridge">
-                  <div className="connection-mini-bracelet" aria-hidden="true"><i /><span>{primaryConnectionResult.symbol}</span><i /></div>
                   <div>
                     <span>Продолжение — вживую</span>
                     <p>{connectionStatusCopy[connectionStatus]}</p>
-                    <p className="connection-route">Ваш маршрут по программе: <a href="#speakers">{primaryConnectionResult.route.join(" · ")}</a></p>
                   </div>
+                </div>
+
+                <div className="connection-speaker-route">
+                  <div className="connection-speaker-route-head">
+                    <span>Ваш маршрут по спикерам</span>
+                    <h4>К кому подойти и о чём спросить</h4>
+                    <p>Мы сопоставили ваш код с темами фестиваля. Эти выступления помогут разобрать именно те вопросы, которые сильнее всего влияют на ваш способ строить отношения.</p>
+                  </div>
+                  <div className="connection-speaker-route-list">
+                    {primaryConnectionResult.route.map((speaker) => (
+                      <article key={speaker.name}>
+                        <a href="#speakers">{speaker.name}</a>
+                        <p>{speaker.reason}</p>
+                        <div><span>Спросите:</span> «{speaker.question}»</div>
+                      </article>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="connection-screenshot-tip">
+                  <span>Сохраните результат</span>
+                  <p>Сделайте скриншот этой карточки и отправьте партнёру или другу — так результат сохранится вместе с пояснениями и вопросами.</p>
                 </div>
 
                 <div className="connection-result-actions">
                   <a className="primary-button" href="#pricing"><span>Выбрать билет</span><i className="button-icon"><ArrowIcon /></i></a>
-                  <button type="button" onClick={shareConnectionResult}>{connectionShared ? "Ссылка скопирована" : "Поделиться результатом"}</button>
                   <button type="button" onClick={startConnectionQuiz}>Пройти ещё раз</button>
                 </div>
                 <small className="connection-disclaimer">Результат предназначен для саморефлексии и не является психологической диагностикой.</small>
