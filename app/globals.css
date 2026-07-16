@@ -362,6 +362,32 @@ main {
   box-shadow: var(--shadow);
   transform: rotate(.35deg);
   perspective: 1500px;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.hero-date-card.is-paused {
+  cursor: grabbing;
+}
+
+.hero-slider-column {
+  min-width: 0;
+}
+
+.hero-speaker-hint {
+  display: block;
+  width: fit-content;
+  margin: 15px auto 0;
+  color: rgba(33, 25, 22, .58);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: center;
+  text-decoration: underline;
+  text-decoration-color: rgba(33, 25, 22, .24);
+  text-underline-offset: 4px;
 }
 
 .hero-speaker-slides,
