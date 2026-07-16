@@ -493,7 +493,7 @@ export default function Home() {
     }, 1500);
 
     return () => window.clearInterval(interval);
-  }, [heroPaused]);
+  }, [heroPaused, heroSlideIndex]);
 
   const changeHeroSlide = (direction: -1 | 1) => {
     setHeroSlideIndex((current) => (current + direction + heroSlides.length) % heroSlides.length);
@@ -571,11 +571,20 @@ export default function Home() {
                 className={`hero-date-card ${heroPaused ? "is-paused" : ""}`}
                 aria-label="Спикеры фестиваля. Удерживайте, чтобы остановить, и листайте свайпом"
                 onPointerDown={(event) => {
+                  if (event.pointerType !== "mouse") return;
                   event.currentTarget.setPointerCapture(event.pointerId);
                   startHeroSwipe(event.clientX);
                 }}
-                onPointerUp={(event) => finishHeroSwipe(event.clientX)}
+                onPointerUp={(event) => {
+                  if (event.pointerType === "mouse") finishHeroSwipe(event.clientX);
+                }}
                 onPointerCancel={() => {
+                  heroPointerStart.current = null;
+                  setHeroPaused(false);
+                }}
+                onTouchStart={(event) => startHeroSwipe(event.touches[0].clientX)}
+                onTouchEnd={(event) => finishHeroSwipe(event.changedTouches[0].clientX)}
+                onTouchCancel={() => {
                   heroPointerStart.current = null;
                   setHeroPaused(false);
                 }}
@@ -605,7 +614,13 @@ export default function Home() {
                   ))}
                 </div>
               </div>
-              <a className="hero-speaker-hint" href="#speakers">Подробнее смотрите в разделе «Спикеры»</a>
+              <div className="hero-slider-footer">
+                <a className="hero-speaker-hint" href="#speakers">Подробнее смотрите в разделе «Спикеры»</a>
+                <div className="hero-slider-controls" aria-label="Ручное переключение спикеров">
+                  <button type="button" onClick={() => changeHeroSlide(-1)} aria-label="Предыдущий спикер"><ChevronIcon direction="left" /></button>
+                  <button type="button" onClick={() => changeHeroSlide(1)} aria-label="Следующий спикер"><ChevronIcon direction="right" /></button>
+                </div>
+              </div>
             </div>
           </div>
           <div className="stats-bar">
