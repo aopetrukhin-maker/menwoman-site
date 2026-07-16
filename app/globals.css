@@ -360,27 +360,37 @@ main {
   color: var(--white);
   background: #2a1e1d;
   box-shadow: var(--shadow);
-  transform: rotate(1.7deg);
+  transform: rotate(1.25deg);
+  perspective: 1500px;
 }
 
 .hero-speaker-slides,
 .hero-speaker-slide,
 .hero-speaker-slide img,
-.hero-card-shade {
+.hero-magazine-shade,
+.hero-magazine-cover {
   position: absolute;
   inset: 0;
 }
 
 .hero-speaker-slide {
   opacity: 0;
-  transform: scale(1.06);
-  transition: opacity .8s ease, transform 2.4s ease;
+  overflow: hidden;
+  transform: translateX(7%) rotateY(-16deg) scale(1.035);
+  transform-origin: right center;
+  filter: saturate(.82) contrast(.94);
+  transition:
+    opacity .72s ease,
+    transform .92s cubic-bezier(.2, .78, .25, 1),
+    filter .92s ease;
   will-change: opacity, transform;
 }
 
 .hero-speaker-slide.is-active {
+  z-index: 1;
   opacity: 1;
-  transform: scale(1);
+  transform: translateX(0) rotateY(0) scale(1);
+  filter: saturate(1) contrast(1);
 }
 
 .hero-speaker-slide img {
@@ -389,60 +399,59 @@ main {
   object-fit: cover;
 }
 
-.hero-card-shade {
+.hero-magazine-shade {
   z-index: 1;
   background:
-    linear-gradient(to bottom, rgba(27, 15, 13, .18) 0%, transparent 34%),
-    linear-gradient(to top, rgba(27, 15, 13, .88) 0%, rgba(27, 15, 13, .08) 52%, transparent 72%);
+    linear-gradient(to bottom, rgba(18, 11, 10, .38) 0%, transparent 33%),
+    linear-gradient(to top, rgba(18, 10, 9, .92) 0%, rgba(18, 10, 9, .3) 48%, transparent 70%);
   pointer-events: none;
 }
 
-.hero-card-date {
-  position: absolute;
+.hero-magazine-cover {
   z-index: 2;
-  top: 25px;
-  left: 25px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 29px 27px 30px;
+  border: 1px solid rgba(255, 255, 255, .24);
+  border-radius: 168px 168px 23px 23px;
+  text-shadow: 0 3px 18px rgba(10, 5, 4, .28);
+}
+
+.hero-magazine-masthead {
   display: flex;
   align-items: center;
-  gap: 11px;
-  padding: 8px 14px 8px 11px;
-  border: 1px solid rgba(255, 255, 255, .34);
-  border-radius: 999px;
-  background: rgba(24, 16, 15, .28);
-  box-shadow: 0 10px 28px rgba(20, 10, 8, .12);
-  backdrop-filter: blur(12px);
+  gap: 10px;
+  padding: 7px 0 10px;
+  border-top: 1px solid rgba(255, 255, 255, .68);
+  border-bottom: 1px solid rgba(255, 255, 255, .4);
 }
 
-.hero-card-date strong {
+.hero-magazine-masthead strong {
   font-family: var(--font-display), Georgia, serif;
-  font-size: 38px;
-  font-weight: 600;
-  line-height: .82;
-  letter-spacing: -.04em;
+  font-size: 31px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -.06em;
 }
 
-.hero-card-date span {
-  font-size: 9px;
+.hero-magazine-masthead span {
+  margin-right: auto;
+  font-size: 8px;
   font-weight: 800;
-  line-height: 1.25;
-  letter-spacing: .08em;
+  letter-spacing: .12em;
   text-transform: uppercase;
 }
 
-.hero-speaker-caption {
-  position: absolute;
-  z-index: 2;
-  right: 25px;
-  bottom: 28px;
-  left: 25px;
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 7px 16px;
-  align-items: end;
+.hero-magazine-masthead small {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .08em;
 }
 
-.hero-speaker-caption > span {
-  grid-column: 1 / -1;
+.hero-magazine-copy > span {
+  display: block;
+  margin-bottom: 9px;
   color: rgba(255, 255, 255, .72);
   font-size: 9px;
   font-weight: 850;
@@ -450,22 +459,39 @@ main {
   text-transform: uppercase;
 }
 
-.hero-speaker-caption > strong {
-  max-width: 310px;
+.hero-magazine-copy h2 {
+  max-width: 100%;
+  margin: 0;
   font-family: var(--font-display), Georgia, serif;
-  font-size: clamp(29px, 3vw, 43px);
+  font-size: clamp(37px, 3.4vw, 50px);
   font-weight: 600;
-  line-height: .95;
-  letter-spacing: -.035em;
+  line-height: .88;
+  letter-spacing: -.045em;
   text-wrap: balance;
 }
 
-.hero-speaker-caption > small {
-  padding-bottom: 3px;
-  color: rgba(255, 255, 255, .72);
-  font-size: 10px;
+.hero-magazine-copy p {
+  max-width: 360px;
+  margin: 18px 0 0;
+  padding-top: 13px;
+  border-top: 1px solid rgba(255, 255, 255, .52);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(16px, 1.5vw, 20px);
+  font-style: italic;
+  font-weight: 600;
+  line-height: 1.04;
+  text-wrap: balance;
+}
+
+.hero-magazine-copy p small {
+  display: block;
+  margin-bottom: 7px;
+  font-family: var(--font-body), Arial, sans-serif;
+  font-size: 8px;
+  font-style: normal;
   font-weight: 800;
-  letter-spacing: .08em;
+  letter-spacing: .16em;
+  text-transform: uppercase;
 }
 
 .stats-bar {
@@ -2236,20 +2262,23 @@ footer {
     border-radius: 140px 140px 28px 28px;
   }
 
-  .hero-card-date {
-    top: 20px;
-    left: 20px;
+  .hero-magazine-cover {
+    padding: 24px 22px 27px;
+    border-radius: 132px 132px 21px 21px;
   }
 
-  .hero-speaker-caption {
-    right: 20px;
-    bottom: 23px;
-    left: 20px;
+  .hero-magazine-masthead span {
+    max-width: 140px;
+    font-size: 7px;
   }
 
-  .hero-speaker-caption > strong {
-    max-width: 270px;
-    font-size: 34px;
+  .hero-magazine-copy h2 {
+    font-size: clamp(37px, 10vw, 48px);
+  }
+
+  .hero-magazine-copy p {
+    max-width: 310px;
+    font-size: 17px;
   }
 
   .stats-bar {

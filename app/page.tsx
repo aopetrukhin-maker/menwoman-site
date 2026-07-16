@@ -235,6 +235,7 @@ const speakers: Speaker[] = [
 const heroSpeakerSlides = [
   {
     name: "Александра Кардаш и Сергей Шиц",
+    topic: "«Взаимодействие в паре»: теория и практика",
     image: "/speakers/kardash-shits.webp",
     imagePosition: "center 32%",
   },
@@ -242,6 +243,7 @@ const heroSpeakerSlides = [
     speaker.image
       ? [{
           name: speaker.name,
+          topic: speaker.topic,
           image: speaker.image,
           imagePosition: speaker.imagePosition ?? "center center",
         }]
@@ -546,18 +548,21 @@ export default function Home() {
                 {heroSpeakerSlides.map((slide, index) => (
                   <div className={`hero-speaker-slide${index === heroSlideIndex ? " is-active" : ""}`} key={`${slide.name}-${index}`}>
                     <img src={slide.image} alt="" style={{ objectPosition: slide.imagePosition }} />
+                    <div className="hero-magazine-shade" />
+                    <div className="hero-magazine-cover">
+                      <div className="hero-magazine-masthead">
+                        <strong>МЖ</strong>
+                        <span>Отношения нового времени</span>
+                        <small>{String(index + 1).padStart(2, "0")} / {String(heroSpeakerSlides.length).padStart(2, "0")}</small>
+                      </div>
+                      <div className="hero-magazine-copy">
+                        <span>Спикер фестиваля</span>
+                        <h2>{slide.name}</h2>
+                        <p><small>Тема выступления</small>{slide.topic}</p>
+                      </div>
+                    </div>
                   </div>
                 ))}
-              </div>
-              <div className="hero-card-shade" />
-              <div className="hero-card-date">
-                <strong>22</strong>
-                <span>августа<br />12:00</span>
-              </div>
-              <div className="hero-speaker-caption">
-                <span>Спикер фестиваля</span>
-                <strong>{heroSpeakerSlides[heroSlideIndex].name}</strong>
-                <small>{String(heroSlideIndex + 1).padStart(2, "0")} / {String(heroSpeakerSlides.length).padStart(2, "0")}</small>
               </div>
             </div>
           </div>
