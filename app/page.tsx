@@ -222,9 +222,14 @@ const speakers: Speaker[] = [
   },
   {
     name: "Лариса Соколова",
-    role: "Спикер фестиваля",
-    topic: "Тема выступления будет объявлена",
-    facts: ["Участница программы фестиваля «Мужчина и Женщина. Перезагрузка»"],
+    role: "Врач-офтальмолог, реабилитолог",
+    topic: "Отношения начинаются не с психологии, а с состояния организма: глюкоза, стресс, энергия и здоровье",
+    facts: [
+      "Врач-офтальмолог и реабилитолог",
+      "Врач антивозрастной медицины",
+      "D-доктор",
+      "Клинический нутрициолог",
+    ],
     initials: "ЛС",
     tone: "plum",
     image: "/speakers/larisa-sokolova.webp",
@@ -461,6 +466,8 @@ export default function Home() {
   const [selectedSpeaker, setSelectedSpeaker] = useState<Speaker | null>(null);
   const [cookieVisible, setCookieVisible] = useState(false);
   const [heroSlideIndex, setHeroSlideIndex] = useState(0);
+  const [heroPaused, setHeroPaused] = useState(false);
+  const heroPointerStart = useRef<number | null>(null);
   const formatsRef = useRef<HTMLDivElement>(null);
   const speakersRef = useRef<HTMLDivElement>(null);
 
@@ -479,12 +486,32 @@ export default function Home() {
   }, [selectedSpeaker]);
 
   useEffect(() => {
+    if (heroPaused) return;
+
     const interval = window.setInterval(() => {
       setHeroSlideIndex((current) => (current + 1) % heroSlides.length);
     }, 1500);
 
     return () => window.clearInterval(interval);
-  }, []);
+  }, [heroPaused]);
+
+  const changeHeroSlide = (direction: -1 | 1) => {
+    setHeroSlideIndex((current) => (current + direction + heroSlides.length) % heroSlides.length);
+  };
+
+  const startHeroSwipe = (clientX: number) => {
+    heroPointerStart.current = clientX;
+    setHeroPaused(true);
+  };
+
+  const finishHeroSwipe = (clientX: number) => {
+    if (heroPointerStart.current !== null) {
+      const distance = clientX - heroPointerStart.current;
+      if (Math.abs(distance) > 34) changeHeroSlide(distance < 0 ? 1 : -1);
+    }
+    heroPointerStart.current = null;
+    setHeroPaused(false);
+  };
 
   const acceptCookies = () => {
     window.localStorage.setItem("mj-cookie-ok", "1");
@@ -539,30 +566,46 @@ export default function Home() {
               <p className="hero-copy">За один день вы поймете, как выстроить взрослый союз, где карьера, деньги и амбиции не мешают близости с любимым человеком.</p>
               <a className="primary-button hero-button" href="#pricing"><span>Стать участником</span><i className="button-icon"><ArrowIcon /></i></a>
             </div>
-            <div className="hero-date-card" aria-label="Спикеры фестиваля">
-              <div className="hero-speaker-slides">
-                {heroSlides.map((slide, index) => (
-                  <article
-                    className={`hero-speaker-slide ${index === heroSlideIndex ? "is-active" : ""}`}
-                    key={`${slide.name}-${index}`}
-                    aria-hidden={index !== heroSlideIndex}
-                  >
-                    <img
-                      src={slide.image}
-                      alt={index === heroSlideIndex ? slide.name : ""}
-                      style={{ objectPosition: slide.imagePosition }}
-                    />
-                    <div className="hero-magazine-shade" />
-                    <div className="hero-magazine-cover">
-                      <div className="hero-magazine-copy">
-                        <span>Спикер фестиваля</span>
-                        <h2>{slide.name}</h2>
-                        <p>{slide.topic}</p>
+            <div className="hero-slider-column">
+              <div
+                className={`hero-date-card ${heroPaused ? "is-paused" : ""}`}
+                aria-label="Спикеры фестиваля. Удерживайте, чтобы остановить, и листайте свайпом"
+                onPointerDown={(event) => {
+                  event.currentTarget.setPointerCapture(event.pointerId);
+                  startHeroSwipe(event.clientX);
+                }}
+                onPointerUp={(event) => finishHeroSwipe(event.clientX)}
+                onPointerCancel={() => {
+                  heroPointerStart.current = null;
+                  setHeroPaused(false);
+                }}
+              >
+                <div className="hero-speaker-slides">
+                  {heroSlides.map((slide, index) => (
+                    <article
+                      className={`hero-speaker-slide ${index === heroSlideIndex ? "is-active" : ""}`}
+                      key={`${slide.name}-${index}`}
+                      aria-hidden={index !== heroSlideIndex}
+                    >
+                      <img
+                        src={slide.image}
+                        alt={index === heroSlideIndex ? slide.name : ""}
+                        style={{ objectPosition: slide.imagePosition }}
+                        draggable={false}
+                      />
+                      <div className="hero-magazine-shade" />
+                      <div className="hero-magazine-cover">
+                        <div className="hero-magazine-copy">
+                          <span>Спикер фестиваля</span>
+                          <h2>{slide.name}</h2>
+                          <p>{slide.topic}</p>
+                        </div>
                       </div>
-                    </div>
-                  </article>
-                ))}
+                    </article>
+                  ))}
+                </div>
               </div>
+              <a className="hero-speaker-hint" href="#speakers">Подробнее смотрите в разделе «Спикеры»</a>
             </div>
           </div>
           <div className="stats-bar">
