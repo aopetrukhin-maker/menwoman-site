@@ -931,30 +931,6 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section dark-section" id="audience">
-        <div className="container">
-          <div className="section-heading split-heading">
-            <div>
-              <p className="section-label">У каждого своя история</p>
-              <h2><span>На любом этапе</span> - свой разговор и ответ</h2>
-            </div>
-            <p>Кто-то ищет любовь, кто-то возвращает близость, а кто-то хочет сделать хорошие отношения еще сильнее. Всех объединяет желание любить и быть любимым.</p>
-          </div>
-          <div className="audience-grid">
-            {audience.map((item) => (
-              <article className="audience-card" key={item.number}>
-                <div className="card-top"><span>Сценарий</span><strong>{item.number}</strong></div>
-                <p className="card-label">{item.label}</p>
-                <h3>{item.title}</h3>
-                <ul>
-                  {item.points.map((point) => <li key={point}><b aria-hidden="true">•</b>{point}</li>)}
-                </ul>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
       <section className="section connection-section" id="connection-code">
         <div className="container connection-shell">
           <div className="connection-pitch">
@@ -1080,6 +1056,30 @@ export default function Home() {
                 <small className="connection-disclaimer">Результат предназначен для саморефлексии и не является психологической диагностикой.</small>
               </div>
             )}
+          </div>
+        </div>
+      </section>
+
+      <section className="section dark-section" id="audience">
+        <div className="container">
+          <div className="section-heading split-heading">
+            <div>
+              <p className="section-label">У каждого своя история</p>
+              <h2><span>На любом этапе</span> - свой разговор и ответ</h2>
+            </div>
+            <p>Кто-то ищет любовь, кто-то возвращает близость, а кто-то хочет сделать хорошие отношения еще сильнее. Всех объединяет желание любить и быть любимым.</p>
+          </div>
+          <div className="audience-grid">
+            {audience.map((item) => (
+              <article className="audience-card" key={item.number}>
+                <div className="card-top"><span>Сценарий</span><strong>{item.number}</strong></div>
+                <p className="card-label">{item.label}</p>
+                <h3>{item.title}</h3>
+                <ul>
+                  {item.points.map((point) => <li key={point}><b aria-hidden="true">•</b>{point}</li>)}
+                </ul>
+              </article>
+            ))}
           </div>
         </div>
       </section>
