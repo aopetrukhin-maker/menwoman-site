@@ -232,25 +232,6 @@ const speakers: Speaker[] = [
   },
 ];
 
-const heroSpeakerSlides = [
-  {
-    name: "Александра Кардаш и Сергей Шиц",
-    topic: "«Взаимодействие в паре»: теория и практика",
-    image: "/speakers/kardash-shits.webp",
-    imagePosition: "center 32%",
-  },
-  ...speakers.flatMap((speaker) =>
-    speaker.image
-      ? [{
-          name: speaker.name,
-          topic: speaker.topic,
-          image: speaker.image,
-          imagePosition: speaker.imagePosition ?? "center center",
-        }]
-      : [],
-  ),
-];
-
 const formats = [
   {
     number: "01",
@@ -461,7 +442,6 @@ function ChevronIcon({ direction }: { direction: "left" | "right" }) {
 
 export default function Home() {
   const [selectedSpeaker, setSelectedSpeaker] = useState<Speaker | null>(null);
-  const [heroSlideIndex, setHeroSlideIndex] = useState(0);
   const [cookieVisible, setCookieVisible] = useState(false);
   const formatsRef = useRef<HTMLDivElement>(null);
   const speakersRef = useRef<HTMLDivElement>(null);
@@ -471,16 +451,6 @@ export default function Home() {
       setCookieVisible(window.localStorage.getItem("mj-cookie-ok") !== "1");
     });
     return () => window.cancelAnimationFrame(frame);
-  }, []);
-
-  useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-    const interval = window.setInterval(() => {
-      setHeroSlideIndex((current) => (current + 1) % heroSpeakerSlides.length);
-    }, 1500);
-
-    return () => window.clearInterval(interval);
   }, []);
 
   useEffect(() => {
@@ -543,26 +513,10 @@ export default function Home() {
               <p className="hero-copy">За один день вы поймете, как выстроить взрослый союз, где карьера, деньги и амбиции не мешают близости с любимым человеком.</p>
               <a className="primary-button hero-button" href="#pricing"><span>Стать участником</span><i className="button-icon"><ArrowIcon /></i></a>
             </div>
-            <div className="hero-date-card" aria-label="Фотографии спикеров фестиваля">
-              <div className="hero-speaker-slides" aria-hidden="true">
-                {heroSpeakerSlides.map((slide, index) => (
-                  <div className={`hero-speaker-slide${index === heroSlideIndex ? " is-active" : ""}`} key={`${slide.name}-${index}`}>
-                    <img src={slide.image} alt="" style={{ objectPosition: slide.imagePosition }} />
-                    <div className="hero-magazine-shade" />
-                    <div className="hero-magazine-cover">
-                      <div className="hero-magazine-masthead">
-                        <strong>МЖ</strong>
-                        <span>Отношения нового времени</span>
-                      </div>
-                      <div className="hero-magazine-copy">
-                        <span>Спикер фестиваля</span>
-                        <h2>{slide.name}</h2>
-                        <p><small>Тема выступления</small>{slide.topic}</p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+            <div className="hero-date-card" aria-label="Дата фестиваля">
+              <span>АВГ</span>
+              <strong>22</strong>
+              <small>12:00 · суббота</small>
             </div>
           </div>
           <div className="stats-bar">
