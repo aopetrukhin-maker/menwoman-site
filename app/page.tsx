@@ -14,6 +14,21 @@ type Speaker = {
   imagePosition?: string;
 };
 
+type ConnectionCode = "dialogue" | "support" | "spark" | "space" | "depth";
+type ConnectionStatus = "search" | "relationship" | "complicated" | "self";
+
+type ConnectionAnswer = {
+  label: string;
+  note: string;
+  scores: Partial<Record<ConnectionCode, number>>;
+};
+
+type ConnectionQuestion = {
+  eyebrow: string;
+  question: string;
+  answers: ConnectionAnswer[];
+};
+
 const ticketUrl = "https://qtickets.ru/organizer/50526?base_color=ea1e63";
 const telegramUrl = "https://t.me/aopetrukhin";
 
@@ -276,7 +291,7 @@ const formats = [
   {
     number: "04",
     title: "Система браслетов",
-    text: "На входе участник получает браслет со статусом: в отношениях или в активном поиске. Начать нужный разговор становится проще.",
+    text: "Цвет браслета показывает, кто открыт к знакомству. А «Код связи» и специальные вопросы помогают начать не с формальностей, а с разговора о ценностях и намерениях.",
     image: "https://images.pexels.com/photos/118033/pexels-photo-118033.jpeg?auto=compress&cs=tinysrgb&w=1200",
   },
   {
@@ -319,6 +334,159 @@ const audience = [
     ],
   },
 ];
+
+const connectionStatusOptions: { value: ConnectionStatus; label: string; note: string }[] = [
+  { value: "search", label: "Я сейчас в поиске", note: "Хочу понимать, с кем мне действительно по пути" },
+  { value: "relationship", label: "Я в отношениях", note: "Хочу лучше понимать наш союз и друг друга" },
+  { value: "complicated", label: "У меня всё сложно", note: "Хочу увидеть ситуацию яснее и без самообмана" },
+  { value: "self", label: "Хочу понять себя", note: "Без привязки к текущему статусу отношений" },
+];
+
+const connectionQuestions: ConnectionQuestion[] = [
+  {
+    eyebrow: "Начало отношений",
+    question: "Что быстрее всего создаёт у вас ощущение: «этому человеку можно открыться»?",
+    answers: [
+      { label: "Он говорит прямо", note: "Нет игр, догадок и двойных смыслов", scores: { dialogue: 3, depth: 1 } },
+      { label: "Он остаётся рядом", note: "Я вижу заботу и последовательность в поступках", scores: { support: 3, dialogue: 1 } },
+      { label: "Между нами возникает энергия", note: "Хочется смеяться, двигаться и проживать новое", scores: { spark: 3, depth: 1 } },
+      { label: "Он не пытается меня присвоить", note: "Есть интерес, но остаётся воздух и свобода", scores: { space: 3, support: 1 } },
+    ],
+  },
+  {
+    eyebrow: "После конфликта",
+    question: "Как вам проще всего вернуться к близости после сложного разговора?",
+    answers: [
+      { label: "Разобрать всё словами", note: "Понять, что произошло и о чём договорились", scores: { dialogue: 3, support: 1 } },
+      { label: "Сначала выдохнуть отдельно", note: "Мне нужно пространство, чтобы услышать себя", scores: { space: 3, depth: 1 } },
+      { label: "Почувствовать тепло", note: "Объятие или тихое присутствие важнее аргументов", scores: { support: 3, depth: 1 } },
+      { label: "Сменить обстановку", note: "Совместное действие помогает выйти из тяжести", scores: { spark: 3, dialogue: 1 } },
+    ],
+  },
+  {
+    eyebrow: "Настоящая близость",
+    question: "В какой момент вы сильнее всего чувствуете связь с человеком?",
+    answers: [
+      { label: "Когда говорим до ночи", note: "И можно обсуждать то, что обычно прячут", scores: { depth: 3, dialogue: 2 } },
+      { label: "Когда строим общее", note: "Планы, дом, проект или понятное будущее", scores: { support: 3, dialogue: 1 } },
+      { label: "Когда нас захватывает жизнь", note: "Путешествие, танец, приключение, новое впечатление", scores: { spark: 3, space: 1 } },
+      { label: "Когда можем быть разными", note: "Близость не требует отказаться от самого себя", scores: { space: 3, depth: 1 } },
+    ],
+  },
+  {
+    eyebrow: "Красная линия",
+    question: "Что в отношениях ранит или отталкивает вас сильнее всего?",
+    answers: [
+      { label: "Недосказанность", note: "Когда приходится угадывать намерения и чувства", scores: { dialogue: 3, depth: 1 } },
+      { label: "Ненадёжность", note: "Когда слова и реальные поступки не совпадают", scores: { support: 3, dialogue: 1 } },
+      { label: "Холод и рутина", note: "Когда отношения перестают быть живыми", scores: { spark: 3, support: 1 } },
+      { label: "Контроль", note: "Когда любовь превращается в ограничения и отчёты", scores: { space: 3, spark: 1 } },
+    ],
+  },
+  {
+    eyebrow: "Идеальный день вдвоём",
+    question: "Какой сценарий звучит для вас наиболее притягательно?",
+    answers: [
+      { label: "Разговор без телефонов", note: "Время, где мы действительно слышим друг друга", scores: { dialogue: 2, depth: 3 } },
+      { label: "Совместное маленькое дело", note: "Приготовить ужин, обустроить дом, помочь друг другу", scores: { support: 3, depth: 1 } },
+      { label: "Спонтанная поездка", note: "Неизвестный маршрут и общее приключение", scores: { spark: 3, space: 1 } },
+      { label: "Вместе, но каждый в своём ритме", note: "Можно читать, работать или молчать рядом", scores: { space: 3, support: 1 } },
+    ],
+  },
+  {
+    eyebrow: "Ваш человек",
+    question: "По какому признаку вы скорее поймёте, что встретили «своего» человека?",
+    answers: [
+      { label: "Мы умеем договариваться", note: "Даже сложные темы не разрушают контакт", scores: { dialogue: 3, support: 1 } },
+      { label: "Рядом становится спокойнее", note: "Мне не нужно постоянно доказывать свою ценность", scores: { support: 3, depth: 1 } },
+      { label: "Рядом хочется жить смелее", note: "Мы усиливаем интерес друг друга к жизни", scores: { spark: 3, space: 1 } },
+      { label: "Я могу оставаться собой", note: "Меня не уменьшают ради удобства отношений", scores: { space: 3, depth: 2 } },
+    ],
+  },
+];
+
+const connectionResults: Record<ConnectionCode, {
+  label: string;
+  symbol: string;
+  title: string;
+  summary: string;
+  blindSpot: string;
+  questions: string[];
+  route: string[];
+}> = {
+  dialogue: {
+    label: "Диалог",
+    symbol: "Д",
+    title: "Вам по пути с теми, с кем можно говорить прямо",
+    summary: "Вам важны ясность намерений, честные слова и ощущение, что сложную тему можно обсудить, не разрушая контакт.",
+    blindSpot: "Вы можете слишком долго искать окончательную определённость и принимать чужую осторожность за отсутствие интереса.",
+    questions: [
+      "О чём тебе особенно трудно говорить в отношениях?",
+      "По каким словам и поступкам ты понимаешь, что человеку можно доверять?",
+      "Как выглядит хороший конфликт, после которого пара становится ближе?",
+    ],
+    route: ["Александр Кардашов", "Виктория Орженевская"],
+  },
+  support: {
+    label: "Опора",
+    symbol: "О",
+    title: "Вы выбираете любовь, которую видно в поступках",
+    summary: "Вам нужны надёжность, последовательность и партнёрство, в котором двое не конкурируют, а создают устойчивую общую жизнь.",
+    blindSpot: "Иногда вы можете брать на себя слишком много ответственности и незаметно превращать заботу в контроль.",
+    questions: [
+      "Что для тебя означает быть командой в обычной жизни?",
+      "В какой момент забота начинает ощущаться как контроль?",
+      "Как ты обычно показываешь человеку: на меня можно положиться?",
+    ],
+    route: ["Инна Мартынова", "Александра Кардаш"],
+  },
+  spark: {
+    label: "Искра",
+    symbol: "И",
+    title: "Вам нужна связь, в которой жизнь становится ярче",
+    summary: "Вас сближают энергия, телесность, юмор и новые впечатления. В отношениях для вас важно не только спокойствие, но и живое желание.",
+    blindSpot: "Сильное притяжение может казаться доказательством совместимости раньше, чем вы успеете увидеть ценности и надёжность человека.",
+    questions: [
+      "Что помогает тебе сохранять интерес в долгих отношениях?",
+      "Какое совместное приключение ты хотел бы прожить в ближайший год?",
+      "Что для тебя важнее в притяжении: телесность, юмор или восхищение человеком?",
+    ],
+    route: ["Мария Соломатина", "Ольга Жильникова"],
+  },
+  space: {
+    label: "Пространство",
+    symbol: "П",
+    title: "Вы ищете близость, в которой не нужно терять себя",
+    summary: "Для вас любовь совместима со свободой, личным ритмом и уважением границ. Вам важно, чтобы союз расширял жизнь обоих.",
+    blindSpot: "За самостоятельностью иногда может прятаться страх показать потребность в другом человеке или попросить о поддержке.",
+    questions: [
+      "Что для тебя означает свобода внутри отношений?",
+      "Как понять, что человеку нужно пространство, а не дистанция?",
+      "В какой ситуации тебе особенно сложно попросить о помощи?",
+    ],
+    route: ["Светлана Федосеева", "Люси Беликова"],
+  },
+  depth: {
+    label: "Глубина",
+    symbol: "Г",
+    title: "Вам важна встреча не ролей, а настоящих людей",
+    summary: "Вы ищете смысл, эмоциональную честность и возможность быть увиденным целиком — не только сильным, удобным или успешным.",
+    blindSpot: "Вы можете ждать мгновенной глубины и недооценивать отношения, которым нужно время, лёгкость и совместный опыт.",
+    questions: [
+      "Что ты хотел бы, чтобы близкий человек понимал о тебе без объяснений?",
+      "Какая часть тебя редко получает место в отношениях?",
+      "Что для тебя значит быть эмоционально доступным?",
+    ],
+    route: ["Дмитрий Елунин", "Алёна Пересада"],
+  },
+};
+
+const connectionStatusCopy: Record<ConnectionStatus, string> = {
+  search: "На фестивале цвет браслета поможет увидеть, кто открыт к знакомству. А ваш код и вопросы для разговора помогут быстрее перейти от формальностей к ценностям и намерениям.",
+  relationship: "Пройдите тест вдвоём и сравните результаты. На фестивале программа даст вам общий контекст, чтобы обсудить близость, деньги, конфликты и будущее без привычного сценария.",
+  complicated: "Ваш результат не принимает решение за вас, но даёт язык для честного разговора. На фестивале вы сможете посмотреть на ситуацию через разные подходы экспертов.",
+  self: "Понимание своего кода помогает замечать подходящих людей и не соглашаться на связь, в которой приходится отказываться от себя.",
+};
 
 const talkTopics = [
   "Почему успешные люди разрушают отношения",
@@ -467,7 +635,20 @@ export default function Home() {
   const [cookieVisible, setCookieVisible] = useState(false);
   const [heroSlideIndex, setHeroSlideIndex] = useState(0);
   const [heroPaused, setHeroPaused] = useState(false);
+  const [connectionQuizStarted, setConnectionQuizStarted] = useState(false);
+  const [connectionStep, setConnectionStep] = useState(0);
+  const [connectionStatus, setConnectionStatus] = useState<ConnectionStatus | null>(null);
+  const [connectionScores, setConnectionScores] = useState<Record<ConnectionCode, number>>({
+    dialogue: 0,
+    support: 0,
+    spark: 0,
+    space: 0,
+    depth: 0,
+  });
+  const [connectionResult, setConnectionResult] = useState<{ primary: ConnectionCode; secondary: ConnectionCode } | null>(null);
+  const [connectionShared, setConnectionShared] = useState(false);
   const heroPointerStart = useRef<number | null>(null);
+  const connectionQuizRef = useRef<HTMLDivElement>(null);
   const formatsRef = useRef<HTMLDivElement>(null);
   const speakersRef = useRef<HTMLDivElement>(null);
 
@@ -513,6 +694,58 @@ export default function Home() {
     setHeroPaused(false);
   };
 
+  const startConnectionQuiz = () => {
+    setConnectionQuizStarted(true);
+    setConnectionStep(0);
+    setConnectionStatus(null);
+    setConnectionScores({ dialogue: 0, support: 0, spark: 0, space: 0, depth: 0 });
+    setConnectionResult(null);
+    setConnectionShared(false);
+    window.requestAnimationFrame(() => connectionQuizRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }));
+  };
+
+  const chooseConnectionStatus = (status: ConnectionStatus) => {
+    setConnectionStatus(status);
+    setConnectionStep(1);
+  };
+
+  const chooseConnectionAnswer = (answer: ConnectionAnswer) => {
+    const nextScores = { ...connectionScores };
+    (Object.keys(answer.scores) as ConnectionCode[]).forEach((code) => {
+      nextScores[code] += answer.scores[code] ?? 0;
+    });
+    setConnectionScores(nextScores);
+
+    if (connectionStep === connectionQuestions.length) {
+      const ranked = (Object.entries(nextScores) as [ConnectionCode, number][]).sort((a, b) => b[1] - a[1]);
+      setConnectionResult({ primary: ranked[0][0], secondary: ranked[1][0] });
+      window.requestAnimationFrame(() => connectionQuizRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }));
+      return;
+    }
+
+    setConnectionStep((current) => current + 1);
+  };
+
+  const shareConnectionResult = async () => {
+    if (!connectionResult) return;
+    const primary = connectionResults[connectionResult.primary];
+    const secondary = connectionResults[connectionResult.secondary];
+    const shareText = `Мой код связи — ${primary.label} × ${secondary.label}. ${primary.title}. Узнайте свой код на фестивале «Мужчина и Женщина. Перезагрузка».`;
+
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: "Мой код связи", text: shareText, url: `${window.location.origin}${window.location.pathname}#connection-code` });
+      } else {
+        await navigator.clipboard.writeText(`${shareText} ${window.location.origin}${window.location.pathname}#connection-code`);
+        setConnectionShared(true);
+      }
+    } catch (error) {
+      if (error instanceof DOMException && error.name === "AbortError") return;
+      await navigator.clipboard.writeText(`${shareText} ${window.location.origin}${window.location.pathname}#connection-code`);
+      setConnectionShared(true);
+    }
+  };
+
   const acceptCookies = () => {
     window.localStorage.setItem("mj-cookie-ok", "1");
     setCookieVisible(false);
@@ -523,6 +756,11 @@ export default function Home() {
     track.scrollBy({ left: direction * Math.min(track.clientWidth * 0.86, 820), behavior: "smooth" });
   };
 
+  const currentConnectionQuestion = connectionStep > 0 ? connectionQuestions[connectionStep - 1] : null;
+  const primaryConnectionResult = connectionResult ? connectionResults[connectionResult.primary] : null;
+  const secondaryConnectionResult = connectionResult ? connectionResults[connectionResult.secondary] : null;
+  const connectionProgress = connectionResult ? 100 : Math.max(1, connectionStep + 1) / (connectionQuestions.length + 1) * 100;
+
   return (
     <main>
       <nav className="floating-nav" aria-label="Навигация по странице">
@@ -531,6 +769,7 @@ export default function Home() {
           <span>22 августа 2026</span>
         </a>
         <div className="nav-links">
+          <a href="#connection-code"><span>●</span> Код связи</a>
           <a href="#speakers"><span>●</span> Спикеры</a>
           <a href="#program"><span>●</span> Программа</a>
           <a href="#partnership"><span>●</span> Партнерство</a>
@@ -540,6 +779,7 @@ export default function Home() {
         <details className="mobile-nav">
           <summary aria-label="Открыть меню">Меню</summary>
           <div>
+            <a href="#connection-code">Код связи</a>
             <a href="#speakers">Спикеры</a>
             <a href="#program">Программа</a>
             <a href="#partnership">Партнерство</a>
@@ -564,7 +804,10 @@ export default function Home() {
               <h1>Мужчина и Женщина.<br /><em>Перезагрузка</em></h1>
               <p className="hero-lead">О любви, власти, деньгах и партнерстве в современном мире</p>
               <p className="hero-copy">За один день вы поймете, как выстроить взрослый союз, где карьера, деньги и амбиции не мешают близости с любимым человеком.</p>
-              <a className="primary-button hero-button" href="#pricing"><span>Стать участником</span><i className="button-icon"><ArrowIcon /></i></a>
+              <div className="hero-actions">
+                <a className="primary-button hero-button" href="#pricing"><span>Стать участником</span><i className="button-icon"><ArrowIcon /></i></a>
+                <a className="hero-quiz-link" href="#connection-code"><b>90 секунд</b><span>Узнать свой код связи</span></a>
+              </div>
             </div>
             <div className="hero-slider-column">
               <div
@@ -671,6 +914,133 @@ export default function Home() {
                 </ul>
               </article>
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section connection-section" id="connection-code">
+        <div className="container connection-shell">
+          <div className="connection-pitch">
+            <p className="section-label">Интерактив фестиваля · 90 секунд</p>
+            <h2>С кем вам <span>действительно</span> по пути?</h2>
+            <p className="connection-lead">Сделайте семь честных выборов и получите свой код связи — без гороскопов, банальных типологий и оценки «правильно» или «неправильно».</p>
+            <div className="connection-promises" aria-label="Что вы получите">
+              <span>Ваш способ строить близость</span>
+              <span>Возможная слепая зона</span>
+              <span>3 вопроса для живого разговора</span>
+              <span>Маршрут по спикерам фестиваля</span>
+            </div>
+            <div className="connection-signals" aria-hidden="true">
+              {(Object.keys(connectionResults) as ConnectionCode[]).map((code) => (
+                <span key={code}>{connectionResults[code].symbol}<small>{connectionResults[code].label}</small></span>
+              ))}
+            </div>
+          </div>
+
+          <div className="connection-experience" ref={connectionQuizRef}>
+            {!connectionQuizStarted && (
+              <div className="connection-intro-card">
+                <div className="connection-bracelet-preview" aria-hidden="true">
+                  <i />
+                  <span>?</span>
+                  <i />
+                </div>
+                <p>Ваш персональный код</p>
+                <h3>Не ищите идеального человека. Узнайте, какая связь подходит именно вам.</h3>
+                <button className="connection-start" type="button" onClick={startConnectionQuiz}>
+                  <span>Расшифровать мой код</span><i className="button-icon"><ArrowIcon /></i>
+                </button>
+                <small>Ответы никуда не отправляются и не сохраняются</small>
+              </div>
+            )}
+
+            {connectionQuizStarted && !connectionResult && (
+              <div className="connection-question-card" aria-live="polite">
+                <div className="connection-progress-head">
+                  <span>Код связи</span>
+                  <strong>{String(connectionStep + 1).padStart(2, "0")} / 07</strong>
+                </div>
+                <div className="connection-progress" aria-hidden="true"><i style={{ width: `${connectionProgress}%` }} /></div>
+
+                {connectionStep === 0 ? (
+                  <div className="connection-question-copy">
+                    <p>Точка, в которой вы сейчас</p>
+                    <h3>С чего начинается ваш маршрут?</h3>
+                    <div className="connection-answers">
+                      {connectionStatusOptions.map((option) => (
+                        <button type="button" key={option.value} onClick={() => chooseConnectionStatus(option.value)}>
+                          <span><b>{option.label}</b><small>{option.note}</small></span><i><ArrowIcon /></i>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ) : currentConnectionQuestion ? (
+                  <div className="connection-question-copy">
+                    <p>{currentConnectionQuestion.eyebrow}</p>
+                    <h3>{currentConnectionQuestion.question}</h3>
+                    <div className="connection-answers">
+                      {currentConnectionQuestion.answers.map((answer) => (
+                        <button type="button" key={answer.label} onClick={() => chooseConnectionAnswer(answer)}>
+                          <span><b>{answer.label}</b><small>{answer.note}</small></span><i><ArrowIcon /></i>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
+                <button className="connection-restart-link" type="button" onClick={startConnectionQuiz}>Начать заново</button>
+              </div>
+            )}
+
+            {connectionResult && primaryConnectionResult && secondaryConnectionResult && connectionStatus && (
+              <div className="connection-result-card" aria-live="polite">
+                <div className="connection-result-head">
+                  <p>Ваш код связи</p>
+                  <div className="connection-code-lockup">
+                    <span>{primaryConnectionResult.symbol}</span>
+                    <i>×</i>
+                    <span>{secondaryConnectionResult.symbol}</span>
+                  </div>
+                  <h3>{primaryConnectionResult.label} <em>×</em> {secondaryConnectionResult.label}</h3>
+                  <strong>{primaryConnectionResult.title}</strong>
+                  <p>{primaryConnectionResult.summary}</p>
+                </div>
+
+                <div className="connection-result-grid">
+                  <article className="connection-blind-spot">
+                    <span>Возможная слепая зона</span>
+                    <p>{primaryConnectionResult.blindSpot}</p>
+                  </article>
+                  <article className="connection-secondary-code">
+                    <span>Ваш второй код</span>
+                    <strong>{secondaryConnectionResult.label}</strong>
+                    <p>{secondaryConnectionResult.summary}</p>
+                  </article>
+                </div>
+
+                <div className="connection-conversations">
+                  <span>Три вопроса для настоящего разговора</span>
+                  <ol>
+                    {primaryConnectionResult.questions.map((question) => <li key={question}>{question}</li>)}
+                  </ol>
+                </div>
+
+                <div className="connection-festival-bridge">
+                  <div className="connection-mini-bracelet" aria-hidden="true"><i /><span>{primaryConnectionResult.symbol}</span><i /></div>
+                  <div>
+                    <span>Продолжение — вживую</span>
+                    <p>{connectionStatusCopy[connectionStatus]}</p>
+                    <p className="connection-route">Ваш маршрут по программе: <a href="#speakers">{primaryConnectionResult.route.join(" · ")}</a></p>
+                  </div>
+                </div>
+
+                <div className="connection-result-actions">
+                  <a className="primary-button" href="#pricing"><span>Выбрать билет</span><i className="button-icon"><ArrowIcon /></i></a>
+                  <button type="button" onClick={shareConnectionResult}>{connectionShared ? "Ссылка скопирована" : "Поделиться результатом"}</button>
+                  <button type="button" onClick={startConnectionQuiz}>Пройти ещё раз</button>
+                </div>
+                <small className="connection-disclaimer">Результат предназначен для саморефлексии и не является психологической диагностикой.</small>
+              </div>
+            )}
           </div>
         </div>
       </section>
