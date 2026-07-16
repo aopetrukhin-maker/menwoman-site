@@ -478,7 +478,7 @@ export default function Home() {
 
     const interval = window.setInterval(() => {
       setHeroSlideIndex((current) => (current + 1) % heroSpeakerSlides.length);
-    }, 2000);
+    }, 1500);
 
     return () => window.clearInterval(interval);
   }, []);
@@ -553,7 +553,6 @@ export default function Home() {
                       <div className="hero-magazine-masthead">
                         <strong>МЖ</strong>
                         <span>Отношения нового времени</span>
-                        <small>{String(index + 1).padStart(2, "0")} / {String(heroSpeakerSlides.length).padStart(2, "0")}</small>
                       </div>
                       <div className="hero-magazine-copy">
                         <span>Спикер фестиваля</span>

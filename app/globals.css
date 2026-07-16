@@ -355,12 +355,12 @@ main {
   min-height: 600px;
   position: relative;
   overflow: hidden;
-  border: 9px solid rgba(255, 253, 249, .82);
-  border-radius: 180px 180px 32px 32px;
+  border: 8px solid rgba(255, 253, 249, .9);
+  border-radius: 28px;
   color: var(--white);
   background: #2a1e1d;
   box-shadow: var(--shadow);
-  transform: rotate(1.25deg);
+  transform: rotate(.35deg);
   perspective: 1500px;
 }
 
@@ -376,14 +376,29 @@ main {
 .hero-speaker-slide {
   opacity: 0;
   overflow: hidden;
-  transform: translateX(7%) rotateY(-16deg) scale(1.035);
+  transform: translateX(9%) rotateY(-28deg) scale(1.025);
   transform-origin: right center;
   filter: saturate(.82) contrast(.94);
   transition:
-    opacity .72s ease,
-    transform .92s cubic-bezier(.2, .78, .25, 1),
-    filter .92s ease;
+    opacity .62s ease,
+    transform .78s cubic-bezier(.18, .76, .22, 1),
+    filter .78s ease;
   will-change: opacity, transform;
+}
+
+.hero-speaker-slide::after {
+  content: "";
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 16%;
+  opacity: .8;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .24));
+  box-shadow: 18px 0 38px rgba(20, 10, 8, .28);
+  pointer-events: none;
+  transition: opacity .5s ease;
 }
 
 .hero-speaker-slide.is-active {
@@ -391,6 +406,10 @@ main {
   opacity: 1;
   transform: translateX(0) rotateY(0) scale(1);
   filter: saturate(1) contrast(1);
+}
+
+.hero-speaker-slide.is-active::after {
+  opacity: 0;
 }
 
 .hero-speaker-slide img {
@@ -414,7 +433,7 @@ main {
   justify-content: space-between;
   padding: 29px 27px 30px;
   border: 1px solid rgba(255, 255, 255, .24);
-  border-radius: 168px 168px 23px 23px;
+  border-radius: 20px;
   text-shadow: 0 3px 18px rgba(10, 5, 4, .28);
 }
 
@@ -441,12 +460,6 @@ main {
   font-weight: 800;
   letter-spacing: .12em;
   text-transform: uppercase;
-}
-
-.hero-magazine-masthead small {
-  font-size: 9px;
-  font-weight: 800;
-  letter-spacing: .08em;
 }
 
 .hero-magazine-copy > span {
@@ -2258,13 +2271,13 @@ footer {
 
   .hero-date-card {
     min-height: 490px;
-    border-width: 7px;
-    border-radius: 140px 140px 28px 28px;
+    border-width: 6px;
+    border-radius: 22px;
   }
 
   .hero-magazine-cover {
     padding: 24px 22px 27px;
-    border-radius: 132px 132px 21px 21px;
+    border-radius: 16px;
   }
 
   .hero-magazine-masthead span {
