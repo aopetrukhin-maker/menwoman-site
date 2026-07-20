@@ -256,6 +256,21 @@ const speakers: Speaker[] = [
     image: "/speakers/larisa-sokolova.webp",
     imagePosition: "center 38%",
   },
+  {
+    name: "Катия Шведова",
+    role: "Мотивационный спикер, креативщик, основательница клуба «Код Многомерности»",
+    topic: "Энергия движения. Как двигаться системно и без потери интереса",
+    facts: [
+      "Спикер Синергии с 2018 года",
+      "С 2015 года — член жюри и спикер форумов по монетизации творческого бизнеса",
+      "Организатор форума «Жизнь как творчество» при поддержке правительства Санкт-Петербурга",
+      "Экс-CEO онлайн-школы с аудиторией более 20 000 человек",
+    ],
+    initials: "КШ",
+    tone: "ruby",
+    image: "/speakers/katia-shvedova.jpg",
+    imagePosition: "center 18%",
+  },
 ];
 
 const heroSlides = [
@@ -906,7 +921,7 @@ export default function Home() {
           <div className="stats-bar">
             <div><strong>8 часов</strong><span>погружения</span></div>
             <div><strong>500+</strong><span>участников</span></div>
-            <div><strong>16+</strong><span>спикеров</span></div>
+            <div><strong>17+</strong><span>спикеров</span></div>
             <div><strong>10+</strong><span>форматов</span></div>
           </div>
         </div>
