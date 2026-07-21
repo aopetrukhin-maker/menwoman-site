@@ -664,7 +664,7 @@ const tickets = [
       "Приоритетный доступ на практики с ограниченным количеством участников",
       "Возможность заранее выбрать одну экспертную мини-диагностику",
       "Рабочая тетрадь участника фестиваля",
-      "Подарки и специальные предложения партнёров на сумму 50 000 рублей",
+      "Индивидуальная корзина подарков и сертификатов на сумму до 50 000 ₽",
       "Доступ в закрытый Telegram-чат участников",
       "Полезные материалы от спикеров после события",
       "Видеозаписи выступлений",
@@ -683,7 +683,7 @@ const tickets = [
       "Отдельная VIP-регистрация",
       "Закрытая встреча и нетворкинг со спикерами, партнёрами и организаторами",
       "Приоритетная запись на экспертные разборы от спикеров",
-      "Премиальный подарочный набор фестиваля",
+      "Увеличенная корзина подарков и сертификатов на сумму до 100 000 ₽",
       "Профессиональные фотографии с площадки",
       "Приглашение на закрытые встречи проекта после фестиваля",
     ],
@@ -826,7 +826,7 @@ export default function Home() {
           <a href="#program"><span>●</span> Программа</a>
           <a href="#partnership"><span>●</span> Партнерство</a>
           <a href="#pricing"><span>●</span> Тарифы</a>
-          <a href="#bonuses"><span>●</span> Бонусы</a>
+          <a className="nav-gift-link" href="#bonuses"><span>●</span> Держи 100 000 ₽</a>
         </div>
         <details className="mobile-nav">
           <summary aria-label="Открыть меню">Меню</summary>
@@ -836,7 +836,7 @@ export default function Home() {
             <a href="#program">Программа</a>
             <a href="#partnership">Партнерство</a>
             <a href="#pricing">Тарифы</a>
-            <a href="#bonuses">Бонусы</a>
+            <a className="nav-gift-link" href="#bonuses">Держи 100 000 ₽</a>
           </div>
         </details>
       </nav>
@@ -1099,6 +1099,59 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="section bonus-section" id="bonuses">
+        <div className="container">
+          <div className="bonus-hero">
+            <div className="bonus-copy">
+              <p className="section-label">Подарочный фонд фестиваля</p>
+              <h2>Соберите подарки на <span>50 000 или 100 000 ₽</span></h2>
+              <p className="bonus-lead">Это не случайный набор и не купоны на ненужные услуги. Вы сами собираете индивидуальную корзину из доступных сертификатов, услуг и товаров наших спикеров, спонсоров и партнёров.</p>
+              <div className="bonus-rule"><strong>от 5 000 ₽</strong><span>номинал каждого сертификата в каталоге</span></div>
+            </div>
+            <div className="bonus-tiers" aria-label="Подарки по тарифам">
+              <article>
+                <span>Тариф</span>
+                <h3>Перезагрузка</h3>
+                <strong>50 000 ₽</strong>
+                <p>подарков на выбор</p>
+              </article>
+              <article className="bonus-tier-vip">
+                <span>Тариф</span>
+                <h3>VIP</h3>
+                <strong>100 000 ₽</strong>
+                <p>подарков на выбор</p>
+              </article>
+            </div>
+          </div>
+
+          <div className="bonus-catalog-heading">
+            <p className="section-label">Выбирайте то, что нужно именно вам</p>
+            <h3>Что будет в каталоге подарков</h3>
+          </div>
+          <div className="bonus-grid">
+            <article><span>01</span><h3>SPA и восстановление</h3><p>Посещение SPA-комплексов, массаж, телесные практики, уходовые и расслабляющие процедуры.</p></article>
+            <article><span>02</span><h3>Здоровье и красота</h3><p>Услуги медицинских и диагностических центров, косметология, салоны красоты и программы ухода.</p></article>
+            <article><span>03</span><h3>Кафе и рестораны</h3><p>Депозиты и сертификаты в кафе и рестораны, гастрономические наборы и предложения food-партнёров.</p></article>
+            <article><span>04</span><h3>Консультации спикеров</h3><p>Личные разборы по отношениям, психологии, здоровью, деньгам, карьере, бизнесу и самореализации.</p></article>
+            <article><span>05</span><h3>Обучение и развитие</h3><p>Мастер-классы, практикумы, трансформационные игры, тренинги и участие в клубных программах.</p></article>
+            <article><span>06</span><h3>Товары партнёров</h3><p>Косметика, парфюмерия, БАДы, полезные продукты, одежда, аксессуары, книги и другие товары брендов.</p></article>
+          </div>
+
+          <div className="bonus-process">
+            <div className="bonus-process-heading">
+              <p className="section-label">Как это работает</p>
+              <h3>Вы выбираете - мы собираем</h3>
+            </div>
+            <ol>
+              <li><b>01</b><div><strong>Выберите тариф</strong><p>«Перезагрузка» - корзина до 50 000 ₽. VIP - корзина до 100 000 ₽.</p></div></li>
+              <li><b>02</b><div><strong>Соберите свой набор</strong><p>На фестивале выберите из доступного каталога именно те подарки, которыми будете пользоваться.</p></div></li>
+              <li><b>03</b><div><strong>Получите сертификаты</strong><p>На следующий день после фестиваля организаторы отправят ваш набор. После этого сертификаты можно активировать.</p></div></li>
+            </ol>
+          </div>
+          <p className="bonus-footnote">Каталог пополняется по мере подтверждения спикеров и партнёров. Итоговый выбор зависит от доступности предложений и условий конкретного партнёра.</p>
+        </div>
+      </section>
+
       <section className="section formats-section" id="festival-formats">
         <div className="container">
           <div className="section-heading center-heading">
@@ -1276,27 +1329,12 @@ export default function Home() {
               <article className={`price-card ${ticket.featured ? "featured" : ""}`} key={ticket.name}>
                   {ticket.featured && <div className="popular">Самый выгодный</div>}
                 <div className="price-head"><h3>{ticket.name}</h3><strong>{ticket.price}</strong><span>{ticket.note}</span></div>
-                <ul>{ticket.items.map((item) => <li className={item.includes("50 000") ? "gift-highlight" : ""} key={item}><b>✓</b>{item}</li>)}</ul>
+                <ul>{ticket.items.map((item) => <li className={item.includes("50 000") || item.includes("100 000") ? "gift-highlight" : ""} key={item}><b>✓</b>{item}</li>)}</ul>
                 <p>{ticket.description}</p>
                 <div className="price-timeline"><span>Следующая цена <b>{ticket.nextPrice}</b></span><span>Финальная цена <b>{ticket.finalPrice}</b></span></div>
                 <a href={ticketUrl} target="_blank" rel="noreferrer">Купить билет <i className="button-icon"><ArrowIcon /></i></a>
               </article>
             ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="section bonus-section" id="bonuses">
-        <div className="container">
-          <div className="section-heading split-heading">
-            <div><p className="section-label">Больше ценности</p><h2>Бонусы тарифа <span>«Перезагрузка»</span></h2></div>
-            <p>Подарки и материалы будут пополняться по мере подтверждения партнёров и спикеров.</p>
-          </div>
-          <div className="bonus-grid">
-            <article><span>01</span><h3>Подарки партнёров</h3><p>Специальные предложения и подарки общей ценностью до 50 000 рублей.</p></article>
-            <article><span>02</span><h3>Материалы спикеров</h3><p>Практики, чек-листы и полезные материалы после фестиваля.</p></article>
-            <article><span>03</span><h3>Закрытый чат</h3><p>Общение с участниками фестиваля и важная организационная информация.</p></article>
-            <article><span>04</span><h3>Видеозаписи</h3><p>Доступ к записям выступлений, чтобы вернуться к главным идеям позже.</p></article>
           </div>
         </div>
       </section>
