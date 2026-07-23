@@ -670,8 +670,12 @@ const partners = [
 const tickets = [
   {
     name: "Старт",
+    tier: "start",
     price: "990 ₽",
     note: "Количество билетов по этой цене ограничено",
+    visualValue: "Билет + материалы",
+    visualNote: "Базовый комплект участника",
+    highlights: ["Весь фестивальный день", "Все выступления", "Программа и тетрадь"],
     nextPrice: "1 490 ₽",
     finalPrice: "1 990 ₽",
     description: "Для тех, кто хочет познакомиться с фестивалем, послушать экспертов и провести насыщенный день.",
@@ -687,8 +691,12 @@ const tickets = [
   },
   {
     name: "Перезагрузка",
+    tier: "reload",
     price: "1 990 ₽",
     note: "Самый выгодный тариф",
+    visualValue: "до 50 000 ₽",
+    visualNote: "Подарки и сертификаты на выбор",
+    highlights: ["Приоритетная зона", "Мини-диагностика", "Видео и закрытый чат"],
     nextPrice: "2 990 ₽",
     finalPrice: "3 990 ₽",
     description: "Для тех, кто хочет активно включиться, поработать со своими запросами и получить максимум пользы.",
@@ -712,8 +720,12 @@ const tickets = [
   },
   {
     name: "VIP",
+    tier: "vip",
     price: "3 990 ₽",
     note: "Количество мест строго ограничено",
+    visualValue: "до 100 000 ₽",
+    visualNote: "Максимальная корзина подарков",
+    highlights: ["Первые ряды", "Закрытый нетворкинг", "Приоритетные разборы"],
     nextPrice: "5 990 ₽",
     finalPrice: "7 990 ₽",
     description: "Максимальный уровень участия, личного общения и комфорта на фестивале.",
@@ -800,7 +812,7 @@ function ProgramSection() {
     <section className="section program-section" id="program">
       <div className="container">
         <div className="section-heading split-heading">
-          <div><p className="section-label">22 августа · начало в 12:00</p><h2>Не расписание лекций.<br /><span>Маршрут изменений.</span></h2></div>
+          <div><p className="section-label">22 августа · программа с 13:00</p><h2>Не расписание лекций.<br /><span>Маршрут изменений.</span></h2></div>
           <p>Шесть смысловых частей проведут от повторяющихся сценариев к понятному следующему шагу в знакомствах, близости, деньгах и границах.</p>
         </div>
         <div className="program-list">
@@ -991,7 +1003,7 @@ export default function Home() {
         <div className="container hero-inner reveal">
           <div className="eyebrow-row">
             <div className="eyebrow-item"><strong>Где</strong><span>Санкт-Петербург<br />Дворец Кваренги, Казанская 7</span></div>
-            <div className="eyebrow-item"><strong>Когда</strong><span>22 августа 2026<br />Начало в 12:00</span></div>
+            <div className="eyebrow-item"><strong>Когда</strong><span>22 августа 2026<br />Регистрация с 12:00<br />Программа с 13:00</span></div>
           </div>
           <div className="hero-grid">
             <div>
@@ -1308,13 +1320,26 @@ export default function Home() {
           </div>
           <div className="pricing-grid">
             {tickets.map((ticket) => (
-              <article className={`price-card ${ticket.featured ? "featured" : ""}`} key={ticket.name}>
+              <article className={`price-card price-card-${ticket.tier} ${ticket.featured ? "featured" : ""}`} key={ticket.name}>
                   {ticket.featured && <div className="popular">Самый выгодный</div>}
                 <div className="price-head"><h3>{ticket.name}</h3><strong>{ticket.price}</strong><span>{ticket.note}</span></div>
-                <div className="ticket-kit" aria-label="Материалы участника">
-                  <div className="ticket-program"><span>МЖ</span><b>Программа</b><small>22 августа</small></div>
-                  <div className="ticket-workbook"><span>Рабочая</span><b>тетрадь</b><i /></div>
+                <div className={`ticket-showcase ticket-showcase-${ticket.tier}`} aria-label={`Главные преимущества тарифа ${ticket.name}`}>
+                  <div className="ticket-showcase-head">
+                    <span>{ticket.tier === "start" ? "Входит в билет" : "Ваш бонусный фонд"}</span>
+                    <strong>{ticket.visualValue}</strong>
+                    <small>{ticket.visualNote}</small>
+                  </div>
+                  <div className="ticket-mockups" aria-hidden="true">
+                    <div className="mockup-pass"><span>МЖ</span><b>{ticket.tier === "vip" ? "VIP" : ticket.name}</b><small>22.08.2026</small></div>
+                    <div className="mockup-program"><span>Электронная</span><b>Программа</b><i /></div>
+                    {ticket.tier !== "start" && <div className="mockup-gift"><span>Подарки</span><b>{ticket.tier === "vip" ? "100К" : "50К"}</b><small>на выбор</small></div>}
+                    {ticket.tier === "vip" && <div className="mockup-vip"><span>Закрытый</span><b>доступ</b><small>спикеры · VIP-зона</small></div>}
+                  </div>
+                  <div className="ticket-highlight-list">
+                    {ticket.highlights.map((highlight) => <span key={highlight}>{highlight}</span>)}
+                  </div>
                 </div>
+                <div className="ticket-includes-title"><span>Полный состав тарифа</span><b>{ticket.items.length} возможностей</b></div>
                 <ul>{ticket.items.map((item) => <li className={item.includes("50 000") || item.includes("100 000") ? "gift-highlight" : ""} key={item}><b>✓</b>{item}</li>)}</ul>
                 <p>{ticket.description}</p>
                 <div className="price-timeline"><span>Следующая цена <b>{ticket.nextPrice}</b></span><span>Финальная цена <b>{ticket.finalPrice}</b></span></div>
@@ -1346,8 +1371,8 @@ export default function Home() {
             <a className="primary-button" href="https://yandex.ru/maps/?text=%D0%94%D0%B2%D0%BE%D1%80%D0%B5%D1%86%20%D0%9A%D0%B2%D0%B0%D1%80%D0%B5%D0%BD%D0%B3%D0%B8%2C%20%D0%9A%D0%B0%D0%B7%D0%B0%D0%BD%D1%81%D0%BA%D0%B0%D1%8F%207" target="_blank" rel="noreferrer"><span>Открыть маршрут</span><i className="button-icon"><ArrowIcon /></i></a>
           </div>
           <div className="logistics-facts">
-            <article><span>11:00</span><p>Начало регистрации гостей</p></article>
-            <article><span>12:00</span><p>Старт основной программы</p></article>
+            <article><span>12:00</span><p>Начало регистрации гостей</p></article>
+            <article><span>13:00</span><p>Старт основной программы</p></article>
             <article><span>20:00</span><p>Завершение фестивального дня</p></article>
             <div className="logistics-note"><strong>Возьмите с собой</strong><p>Билет в телефоне, документ, зарядное устройство и вопросы, которые давно откладывали.</p></div>
           </div>
