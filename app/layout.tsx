@@ -10,6 +10,7 @@ import "@fontsource/cormorant-garamond/600.css";
 import "@fontsource/cormorant-garamond/600-italic.css";
 import "@fontsource/cormorant-garamond/700.css";
 import "./globals.css";
+import "./visual-overrides.css";
 
 export const metadata: Metadata = {
   title: "Мужчина и Женщина. Перезагрузка | Санкт-Петербург, 22 августа 2026",
