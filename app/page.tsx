@@ -977,21 +977,25 @@ export default function Home() {
         </a>
         <div className="nav-links">
           <a href="#connection-code"><span>●</span> Код связи</a>
+          <a href="#dating"><span>●</span> Дейтинг</a>
           <a href="#program"><span>●</span> Программа</a>
           <a href="#speakers"><span>●</span> Спикеры</a>
           <a href="#partnership"><span>●</span> Партнерство</a>
           <a href="#pricing"><span>●</span> Тарифы</a>
-          <a className="nav-gift-link" href="#bonuses"><span>●</span> Держи 100 000 ₽</a>
         </div>
+        <a className="nav-bonus-cta" href="#bonuses" aria-label="Забери подарки на сумму до 100 000 рублей">
+          <span className="nav-bonus-full">Забери 100 000 ₽</span>
+          <span className="nav-bonus-short">100 000 ₽</span>
+        </a>
         <details className="mobile-nav">
           <summary aria-label="Открыть меню">Меню</summary>
           <div>
             <a href="#connection-code">Код связи</a>
+            <a href="#dating">Дейтинг и браслеты</a>
             <a href="#program">Программа</a>
             <a href="#speakers">Спикеры</a>
             <a href="#partnership">Партнерство</a>
             <a href="#pricing">Тарифы</a>
-            <a className="nav-gift-link" href="#bonuses">Держи 100 000 ₽</a>
           </div>
         </details>
       </nav>
@@ -1242,6 +1246,44 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="section dating-section" id="dating">
+        <div className="container dating-shell">
+          <div className="dating-copy">
+            <p className="section-label">Дейтинг и браслеты</p>
+            <h2>Сразу видно, <span>кто открыт к знакомству</span></h2>
+            <p className="dating-lead">Без неловких догадок, случайных подкатов и вопроса «а человек вообще свободен?». На регистрации выберите браслет - и окружающие поймут, какой формат общения вам подходит.</p>
+
+            <div className="dating-benefits">
+              <article><b>01</b><div><strong>Выберите свой цвет</strong><p>Получите браслет на регистрации и обозначьте комфортный формат общения.</p></div></article>
+              <article><b>02</b><div><strong>Замечайте взаимный интерес</strong><p>Цвет помогает быстро понять, к кому можно подойти познакомиться.</p></div></article>
+              <article><b>03</b><div><strong>Начните не с банальностей</strong><p>Используйте «Код связи» и карточки с вопросами о ценностях, близости и целях.</p></div></article>
+            </div>
+
+            <a className="primary-button dating-button" href="#pricing"><span>Выбрать билет</span><i className="button-icon"><ArrowIcon /></i></a>
+          </div>
+
+          <div className="bracelet-stage" aria-label="Значения браслетов фестиваля">
+            <div className="bracelet-orbit bracelet-green">
+              <span>Открыт к знакомствам</span>
+              <strong>Хочу встретить своего человека</strong>
+            </div>
+            <div className="bracelet-orbit bracelet-yellow">
+              <span>Открыт к общению</span>
+              <strong>Можно подойти и начать разговор</strong>
+            </div>
+            <div className="bracelet-orbit bracelet-red">
+              <span>Не знакомлюсь</span>
+              <strong>Пришёл в паре или только за программой</strong>
+            </div>
+            <div className="bracelet-center">
+              <span>МЖ</span>
+              <strong>Ваш цвет снимает первый барьер</strong>
+              <p>Дальше остаётся только сказать: «Привет».</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="section why-section">
         <div className="container why-grid">
           <div className="why-portrait" role="img" aria-label="Успешная женщина в момент эмоциональной усталости">
@@ -1330,10 +1372,10 @@ export default function Home() {
                     <small>{ticket.visualNote}</small>
                   </div>
                   <div className="ticket-mockups" aria-hidden="true">
-                    <div className="mockup-pass"><span>МЖ</span><b>{ticket.tier === "vip" ? "VIP" : ticket.name}</b><small>22.08.2026</small></div>
-                    <div className="mockup-program"><span>Электронная</span><b>Программа</b><i /></div>
-                    {ticket.tier !== "start" && <div className="mockup-gift"><span>Подарки</span><b>{ticket.tier === "vip" ? "100К" : "50К"}</b><small>на выбор</small></div>}
-                    {ticket.tier === "vip" && <div className="mockup-vip"><span>Закрытый</span><b>доступ</b><small>спикеры · VIP-зона</small></div>}
+                    <div className="mockup-pass"><em>Билет</em><span>МЖ</span><b>{ticket.tier === "vip" ? "VIP" : ticket.name}</b><small>22.08.2026</small></div>
+                    <div className="mockup-program"><em>PDF</em><span>Электронная</span><b>Программа</b><i /></div>
+                    {ticket.tier !== "start" && <div className="mockup-gift"><em>Сертификаты</em><span>Подарки</span><b>{ticket.tier === "vip" ? "100К" : "50К"}</b><small>соберите на выбор</small></div>}
+                    {ticket.tier === "vip" && <div className="mockup-vip"><em>VIP</em><span>Закрытый</span><b>доступ</b><small>спикеры · VIP-зона</small></div>}
                   </div>
                   <div className="ticket-highlight-list">
                     {ticket.highlights.map((highlight) => <span key={highlight}>{highlight}</span>)}
