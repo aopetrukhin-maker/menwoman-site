@@ -5,6 +5,146 @@
     var(--paper-soft);
 }
 
+/* Tariff product scenes: only real ticket contents, no book mockups */
+.ticket-product-scene {
+  aspect-ratio: 4 / 3;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  margin-top: 18px;
+  border: 1px solid rgba(33, 25, 22, .12);
+  border-radius: 22px;
+  background: #ead5bd;
+  box-shadow: 0 20px 46px rgba(49, 28, 21, .18);
+  isolation: isolate;
+}
+
+.ticket-product-scene::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(to top, rgba(31, 17, 15, .72), transparent 44%),
+    linear-gradient(135deg, rgba(255, 255, 255, .12), transparent 36%);
+  pointer-events: none;
+}
+
+.ticket-product-scene img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  transition: transform .45s ease;
+}
+
+.price-card:hover .ticket-product-scene img {
+  transform: scale(1.025);
+}
+
+.ticket-product-kicker {
+  position: absolute;
+  right: 16px;
+  bottom: 15px;
+  left: 16px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .1em;
+  line-height: 1.25;
+  text-transform: uppercase;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, .5);
+}
+
+.ticket-product-kicker::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: #f5d77f;
+  box-shadow: 0 0 0 5px rgba(245, 215, 127, .16);
+}
+
+.ticket-product-scene-reload {
+  border-color: rgba(116, 77, 20, .28);
+  box-shadow: 0 24px 54px rgba(103, 68, 15, .23);
+}
+
+.ticket-product-scene-vip {
+  border-color: rgba(244, 223, 156, .3);
+  box-shadow: 0 26px 58px rgba(0, 0, 0, .42);
+}
+
+.ticket-bonus-stack-start > span {
+  grid-column: span 1;
+}
+
+.ticket-bonus-stack-reload > span:last-child {
+  grid-column: 1 / -1;
+}
+
+.ticket-bonus-stack-vip > span:first-child {
+  grid-column: 1 / -1;
+}
+
+.ticket-bonus-stack-vip > span:nth-child(2),
+.ticket-bonus-stack-vip > span:nth-child(3) {
+  grid-column: span 1;
+}
+
+.ticket-bonus-stack > span {
+  min-height: 78px;
+}
+
+.ticket-bonus-stack b {
+  font-size: 22px;
+}
+
+.ticket-bonus-stack small {
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.ticket-bonus-stack .ticket-bonus-gold b {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 31px;
+}
+
+@media (max-width: 640px) {
+  .ticket-product-scene {
+    border-radius: 20px;
+  }
+
+  .ticket-product-kicker {
+    right: 14px;
+    bottom: 13px;
+    left: 14px;
+    font-size: 9px;
+  }
+
+  .ticket-bonus-stack > span {
+    min-height: 82px;
+    padding: 13px;
+  }
+
+  .ticket-bonus-stack b {
+    font-size: 23px;
+  }
+
+  .ticket-bonus-stack small {
+    font-size: 11.5px;
+  }
+
+  .ticket-bonus-stack .ticket-bonus-gold b {
+    font-size: 34px;
+  }
+}
+
 .formats-track {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));

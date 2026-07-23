@@ -678,9 +678,16 @@ const tickets = [
     tier: "start",
     price: "990 ₽",
     note: "Количество билетов по этой цене ограничено",
-    visualValue: "Билет + материалы",
-    visualNote: "Базовый комплект участника",
-    highlights: ["Весь фестивальный день", "Все выступления", "Программа и тетрадь"],
+    visualLabel: "Входит в стоимость",
+    visualValue: "Полный день",
+    visualNote: "Билет и рабочая тетрадь участника",
+    mockupImage: "/visuals/tariff-start-v2.webp",
+    mockupAlt: "Билет на фестиваль и рабочая тетрадь участника",
+    mockupItems: [
+      { title: "Билет", note: "Весь фестивальный день" },
+      { title: "Рабочая тетрадь", note: "Для практик и заметок" },
+    ],
+    highlights: ["Вход на весь день", "Рабочая тетрадь", "Все основные форматы"],
     nextPrice: "1 490 ₽",
     finalPrice: "1 990 ₽",
     description: "Для тех, кто хочет познакомиться с фестивалем, послушать экспертов и провести насыщенный день.",
@@ -699,9 +706,17 @@ const tickets = [
     tier: "reload",
     price: "1 990 ₽",
     note: "Самый выгодный тариф",
+    visualLabel: "Всё включено + бонусы",
     visualValue: "до 50 000 ₽",
-    visualNote: "Подарки и сертификаты на выбор",
-    highlights: ["Приоритетная зона", "Мини-диагностика", "Видео и закрытый чат"],
+    visualNote: "Тетрадь, записи всех выступлений и подарки",
+    mockupImage: "/visuals/tariff-reload-v2.webp",
+    mockupAlt: "Билет, рабочая тетрадь, записи выступлений и подарочные сертификаты",
+    mockupItems: [
+      { title: "Рабочая тетрадь", note: "Практики и личные выводы" },
+      { title: "Записи всех спикеров", note: "Если не успели попасть на всё" },
+      { title: "до 50 000 ₽", note: "Подарки и сертификаты" },
+    ],
+    highlights: ["Подарки до 50 000 ₽", "Записи всех спикеров", "Приоритетная зона"],
     nextPrice: "2 990 ₽",
     finalPrice: "3 990 ₽",
     description: "Для тех, кто хочет активно включиться, поработать со своими запросами и получить максимум пользы.",
@@ -720,7 +735,7 @@ const tickets = [
       "Индивидуальная корзина подарков и сертификатов на сумму до 50 000 ₽",
       "Доступ в закрытый Telegram-чат участников",
       "Полезные материалы от спикеров после события",
-      "Видеозаписи выступлений",
+      "Записи выступлений всех спикеров - если не успели попасть на всё",
     ],
   },
   {
@@ -728,9 +743,17 @@ const tickets = [
     tier: "vip",
     price: "3 990 ₽",
     note: "Количество мест строго ограничено",
+    visualLabel: "Максимум включено + бонусы",
     visualValue: "до 100 000 ₽",
-    visualNote: "Максимальная корзина подарков",
-    highlights: ["Первые ряды", "Закрытый нетворкинг", "Приоритетные разборы"],
+    visualNote: "Расширенный набор, записи и VIP-привилегии",
+    mockupImage: "/visuals/tariff-vip-v2.webp",
+    mockupAlt: "VIP-билет, рабочая тетрадь, записи выступлений и расширенный набор подарков",
+    mockupItems: [
+      { title: "Записи всех спикеров", note: "Смотрите после фестиваля" },
+      { title: "до 100 000 ₽", note: "Подарки и сертификаты" },
+      { title: "VIP-доступ", note: "Первые ряды и закрытый нетворкинг" },
+    ],
+    highlights: ["Подарки до 100 000 ₽", "Записи всех спикеров", "VIP-доступ и первые ряды"],
     nextPrice: "5 990 ₽",
     finalPrice: "7 990 ₽",
     description: "Максимальный уровень участия, личного общения и комфорта на фестивале.",
@@ -745,7 +768,7 @@ const tickets = [
       "Приоритетная запись на экспертные разборы от спикеров",
       "Увеличенная корзина подарков и сертификатов на сумму до 100 000 ₽",
       "Доступ в закрытый Telegram-чат участников",
-      "Полезные материалы и видеозаписи выступлений после события",
+      "Полезные материалы и записи выступлений всех спикеров после события",
       "Профессиональные фотографии с площадки",
       "Приглашение на закрытые встречи проекта после фестиваля",
     ],
@@ -795,7 +818,7 @@ function BonusSection() {
           <article><span>03</span><h3>Кафе и рестораны</h3><p>Депозиты, сертификаты, гастрономические наборы и предложения food-партнёров.</p></article>
           <article><span>04</span><h3>Консультации спикеров</h3><p>Личные разборы по отношениям, психологии, здоровью, деньгам, карьере и самореализации.</p></article>
           <article><span>05</span><h3>Обучение и развитие</h3><p>Мастер-классы, практикумы, игры, тренинги и участие в клубных программах.</p></article>
-          <article><span>06</span><h3>Товары партнёров</h3><p>Косметика, парфюмерия, БАДы, продукты, одежда, аксессуары, книги и товары брендов.</p></article>
+          <article><span>06</span><h3>Товары партнёров</h3><p>Косметика, парфюмерия, БАДы, продукты, одежда, аксессуары и товары брендов.</p></article>
         </div>
 
         <div className="bonus-process">
@@ -1363,7 +1386,7 @@ export default function Home() {
           <div className="section-heading center-heading">
             <p className="section-label">Выбирайте глубину участия</p>
             <h2>Билеты на <span>фестиваль</span></h2>
-            <p>Один день, три формата. Чем выше тариф, тем больше личной работы, комфорта и доступа к экспертам.</p>
+            <p>«Старт» - билет и рабочая тетрадь. С «Перезагрузки» добавляются записи выступлений всех спикеров, подарки и дополнительные привилегии.</p>
           </div>
           <div className="pricing-grid">
             {tickets.map((ticket) => (
@@ -1372,23 +1395,26 @@ export default function Home() {
                 <div className="price-head"><h3>{ticket.name}</h3><strong>{ticket.price}</strong><span>{ticket.note}</span></div>
                 <div className={`ticket-showcase ticket-showcase-${ticket.tier}`} aria-label={`Главные преимущества тарифа ${ticket.name}`}>
                   <div className="ticket-showcase-head">
-                    <span>{ticket.tier === "start" ? "Входит в билет" : "Ваш бонусный фонд"}</span>
+                    <span>{ticket.visualLabel}</span>
                     <strong>{ticket.visualValue}</strong>
                     <small>{ticket.visualNote}</small>
                   </div>
-                  <div className="ticket-book-product">
-                    <div className="ticket-book-title" aria-hidden="true">
-                      <span>Подарочное издание</span>
-                      <strong>Мужчина<br />и Женщина</strong>
-                      <b>Перезагрузка</b>
-                      <small>Рабочая тетрадь участника</small>
-                    </div>
+                  <div className={`ticket-product-scene ticket-product-scene-${ticket.tier}`}>
+                    <img src={ticket.mockupImage} alt={ticket.mockupAlt} />
+                    <span className="ticket-product-kicker">
+                      {ticket.tier === "start" ? "Комплект участника" : ticket.tier === "reload" ? "Бонусы начинаются здесь" : "Максимальная комплектация"}
+                    </span>
                   </div>
                   <div className={`ticket-bonus-stack ticket-bonus-stack-${ticket.tier}`}>
-                    <span><b>Билет</b><small>Весь фестивальный день</small></span>
-                    <span><b>Книга</b><small>Программа и практики</small></span>
-                    {ticket.tier !== "start" && <span className="ticket-bonus-gold"><b>{ticket.tier === "vip" ? "100 000 ₽" : "50 000 ₽"}</b><small>Подарки на выбор</small></span>}
-                    {ticket.tier === "vip" && <span className="ticket-bonus-dark"><b>VIP-доступ</b><small>Первые ряды и нетворкинг</small></span>}
+                    {ticket.mockupItems.map((item) => (
+                      <span
+                        className={item.title.includes("₽") ? "ticket-bonus-gold" : item.title === "VIP-доступ" ? "ticket-bonus-dark" : ""}
+                        key={item.title}
+                      >
+                        <b>{item.title}</b>
+                        <small>{item.note}</small>
+                      </span>
+                    ))}
                   </div>
                   <div className="ticket-highlight-list">
                     {ticket.highlights.map((highlight) => <span key={highlight}>{highlight}</span>)}
