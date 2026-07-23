@@ -285,32 +285,37 @@ const formats = [
   {
     number: "01",
     title: "Главная сцена",
-    text: "Выступления спикеров, панельные дискуссии, батлы и открытые обсуждения. Разные точки зрения и реальные способы решать конфликты.",
+    benefit: "Понять, что происходит в ваших отношениях",
+    text: "Сильные выступления, честные дискуссии и разборы реальных ситуаций - без скучных лекций и общих советов.",
     image: "https://noname-events.ru/mj/main-scene.jpg",
   },
   {
     number: "02",
     title: "Нетворкинг-пространство",
-    text: "Специальные форматы общения помогут познакомиться с людьми вашего уровня мышления и ценностей - для идей, партнерств и новых отношений.",
+    benefit: "Встретить людей своего уровня и ценностей",
+    text: "Знакомства не остаются на волю случая: ведущие, вопросы и механики общения помогают начать настоящий разговор.",
     image: "https://noname-events.ru/mj/networking.jpg",
   },
   {
     number: "03",
     title: "Экспертная маркет-зона",
-    text: "50+ экспонентов, тематические зоны и личное общение с психологами, практиками и телесными специалистами. Можно получить консультацию и разбор.",
+    benefit: "Получить личный ответ на свой вопрос",
+    text: "Психологи, телесные специалисты и практики работают с участниками лично: консультации, мини-диагностики и точечные разборы.",
     image: "https://noname-events.ru/mj/market.jpg",
   },
   {
     number: "04",
     title: "Система браслетов",
-    text: "Цвет браслета показывает, кто открыт к знакомству. А «Код связи» и специальные вопросы помогают начать не с формальностей, а с разговора о ценностях и намерениях.",
-    image: "https://images.pexels.com/photos/118033/pexels-photo-118033.jpeg?auto=compress&cs=tinysrgb&w=1200",
+    benefit: "Снять первый барьер для знакомства",
+    text: "Цвет сразу показывает комфортный формат общения. Вы понимаете, к кому можно подойти, еще до первого слова.",
+    imageClass: "format-image-bracelets",
   },
   {
     number: "05",
     title: "Еще больше форматов",
-    text: "Партнерские активности, мастер-классы, speed dating, практики и открытый нетворкинг в течение всего фестивального дня.",
-    image: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1600&q=86",
+    benefit: "Не просто слушать - прожить этот день",
+    text: "Speed dating, мастер-классы, групповые практики, партнерские активности и открытый нетворкинг в течение всего фестиваля.",
+    imageClass: "format-image-editorial",
   },
 ];
 
@@ -906,7 +911,6 @@ export default function Home() {
   });
   const [connectionResult, setConnectionResult] = useState<{ primary: ConnectionCode; secondary: ConnectionCode } | null>(null);
   const connectionQuizRef = useRef<HTMLDivElement>(null);
-  const formatsRef = useRef<HTMLDivElement>(null);
   const speakersRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -1219,29 +1223,27 @@ export default function Home() {
             <h2>Пять форматов <span>одного сильного дня</span></h2>
             <p>От общего опыта на главной сцене до точечных знакомств и личных разборов.</p>
           </div>
-          <div className="formats-track" ref={formatsRef}>
-            {formats.map((format) => (
-              <article className="format-card" key={format.number}>
-                {format.image ? (
-                  <div className="format-image" style={{ backgroundImage: `url(${format.image})` }}>
+          <div className="formats-track">
+            {formats.map((format, index) => (
+              <article className={`format-card format-card-${index + 1}`} key={format.number}>
+                {format.image || format.imageClass ? (
+                  <div className={`format-image ${format.imageClass ?? ""}`} style={format.image ? { backgroundImage: `url(${format.image})` } : undefined}>
                     <span>{format.number}</span>
                   </div>
                 ) : (
                   <div className="format-graphic"><span>{format.number}</span><strong>МЖ</strong></div>
                 )}
                 <div className="format-content">
+                  <span className="format-benefit">{format.benefit}</span>
                   <h3>{format.title}</h3>
                   <p>{format.text}</p>
                 </div>
               </article>
             ))}
           </div>
-          <div className="slider-footer">
-            <div className="scroll-hint">Листайте карточки</div>
-            <div className="slider-controls" aria-label="Навигация по форматам">
-              <button type="button" onClick={() => scrollSlider(formatsRef.current, -1)} aria-label="Предыдущие форматы"><ChevronIcon direction="left" /></button>
-              <button type="button" onClick={() => scrollSlider(formatsRef.current, 1)} aria-label="Следующие форматы"><ChevronIcon direction="right" /></button>
-            </div>
+          <div className="formats-total">
+            <strong>5 форматов</strong>
+            <span>Все входят в один фестивальный день</span>
           </div>
         </div>
       </section>
@@ -1263,22 +1265,25 @@ export default function Home() {
           </div>
 
           <div className="bracelet-stage" aria-label="Значения браслетов фестиваля">
-            <div className="bracelet-orbit bracelet-green">
-              <span>Открыт к знакомствам</span>
-              <strong>Хочу встретить своего человека</strong>
+            <div className="bracelet-product" role="img" aria-label="Зеленый, желтый и красный браслеты фестиваля">
+              <div className="bracelet-product-caption">
+                <span>Вы получаете браслет на входе</span>
+                <strong>Цвет говорит за вас</strong>
+              </div>
             </div>
-            <div className="bracelet-orbit bracelet-yellow">
-              <span>Открыт к общению</span>
-              <strong>Можно подойти и начать разговор</strong>
-            </div>
-            <div className="bracelet-orbit bracelet-red">
-              <span>Не знакомлюсь</span>
-              <strong>Пришёл в паре или только за программой</strong>
-            </div>
-            <div className="bracelet-center">
-              <span>МЖ</span>
-              <strong>Ваш цвет снимает первый барьер</strong>
-              <p>Дальше остаётся только сказать: «Привет».</p>
+            <div className="bracelet-legend">
+              <article className="bracelet-legend-green">
+                <b aria-hidden="true" />
+                <div><span>Зелёный</span><strong>Открыт к знакомствам</strong><p>Хочу встретить своего человека.</p></div>
+              </article>
+              <article className="bracelet-legend-yellow">
+                <b aria-hidden="true" />
+                <div><span>Жёлтый</span><strong>Открыт к общению</strong><p>Можно подойти и начать разговор.</p></div>
+              </article>
+              <article className="bracelet-legend-red">
+                <b aria-hidden="true" />
+                <div><span>Красный</span><strong>Не знакомлюсь</strong><p>Пришёл в паре или только за программой.</p></div>
+              </article>
             </div>
           </div>
         </div>
@@ -1371,11 +1376,19 @@ export default function Home() {
                     <strong>{ticket.visualValue}</strong>
                     <small>{ticket.visualNote}</small>
                   </div>
-                  <div className="ticket-mockups" aria-hidden="true">
-                    <div className="mockup-pass"><em>Билет</em><span>МЖ</span><b>{ticket.tier === "vip" ? "VIP" : ticket.name}</b><small>22.08.2026</small></div>
-                    <div className="mockup-program"><em>PDF</em><span>Электронная</span><b>Программа</b><i /></div>
-                    {ticket.tier !== "start" && <div className="mockup-gift"><em>Сертификаты</em><span>Подарки</span><b>{ticket.tier === "vip" ? "100К" : "50К"}</b><small>соберите на выбор</small></div>}
-                    {ticket.tier === "vip" && <div className="mockup-vip"><em>VIP</em><span>Закрытый</span><b>доступ</b><small>спикеры · VIP-зона</small></div>}
+                  <div className="ticket-book-product">
+                    <div className="ticket-book-title" aria-hidden="true">
+                      <span>Подарочное издание</span>
+                      <strong>Мужчина<br />и Женщина</strong>
+                      <b>Перезагрузка</b>
+                      <small>Рабочая тетрадь участника</small>
+                    </div>
+                  </div>
+                  <div className={`ticket-bonus-stack ticket-bonus-stack-${ticket.tier}`}>
+                    <span><b>Билет</b><small>Весь фестивальный день</small></span>
+                    <span><b>Книга</b><small>Программа и практики</small></span>
+                    {ticket.tier !== "start" && <span className="ticket-bonus-gold"><b>{ticket.tier === "vip" ? "100 000 ₽" : "50 000 ₽"}</b><small>Подарки на выбор</small></span>}
+                    {ticket.tier === "vip" && <span className="ticket-bonus-dark"><b>VIP-доступ</b><small>Первые ряды и нетворкинг</small></span>}
                   </div>
                   <div className="ticket-highlight-list">
                     {ticket.highlights.map((highlight) => <span key={highlight}>{highlight}</span>)}
