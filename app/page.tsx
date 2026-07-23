@@ -273,21 +273,12 @@ const speakers: Speaker[] = [
   },
 ];
 
-const heroSlides = [
-  {
-    name: "Александра Кардаш и Сергей Шиц",
-    topic: "Взаимодействие в паре: теория и практика",
-    image: "/speakers/kardash-shits.webp",
-    imagePosition: "center 28%",
-  },
-  ...speakers
-    .filter((speaker) => speaker.image && speaker.name !== "Александра Кардаш" && speaker.name !== "Сергей Шиц")
-    .map((speaker) => ({
-      name: speaker.name,
-      topic: speaker.topic,
-      image: speaker.image as string,
-      imagePosition: speaker.imagePosition ?? "center center",
-    })),
+const introPromises = [
+  "Без скучных лекций",
+  "Честные разговоры",
+  "Реальные ситуации",
+  "Практики и знакомства",
+  "Конкретные ответы",
 ];
 
 const formats = [
@@ -328,6 +319,7 @@ const audience = [
     number: "01",
     label: "Если вы в поиске отношений",
     title: "Новый союз без старых сценариев",
+    image: "/stories/audience-search.webp",
     points: [
       "Поймете, почему выбираете «не тех» и как найти партнера с похожими ценностями",
       "Узнаете, как восстановиться после расставания и снова открыться любви",
@@ -338,6 +330,7 @@ const audience = [
     number: "02",
     label: "Если вы в отношениях",
     title: "Пара как команда, а не поле борьбы",
+    image: "/stories/audience-conflict.webp",
     points: [
       "Поймете, как слышать партнера и не превращать разговор в ссору",
       "Узнаете, как перестать конкурировать и стать настоящей командой",
@@ -348,6 +341,7 @@ const audience = [
     number: "03",
     label: "Если вы давно вместе",
     title: "Близость, которая выдерживает время",
+    image: "/stories/audience-longterm.webp",
     points: [
       "Поймете, как вернуть страсть и оставаться интересными друг другу",
       "Получите новые способы проходить кризисы без разрушения семьи",
@@ -428,23 +422,27 @@ const connectionQuestions: ConnectionQuestion[] = [
 
 const connectionResults: Record<ConnectionCode, {
   label: string;
-  symbol: string;
   title: string;
   summary: string;
+  scenario: string;
+  strength: string;
+  partner: string;
   blindSpot: string;
-  questions: string[];
+  steps: string[];
   route: SpeakerRoute[];
 }> = {
   dialogue: {
     label: "Диалог",
-    symbol: "Д",
     title: "Вам по пути с теми, с кем можно говорить прямо",
     summary: "Вам важны ясность намерений, честные слова и ощущение, что сложную тему можно обсудить, не разрушая контакт.",
+    scenario: "Вы сближаетесь через разговор и ясность. Если человек уходит от прямых ответов, вы быстро теряете ощущение безопасности и начинаете искать скрытый смысл.",
+    strength: "Вы умеете называть сложное словами, договариваться и возвращать отношениям определённость.",
+    partner: "Эмоционально доступный человек, который не играет в молчание, умеет обсуждать конфликт и подтверждает слова поступками.",
     blindSpot: "Вы можете слишком долго искать окончательную определённость и принимать чужую осторожность за отсутствие интереса.",
-    questions: [
-      "О чём тебе особенно трудно говорить в отношениях?",
-      "По каким словам и поступкам ты понимаешь, что человеку можно доверять?",
-      "Как выглядит хороший конфликт, после которого пара становится ближе?",
+    steps: [
+      "Не требуйте полной определённости в первые дни - оценивайте последовательность человека, а не скорость признаний.",
+      "Перед сложным разговором формулируйте один конкретный запрос вместо списка накопленных претензий.",
+      "Смотрите, умеет ли человек не только говорить, но и менять поведение после договорённости.",
     ],
     route: [
       {
@@ -461,14 +459,16 @@ const connectionResults: Record<ConnectionCode, {
   },
   support: {
     label: "Опора",
-    symbol: "О",
     title: "Вы выбираете любовь, которую видно в поступках",
     summary: "Вам нужны надёжность, последовательность и партнёрство, в котором двое не конкурируют, а создают устойчивую общую жизнь.",
+    scenario: "Вы проявляете любовь через заботу и реальные действия. В отношениях легко становитесь тем, на ком держится быт, планы и эмоциональная устойчивость пары.",
+    strength: "Рядом с вами спокойно: вы надёжны, внимательны и умеете создавать устойчивость без громких обещаний.",
+    partner: "Самостоятельный и последовательный человек, который умеет принимать заботу, но не перекладывает на вас ответственность за свою жизнь.",
     blindSpot: "Иногда вы можете брать на себя слишком много ответственности и незаметно превращать заботу в контроль.",
-    questions: [
-      "Что для тебя означает быть командой в обычной жизни?",
-      "В какой момент забота начинает ощущаться как контроль?",
-      "Как ты обычно показываешь человеку: на меня можно положиться?",
+    steps: [
+      "Перед помощью спрашивайте: человек просит поддержки или вы спасаете его от последствий собственного выбора.",
+      "Разделите постоянные обязанности пары и перестаньте молча компенсировать чужую безответственность.",
+      "Оценивайте взаимность не по словам благодарности, а по регулярным действиям партнёра.",
     ],
     route: [
       {
@@ -485,14 +485,16 @@ const connectionResults: Record<ConnectionCode, {
   },
   spark: {
     label: "Искра",
-    symbol: "И",
     title: "Вам нужна связь, в которой жизнь становится ярче",
     summary: "Вас сближают энергия, телесность, юмор и новые впечатления. В отношениях для вас важно не только спокойствие, но и живое желание.",
+    scenario: "Вы быстро чувствуете химию и оживаете рядом с человеком, который приносит движение, юмор и новые впечатления. Рутина для вас опаснее открытого конфликта.",
+    strength: "Вы умеете наполнять союз энергией, проявлять желание и превращать обычную жизнь в совместное приключение.",
+    partner: "Живой, инициативный и телесно открытый человек, который любит новое, но способен выдерживать обязательства и повседневность.",
     blindSpot: "Сильное притяжение может казаться доказательством совместимости раньше, чем вы успеете увидеть ценности и надёжность человека.",
-    questions: [
-      "Что помогает тебе сохранять интерес в долгих отношениях?",
-      "Какое совместное приключение ты хотел бы прожить в ближайший год?",
-      "Что для тебя важнее в притяжении: телесность, юмор или восхищение человеком?",
+    steps: [
+      "Не принимайте сильную химию за готовую совместимость - проверьте ценности, границы и отношение к обязательствам.",
+      "Планируйте одно новое совместное впечатление каждую неделю, не дожидаясь, пока отношения станут скучными.",
+      "Говорите о желании прямо, а не проверяйте любовь партнёра через дистанцию и провокации.",
     ],
     route: [
       {
@@ -509,14 +511,16 @@ const connectionResults: Record<ConnectionCode, {
   },
   space: {
     label: "Пространство",
-    symbol: "П",
     title: "Вы ищете близость, в которой не нужно терять себя",
     summary: "Для вас любовь совместима со свободой, личным ритмом и уважением границ. Вам важно, чтобы союз расширял жизнь обоих.",
+    scenario: "Вы цените связь, но плохо переносите контроль и слияние. Когда партнёр требует постоянного подтверждения любви, вам хочется отойти и восстановить внутреннюю свободу.",
+    strength: "Вы уважаете индивидуальность, не душите близостью и умеете строить отношения двух самостоятельных людей.",
+    partner: "Уверенный в себе человек с собственной жизнью, который способен быть близко без контроля, ревности и постоянной проверки чувств.",
     blindSpot: "За самостоятельностью иногда может прятаться страх показать потребность в другом человеке или попросить о поддержке.",
-    questions: [
-      "Что для тебя означает свобода внутри отношений?",
-      "Как понять, что человеку нужно пространство, а не дистанция?",
-      "В какой ситуации тебе особенно сложно попросить о помощи?",
+    steps: [
+      "Заранее объясняйте, сколько личного времени вам нужно и что дистанция не означает отказ от отношений.",
+      "Тренируйтесь просить о конкретной помощи до того, как усталость превратится в холодность.",
+      "Отличайте нарушение границ от обычной потребности партнёра в контакте и ясности.",
     ],
     route: [
       {
@@ -533,14 +537,16 @@ const connectionResults: Record<ConnectionCode, {
   },
   depth: {
     label: "Глубина",
-    symbol: "Г",
     title: "Вам важна встреча не ролей, а настоящих людей",
     summary: "Вы ищете смысл, эмоциональную честность и возможность быть увиденным целиком — не только сильным, удобным или успешным.",
+    scenario: "Вы редко удовлетворяетесь поверхностной симпатией. Вам важно быстро почувствовать эмоциональную правду человека и понять, можно ли рядом показать уязвимую часть себя.",
+    strength: "Вы способны видеть человека глубже роли, создавать доверие и выдерживать разговоры, которых другие избегают.",
+    partner: "Эмоционально зрелый человек, который не боится уязвимости, но умеет сохранять лёгкость и не превращает близость в бесконечный анализ.",
     blindSpot: "Вы можете ждать мгновенной глубины и недооценивать отношения, которым нужно время, лёгкость и совместный опыт.",
-    questions: [
-      "Что ты хотел бы, чтобы близкий человек понимал о тебе без объяснений?",
-      "Какая часть тебя редко получает место в отношениях?",
-      "Что для тебя значит быть эмоционально доступным?",
+    steps: [
+      "Давайте отношениям время: надёжная глубина часто растёт медленнее сильного эмоционального узнавания.",
+      "Добавляйте в общение действие, юмор и телесность, чтобы близость не превращалась в постоянный разбор чувств.",
+      "Проверяйте, способен ли человек выдерживать вашу правду, не требуя мгновенного полного раскрытия.",
     ],
     route: [
       {
@@ -565,56 +571,86 @@ const connectionStatusCopy: Record<ConnectionStatus, string> = {
 };
 
 const talkTopics = [
-  "Почему успешные люди разрушают отношения",
-  "Деньги в паре: общий бюджет или личная территория",
-  "Взрослая любовь после 35",
-  "Мужская ответственность в 2026 году",
-  "Женская сила без конкуренции с мужчиной",
-  "Психология измен в сильных парах",
-  "Как сохранить страсть после 10 лет брака",
-  "Сепарация от родителей без войны",
-  "Карьера и семья без взаимных жертв",
-  "Брак как партнерство: модель CEO + CEO",
+  "Возможно ли встретить любовь после 35?",
+  "Должна ли женщина вкладываться в семейный бюджет?",
+  "Можно ли простить измену и сохранить отношения?",
+  "Почему успешные женщины выбирают недоступных мужчин?",
+  "Что убивает секс в длительных отношениях?",
+  "Кто должен зарабатывать больше?",
+  "Как не стать мамой собственному мужчине?",
+  "Можно ли построить отношения и не потерять себя?",
 ];
 
 const program = [
   {
-    label: "Блок 1",
-    title: "Сценарии выбора",
+    label: "Почему вы снова выбираете не тех?",
+    title: "Сценарии, которые управляют любовью",
     topics: [
       "Почему мы снова выбираем не тех людей?",
       "Что мы на самом деле приносим в отношения: сценарии, родовые программы, деньги, страхи и ожидания",
     ],
+    speakers: "Дмитрий Елунин · Евгения Цапина",
+    result: "Увидите свой повторяющийся сценарий и поймёте, где можно остановить его до нового разочарования.",
   },
   {
-    label: "Блок 2",
-    title: "Поиск отношений",
-    topics: ["Как встретить мужчину мечты в большом городе?"],
+    label: "Можно ли встретить своего человека?",
+    title: "Поиск без самообмана и случайных связей",
+    topics: ["Как встретить мужчину мечты в большом городе?", "Мой человек или не мой: красные и зелёные флаги"],
+    speakers: "Таня Щербакова · Виктория Орженевская",
+    result: "Сформируете критерии выбора и поймёте, кого больше не стоит пытаться переделывать.",
   },
   {
-    label: "Блок 3",
-    title: "Когда отношения уже начались",
+    label: "Почему вы любите, но не слышите друг друга?",
+    title: "Конфликт без разрушения близости",
     topics: [
       "Взаимодействие в паре. Теория и практика",
       "Вы не несовместимы. Вы просто неправильно ссоритесь",
     ],
+    speakers: "Александра Кардаш и Сергей Шиц · Александр Кардашов",
+    result: "Распознаете свой сценарий ссоры и получите способ вернуть разговор до взаимных обвинений.",
   },
   {
-    label: "Блок 4",
-    title: "Близость",
-    topics: ["Классный секс начинается не в постели", "Секс становится обязанностью"],
+    label: "Куда исчезает желание?",
+    title: "Тело, секс и близость после рутины",
+    topics: ["Классный секс начинается не в постели", "Секс становится обязанностью", "Как вернуть себе желание и вкус к жизни"],
+    speakers: "Мария Соломатина · Анна Рацун · Ольга Жильникова",
+    result: "Поймёте, что именно выключает желание в вашей паре и с какого безопасного шага его возвращать.",
   },
   {
-    label: "Блок 5",
-    title: "Деньги",
-    topics: ["Почему деньги приходят, но не остаются? Пять финансовых сценариев семьи"],
+    label: "Кто в паре платит за всё?",
+    title: "Деньги, ответственность и скрытая власть",
+    topics: ["Почему деньги приходят, но не остаются?", "Как обсуждать вклад каждого без стыда, контроля и борьбы"],
+    speakers: "Олеся Дроздова · Инна Мартынова",
+    result: "Определите финансовый сценарий пары и подготовите разговор о деньгах без нападения и оправданий.",
   },
   {
-    label: "Блок 6",
-    title: "Новый взгляд",
-    topics: ["Пространство между вами: как БаЦзы помогает создать союз, в котором оба расцветают"],
+    label: "Как не потерять себя в союзе?",
+    title: "Границы, энергия и движение дальше",
+    topics: ["Пространство между вами: союз, в котором оба расцветают", "Хорошая не значит удобная", "Энергия движения без потери интереса"],
+    speakers: "Алёна Пересада · Светлана Федосеева · Люси Беликова · Катия Шведова",
+    result: "Соберёте личный следующий шаг, который сохраняет отношения, карьеру и собственный голос.",
   },
 ];
+
+const speakerOutcomes: Record<string, string> = {
+  "Александра Кардаш": "Почувствуете, где в паре заканчивается контакт и начинается борьба за контроль.",
+  "Анна Рацун": "Поймёте, почему близость стала обязанностью и как возвращать желание без давления.",
+  "Инна Мартынова": "Увидите, где забота превратилась в роль мамы, и вернёте ответственность партнёру.",
+  "Евгения Цапина": "Распознаете семейный сценарий, который незаметно управлял вашими отношениями.",
+  "Дмитрий Елунин": "Поймёте, почему снова выбираете похожих людей и как прекратить повторение.",
+  "Сергей Шиц": "Через тело заметите привычную реакцию на партнёра и попробуете новый способ контакта.",
+  "Таня Щербакова": "Получите конкретный маршрут знакомств в большом городе без бесконечной переписки.",
+  "Алёна Пересада": "Увидите, где союз усиливает обоих, а где партнёры невольно гасят друг друга.",
+  "Александр Кардашов": "Определите свой тип поведения в ссоре и способ остановить конфликт вовремя.",
+  "Ольга Жильникова": "Найдёте точку, в которой блокируется сексуальность, и первый шаг к телу.",
+  "Люси Беликова": "Поймёте, куда уходит ваша энергия и как снова начать выбирать себя.",
+  "Олеся Дроздова": "Определите финансовый сценарий семьи и место, где из пары утекают деньги.",
+  "Виктория Орженевская": "Отделите реальные признаки совместимости от надежды переделать партнёра.",
+  "Мария Соломатина": "Свяжете желание с состоянием тела и поймёте, что менять вне спальни.",
+  "Светлана Федосеева": "Вернёте себе границы без чувства вины и войны с близкими.",
+  "Лариса Соколова": "Поймёте, как стресс, энергия и состояние организма влияют на близость.",
+  "Катия Шведова": "Соберёте систему движения вперёд, которая не держится на короткой мотивации.",
+};
 
 const partners = [
   { name: "Только по делу", image: "/partners/tolko.jpg" },
@@ -658,12 +694,16 @@ const tickets = [
     description: "Для тех, кто хочет активно включиться, поработать со своими запросами и получить максимум пользы.",
     featured: true,
     items: [
-      "Всё из тарифа «Старт»",
+      "Вход на фестиваль на весь день",
+      "Доступ ко всем выступлениям основной сцены",
+      "Участие в общих практиках и интерактивах",
+      "Доступ в экспертные и бренд-зоны",
+      "Знакомства и открытый нетворкинг",
+      "Электронная программа и рабочая тетрадь",
       "Места в приоритетной зоне перед сценой",
       "Отдельная быстрая регистрация без общей очереди",
       "Приоритетный доступ на практики с ограниченным количеством участников",
       "Возможность заранее выбрать одну экспертную мини-диагностику",
-      "Рабочая тетрадь участника фестиваля",
       "Индивидуальная корзина подарков и сертификатов на сумму до 50 000 ₽",
       "Доступ в закрытый Telegram-чат участников",
       "Полезные материалы от спикеров после события",
@@ -678,12 +718,17 @@ const tickets = [
     finalPrice: "7 990 ₽",
     description: "Максимальный уровень участия, личного общения и комфорта на фестивале.",
     items: [
-      "Всё из тарифа «Перезагрузка»",
+      "Вход на фестиваль на весь день и доступ ко всем выступлениям",
+      "Участие во всех общих практиках и интерактивах",
+      "Доступ в экспертные и бренд-зоны",
+      "Электронная программа и рабочая тетрадь",
       "Лучшие места в первых рядах",
       "Отдельная VIP-регистрация",
       "Закрытая встреча и нетворкинг со спикерами, партнёрами и организаторами",
       "Приоритетная запись на экспертные разборы от спикеров",
       "Увеличенная корзина подарков и сертификатов на сумму до 100 000 ₽",
+      "Доступ в закрытый Telegram-чат участников",
+      "Полезные материалы и видеозаписи выступлений после события",
       "Профессиональные фотографии с площадки",
       "Приглашение на закрытые встречи проекта после фестиваля",
     ],
@@ -706,11 +751,138 @@ function ChevronIcon({ direction }: { direction: "left" | "right" }) {
   );
 }
 
+function BonusSection() {
+  return (
+    <section className="section bonus-section" id="bonuses">
+      <div className="container">
+        <div className="bonus-hero">
+          <div className="bonus-copy">
+            <p className="section-label">Подарочный фонд фестиваля</p>
+            <h2>Соберите подарки на <span>50 000 или 100 000 ₽</span></h2>
+            <p className="bonus-lead">Вы сами собираете индивидуальную корзину из доступных сертификатов, услуг и товаров спикеров, спонсоров и партнёров - без случайного набора ненужных купонов.</p>
+            <div className="bonus-rule"><strong>от 5 000 ₽</strong><span>номинал сертификатов в каталоге</span></div>
+          </div>
+          <div className="bonus-tiers" aria-label="Подарки по тарифам">
+            <article><span>Тариф</span><h3>Перезагрузка</h3><strong>до 50 000 ₽</strong><p>в персональной корзине</p></article>
+            <article className="bonus-tier-vip"><span>Тариф</span><h3>VIP</h3><strong>до 100 000 ₽</strong><p>в расширенной корзине</p></article>
+          </div>
+        </div>
+
+        <div className="bonus-catalog-heading">
+          <p className="section-label">Выбирайте то, что нужно именно вам</p>
+          <h3>Что будет в каталоге подарков</h3>
+        </div>
+        <div className="bonus-grid">
+          <article><span>01</span><h3>SPA и восстановление</h3><p>SPA-комплексы, массаж, телесные практики, уходовые и расслабляющие процедуры.</p></article>
+          <article><span>02</span><h3>Здоровье и красота</h3><p>Диагностика, медицинские центры, косметология, салоны красоты и программы ухода.</p></article>
+          <article><span>03</span><h3>Кафе и рестораны</h3><p>Депозиты, сертификаты, гастрономические наборы и предложения food-партнёров.</p></article>
+          <article><span>04</span><h3>Консультации спикеров</h3><p>Личные разборы по отношениям, психологии, здоровью, деньгам, карьере и самореализации.</p></article>
+          <article><span>05</span><h3>Обучение и развитие</h3><p>Мастер-классы, практикумы, игры, тренинги и участие в клубных программах.</p></article>
+          <article><span>06</span><h3>Товары партнёров</h3><p>Косметика, парфюмерия, БАДы, продукты, одежда, аксессуары, книги и товары брендов.</p></article>
+        </div>
+
+        <div className="bonus-process">
+          <div className="bonus-process-heading"><p className="section-label">Три шага</p><h3>Вы выбираете - мы отправляем</h3></div>
+          <ol>
+            <li><b>01</b><div><strong>Выберите тариф</strong><p>«Перезагрузка» - корзина до 50 000 ₽. VIP - до 100 000 ₽.</p></div></li>
+            <li><b>02</b><div><strong>Соберите набор на фестивале</strong><p>Выберите из актуального каталога то, чем действительно будете пользоваться.</p></div></li>
+            <li><b>03</b><div><strong>Получите сертификаты</strong><p>На следующий день организаторы отправят выбранный набор и инструкции по активации.</p></div></li>
+          </ol>
+        </div>
+        <p className="bonus-footnote">Состав каталога зависит от подтверждённых предложений партнёров. Конкретные услуги, сроки действия и доступность выбора будут указаны в каталоге фестиваля.</p>
+      </div>
+    </section>
+  );
+}
+
+function ProgramSection() {
+  return (
+    <section className="section program-section" id="program">
+      <div className="container">
+        <div className="section-heading split-heading">
+          <div><p className="section-label">22 августа · начало в 12:00</p><h2>Не расписание лекций.<br /><span>Маршрут изменений.</span></h2></div>
+          <p>Шесть смысловых частей проведут от повторяющихся сценариев к понятному следующему шагу в знакомствах, близости, деньгах и границах.</p>
+        </div>
+        <div className="program-list">
+          {program.map((block, index) => (
+            <article className={`program-card program-card-${(index % 4) + 1}`} key={block.label}>
+              <div className="program-number">{String(index + 1).padStart(2, "0")}</div>
+              <div className="program-copy">
+                <span>{block.label}</span>
+                <h3>{block.title}</h3>
+                <ul>{block.topics.map((topic) => <li key={topic}>{topic}</li>)}</ul>
+                <p className="program-speakers"><b>Спикеры:</b> {block.speakers}</p>
+                <p className="program-result"><b>Результат:</b> {block.result}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+        <p className="program-note">Точные время и распределение по двум залам будут опубликованы после финального согласования программы.</p>
+      </div>
+    </section>
+  );
+}
+
+function SpeakersSection({
+  trackRef,
+  onSelect,
+  onScroll,
+}: {
+  trackRef: { current: HTMLDivElement | null };
+  onSelect: (speaker: Speaker) => void;
+  onScroll: (direction: -1 | 1) => void;
+}) {
+  return (
+    <>
+      <section className="section speakers-section" id="speakers">
+        <div className="container">
+          <div className="section-heading center-heading">
+            <p className="section-label">Психологи · сексологи · коучи · терапевты</p>
+            <h2>Спикеры <span>фестиваля</span></h2>
+            <p>На карточке сразу видно тему, подтверждённый факт и конкретный результат для участника.</p>
+          </div>
+          <div className="speakers-track" ref={trackRef}>
+            {speakers.map((speaker, index) => (
+              <button className="speaker-card" key={speaker.name} onClick={() => onSelect(speaker)}>
+                <div className={`speaker-visual ${speaker.tone}${speaker.image ? " has-photo" : ""}`}>
+                  {speaker.image && <img src={speaker.image} alt={speaker.name} loading="lazy" style={{ objectPosition: speaker.imagePosition }} />}
+                  <span className="speaker-index">{String(index + 1).padStart(2, "0")}</span>
+                  {!speaker.image && <strong>{speaker.initials}</strong>}
+                  <span className="speaker-open"><ArrowIcon /></span>
+                  <span className="speaker-action">Нажмите - подробнее</span>
+                </div>
+                <div className="speaker-card-copy">
+                  <h3>{speaker.name}</h3>
+                  <p>{speaker.role}</p>
+                  <span className="speaker-topic">Тема: {speaker.topic}</span>
+                  <strong className="speaker-proof">{speaker.facts[0]}</strong>
+                  <span className="speaker-outcome">Что получите: {speakerOutcomes[speaker.name]}</span>
+                </div>
+              </button>
+            ))}
+          </div>
+          <div className="slider-footer">
+            <div className="scroll-hint">Нажмите на карточку, чтобы узнать подробнее</div>
+            <div className="slider-controls" aria-label="Навигация по спикерам">
+              <button type="button" onClick={() => onScroll(-1)} aria-label="Предыдущие спикеры"><ChevronIcon direction="left" /></button>
+              <button type="button" onClick={() => onScroll(1)} aria-label="Следующие спикеры"><ChevronIcon direction="right" /></button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section className="section cta-section">
+        <div className="container cta-card">
+          <div><p className="section-label">Открыт набор экспертов</p><h2>Хотите стать <span>спикером фестиваля?</span></h2><p>Если у вас есть сильная практика и понятный результат для аудитории, оставляйте заявку на участие в программе.</p></div>
+          <a className="secondary-button" href={`${telegramUrl}?text=${encodeURIComponent("Хочу стать спикером фестиваля МЖ")}`} target="_blank" rel="noreferrer">Стать спикером <i className="button-icon"><ArrowIcon /></i></a>
+        </div>
+      </section>
+    </>
+  );
+}
+
 export default function Home() {
   const [selectedSpeaker, setSelectedSpeaker] = useState<Speaker | null>(null);
   const [cookieVisible, setCookieVisible] = useState(false);
-  const [heroSlideIndex, setHeroSlideIndex] = useState(0);
-  const [heroPaused, setHeroPaused] = useState(false);
   const [connectionStep, setConnectionStep] = useState(0);
   const [connectionStatus, setConnectionStatus] = useState<ConnectionStatus | null>(null);
   const [connectionScores, setConnectionScores] = useState<Record<ConnectionCode, number>>({
@@ -721,7 +893,6 @@ export default function Home() {
     depth: 0,
   });
   const [connectionResult, setConnectionResult] = useState<{ primary: ConnectionCode; secondary: ConnectionCode } | null>(null);
-  const heroPointerStart = useRef<number | null>(null);
   const connectionQuizRef = useRef<HTMLDivElement>(null);
   const formatsRef = useRef<HTMLDivElement>(null);
   const speakersRef = useRef<HTMLDivElement>(null);
@@ -739,34 +910,6 @@ export default function Home() {
       document.body.style.overflow = "";
     };
   }, [selectedSpeaker]);
-
-  useEffect(() => {
-    if (heroPaused) return;
-
-    const interval = window.setInterval(() => {
-      setHeroSlideIndex((current) => (current + 1) % heroSlides.length);
-    }, 1500);
-
-    return () => window.clearInterval(interval);
-  }, [heroPaused, heroSlideIndex]);
-
-  const changeHeroSlide = (direction: -1 | 1) => {
-    setHeroSlideIndex((current) => (current + direction + heroSlides.length) % heroSlides.length);
-  };
-
-  const startHeroSwipe = (clientX: number) => {
-    heroPointerStart.current = clientX;
-    setHeroPaused(true);
-  };
-
-  const finishHeroSwipe = (clientX: number) => {
-    if (heroPointerStart.current !== null) {
-      const distance = clientX - heroPointerStart.current;
-      if (Math.abs(distance) > 34) changeHeroSlide(distance < 0 ? 1 : -1);
-    }
-    heroPointerStart.current = null;
-    setHeroPaused(false);
-  };
 
   const startConnectionQuiz = () => {
     setConnectionStep(0);
@@ -822,8 +965,8 @@ export default function Home() {
         </a>
         <div className="nav-links">
           <a href="#connection-code"><span>●</span> Код связи</a>
-          <a href="#speakers"><span>●</span> Спикеры</a>
           <a href="#program"><span>●</span> Программа</a>
+          <a href="#speakers"><span>●</span> Спикеры</a>
           <a href="#partnership"><span>●</span> Партнерство</a>
           <a href="#pricing"><span>●</span> Тарифы</a>
           <a className="nav-gift-link" href="#bonuses"><span>●</span> Держи 100 000 ₽</a>
@@ -832,8 +975,8 @@ export default function Home() {
           <summary aria-label="Открыть меню">Меню</summary>
           <div>
             <a href="#connection-code">Код связи</a>
-            <a href="#speakers">Спикеры</a>
             <a href="#program">Программа</a>
+            <a href="#speakers">Спикеры</a>
             <a href="#partnership">Партнерство</a>
             <a href="#pricing">Тарифы</a>
             <a className="nav-gift-link" href="#bonuses">Держи 100 000 ₽</a>
@@ -854,67 +997,19 @@ export default function Home() {
             <div>
               <p className="kicker">Фестиваль отношений нового времени</p>
               <h1>Мужчина и Женщина.<br /><em>Перезагрузка</em></h1>
-              <p className="hero-lead">О любви, власти, деньгах и партнерстве в современном мире</p>
-              <p className="hero-copy">За один день вы поймете, как выстроить взрослый союз, где карьера, деньги и амбиции не мешают близости с любимым человеком.</p>
+              <p className="hero-lead">Для тех, кто хочет встретить своего человека, вернуть близость в паре или перестать повторять старые сценарии.</p>
+              <p className="hero-copy">За один день вы поймёте, что мешает вашим отношениям сейчас, и получите конкретный следующий шаг - к знакомству, близости или новому союзу.</p>
               <div className="hero-actions">
-                <a className="primary-button hero-button" href="#pricing"><span>Стать участником</span><i className="button-icon"><ArrowIcon /></i></a>
+                <a className="primary-button hero-button" href="#pricing"><span>Выбрать билет</span><i className="button-icon"><ArrowIcon /></i></a>
                 <a className="hero-quiz-link" href="#connection-code"><b>90 секунд</b><span>Узнать свой код связи</span></a>
               </div>
             </div>
-            <div className="hero-slider-column">
-              <div
-                className={`hero-date-card ${heroPaused ? "is-paused" : ""}`}
-                aria-label="Спикеры фестиваля. Удерживайте, чтобы остановить, и листайте свайпом"
-                onPointerDown={(event) => {
-                  if (event.pointerType !== "mouse") return;
-                  event.currentTarget.setPointerCapture(event.pointerId);
-                  startHeroSwipe(event.clientX);
-                }}
-                onPointerUp={(event) => {
-                  if (event.pointerType === "mouse") finishHeroSwipe(event.clientX);
-                }}
-                onPointerCancel={() => {
-                  heroPointerStart.current = null;
-                  setHeroPaused(false);
-                }}
-                onTouchStart={(event) => startHeroSwipe(event.touches[0].clientX)}
-                onTouchEnd={(event) => finishHeroSwipe(event.changedTouches[0].clientX)}
-                onTouchCancel={() => {
-                  heroPointerStart.current = null;
-                  setHeroPaused(false);
-                }}
-              >
-                <div className="hero-speaker-slides">
-                  {heroSlides.map((slide, index) => (
-                    <article
-                      className={`hero-speaker-slide ${index === heroSlideIndex ? "is-active" : ""}`}
-                      key={`${slide.name}-${index}`}
-                      aria-hidden={index !== heroSlideIndex}
-                    >
-                      <img
-                        src={slide.image}
-                        alt={index === heroSlideIndex ? slide.name : ""}
-                        style={{ objectPosition: slide.imagePosition }}
-                        draggable={false}
-                      />
-                      <div className="hero-magazine-shade" />
-                      <div className="hero-magazine-cover">
-                        <div className="hero-magazine-copy">
-                          <span>Спикер фестиваля</span>
-                          <h2>{slide.name}</h2>
-                          <p>{slide.topic}</p>
-                        </div>
-                      </div>
-                    </article>
-                  ))}
-                </div>
-              </div>
-              <div className="hero-slider-footer">
-                <a className="hero-speaker-hint" href="#speakers">Подробнее смотрите в разделе «Спикеры»</a>
-                <div className="hero-slider-controls" aria-label="Ручное переключение спикеров">
-                  <button type="button" onClick={() => changeHeroSlide(-1)} aria-label="Предыдущий спикер"><ChevronIcon direction="left" /></button>
-                  <button type="button" onClick={() => changeHeroSlide(1)} aria-label="Следующий спикер"><ChevronIcon direction="right" /></button>
-                </div>
+            <div className="hero-manifesto-card" aria-label="Главное о фестивале">
+              <div className="hero-manifesto-date"><strong>22</strong><span>августа<br />2026</span></div>
+              <div className="hero-manifesto-copy">
+                <span>Один день вместо ещё одного года сомнений</span>
+                <h2>Не идеальные отношения.<br />А <b>живые и взрослые.</b></h2>
+                <p>Сцена, практики, знакомства и личные ответы экспертов в одном пространстве.</p>
               </div>
             </div>
           </div>
@@ -922,7 +1017,7 @@ export default function Home() {
             <div><strong>8 часов</strong><span>погружения</span></div>
             <div><strong>500+</strong><span>участников</span></div>
             <div><strong>17+</strong><span>спикеров</span></div>
-            <div><strong>10+</strong><span>форматов</span></div>
+            <div><strong>5</strong><span>форматов</span></div>
           </div>
         </div>
       </section>
@@ -938,11 +1033,8 @@ export default function Home() {
             <p>Это пространство для честного разговора о том, как совмещать семью и личную реализацию в мире быстрых изменений.</p>
           </div>
         </div>
-        <div className="container topic-marquee" aria-label="Темы фестиваля">
-          <span>деньги и власть в паре</span>
-          <span>близость после успеха</span>
-          <span>кризисы длительных отношений</span>
-          <span>измены и разводы</span>
+        <div className="container intro-promises" aria-label="Что будет на фестивале">
+          {introPromises.map((promise, index) => <div key={promise}><span>{String(index + 1).padStart(2, "0")}</span><strong>{promise}</strong></div>)}
         </div>
       </section>
 
@@ -953,10 +1045,10 @@ export default function Home() {
             <h2>С кем вам <span>действительно</span> по пути?</h2>
             <p className="connection-lead">Узнайте свой код связи — без гороскопов, банальных типологий и оценки «правильно» или «неправильно». Пройдите короткий тест.</p>
             <div className="connection-promises" aria-label="Что вы получите">
-              <span>Ваш способ строить близость</span>
-              <span>Возможная слепая зона</span>
-              <span>3 вопроса для живого разговора</span>
-              <span>Маршрут по спикерам фестиваля</span>
+              <span>Как вы строите близость</span>
+              <span>Что мешает отношениям</span>
+              <span>Какой партнёр вам подходит</span>
+              <span>Что делать дальше</span>
             </div>
             <button className="connection-flow-cue" type="button" onClick={() => connectionQuizRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })}>
               <span>Начните здесь — пройдите короткий тест</span>
@@ -1005,33 +1097,35 @@ export default function Home() {
             {connectionResult && primaryConnectionResult && secondaryConnectionResult && connectionStatus && (
               <div className="connection-result-card" aria-live="polite">
                 <div className="connection-result-head">
-                  <p>Ваш код связи</p>
-                  <div className="connection-code-lockup">
-                    <span>{primaryConnectionResult.symbol}</span>
-                    <i>×</i>
-                    <span>{secondaryConnectionResult.symbol}</span>
-                  </div>
-                  <h3>{primaryConnectionResult.label} <em>×</em> {secondaryConnectionResult.label}</h3>
+                  <p>Ваш сценарий связи</p>
+                  <h3>{primaryConnectionResult.label}</h3>
                   <strong>{primaryConnectionResult.title}</strong>
                   <p>{primaryConnectionResult.summary}</p>
                 </div>
 
                 <div className="connection-result-grid">
+                  <article className="connection-scenario">
+                    <span>Как это выглядит в жизни</span>
+                    <p>{primaryConnectionResult.scenario}</p>
+                  </article>
+                  <article className="connection-strength">
+                    <span>Ваша сильная сторона</span>
+                    <p>{primaryConnectionResult.strength}</p>
+                  </article>
                   <article className="connection-blind-spot">
-                    <span>Возможная слепая зона</span>
+                    <span>Главная слепая зона</span>
                     <p>{primaryConnectionResult.blindSpot}</p>
                   </article>
-                  <article className="connection-secondary-code">
-                    <span>Ваш второй код</span>
-                    <strong>{secondaryConnectionResult.label}</strong>
-                    <p>{secondaryConnectionResult.summary}</p>
+                  <article className="connection-partner-fit">
+                    <span>Какой партнёр вам подходит</span>
+                    <p>{primaryConnectionResult.partner}</p>
                   </article>
                 </div>
 
                 <div className="connection-conversations">
-                  <span>Три вопроса для настоящего разговора</span>
+                  <span>Три конкретных шага</span>
                   <ol>
-                    {primaryConnectionResult.questions.map((question) => <li key={question}>{question}</li>)}
+                    {primaryConnectionResult.steps.map((step) => <li key={step}>{step}</li>)}
                   </ol>
                 </div>
 
@@ -1087,68 +1181,18 @@ export default function Home() {
           <div className="audience-grid">
             {audience.map((item) => (
               <article className="audience-card" key={item.number}>
-                <div className="card-top"><span>Сценарий</span><strong>{item.number}</strong></div>
-                <p className="card-label">{item.label}</p>
-                <h3>{item.title}</h3>
-                <ul>
-                  {item.points.map((point) => <li key={point}><b aria-hidden="true">•</b>{point}</li>)}
-                </ul>
+                <div className="audience-image"><img src={item.image} alt="" loading="lazy" /></div>
+                <div className="audience-card-body">
+                  <div className="card-top"><span>Сценарий</span><strong>{item.number}</strong></div>
+                  <p className="card-label">{item.label}</p>
+                  <h3>{item.title}</h3>
+                  <ul>
+                    {item.points.map((point) => <li key={point}><b aria-hidden="true">✓</b>{point}</li>)}
+                  </ul>
+                </div>
               </article>
             ))}
           </div>
-        </div>
-      </section>
-
-      <section className="section bonus-section" id="bonuses">
-        <div className="container">
-          <div className="bonus-hero">
-            <div className="bonus-copy">
-              <p className="section-label">Подарочный фонд фестиваля</p>
-              <h2>Соберите подарки на <span>50 000 или 100 000 ₽</span></h2>
-              <p className="bonus-lead">Это не случайный набор и не купоны на ненужные услуги. Вы сами собираете индивидуальную корзину из доступных сертификатов, услуг и товаров наших спикеров, спонсоров и партнёров.</p>
-              <div className="bonus-rule"><strong>от 5 000 ₽</strong><span>номинал каждого сертификата в каталоге</span></div>
-            </div>
-            <div className="bonus-tiers" aria-label="Подарки по тарифам">
-              <article>
-                <span>Тариф</span>
-                <h3>Перезагрузка</h3>
-                <strong>50 000 ₽</strong>
-                <p>подарков на выбор</p>
-              </article>
-              <article className="bonus-tier-vip">
-                <span>Тариф</span>
-                <h3>VIP</h3>
-                <strong>100 000 ₽</strong>
-                <p>подарков на выбор</p>
-              </article>
-            </div>
-          </div>
-
-          <div className="bonus-catalog-heading">
-            <p className="section-label">Выбирайте то, что нужно именно вам</p>
-            <h3>Что будет в каталоге подарков</h3>
-          </div>
-          <div className="bonus-grid">
-            <article><span>01</span><h3>SPA и восстановление</h3><p>Посещение SPA-комплексов, массаж, телесные практики, уходовые и расслабляющие процедуры.</p></article>
-            <article><span>02</span><h3>Здоровье и красота</h3><p>Услуги медицинских и диагностических центров, косметология, салоны красоты и программы ухода.</p></article>
-            <article><span>03</span><h3>Кафе и рестораны</h3><p>Депозиты и сертификаты в кафе и рестораны, гастрономические наборы и предложения food-партнёров.</p></article>
-            <article><span>04</span><h3>Консультации спикеров</h3><p>Личные разборы по отношениям, психологии, здоровью, деньгам, карьере, бизнесу и самореализации.</p></article>
-            <article><span>05</span><h3>Обучение и развитие</h3><p>Мастер-классы, практикумы, трансформационные игры, тренинги и участие в клубных программах.</p></article>
-            <article><span>06</span><h3>Товары партнёров</h3><p>Косметика, парфюмерия, БАДы, полезные продукты, одежда, аксессуары, книги и другие товары брендов.</p></article>
-          </div>
-
-          <div className="bonus-process">
-            <div className="bonus-process-heading">
-              <p className="section-label">Как это работает</p>
-              <h3>Вы выбираете - мы собираем</h3>
-            </div>
-            <ol>
-              <li><b>01</b><div><strong>Выберите тариф</strong><p>«Перезагрузка» - корзина до 50 000 ₽. VIP - корзина до 100 000 ₽.</p></div></li>
-              <li><b>02</b><div><strong>Соберите свой набор</strong><p>На фестивале выберите из доступного каталога именно те подарки, которыми будете пользоваться.</p></div></li>
-              <li><b>03</b><div><strong>Получите сертификаты</strong><p>На следующий день после фестиваля организаторы отправят ваш набор. После этого сертификаты можно активировать.</p></div></li>
-            </ol>
-          </div>
-          <p className="bonus-footnote">Каталог пополняется по мере подтверждения спикеров и партнёров. Итоговый выбор зависит от доступности предложений и условий конкретного партнёра.</p>
         </div>
       </section>
 
@@ -1188,12 +1232,14 @@ export default function Home() {
 
       <section className="section why-section">
         <div className="container why-grid">
-          <div className="why-number">70<span>%</span></div>
+          <div className="why-portrait" role="img" aria-label="Успешная женщина в момент эмоциональной усталости">
+            <span>Сильная.<br />Успешная.<br /><b>Уставшая.</b></span>
+          </div>
           <div>
             <p className="section-label">Почему так происходит</p>
             <h2>Проблемы часто начинаются, когда <span>карьера и самореализация идут в гору</span></h2>
             <p className="why-copy">Навыки, которые помогают зарабатывать и развиваться, могут убивать близость: привычка контролировать, нежелание быть уязвимым, вечная занятость и усталость.</p>
-            <p className="date-accent">22 августа вы посмотрите на свои отношения по-новому и найдете работающую модель взрослого партнерства.</p>
+            <p className="date-accent">Вы увидите, какие привычки разрушают близость, и найдёте работающую модель отношений без отказа от карьеры и себя.</p>
           </div>
         </div>
       </section>
@@ -1215,78 +1261,12 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section speakers-section" id="speakers">
-        <div className="container">
-          <div className="section-heading center-heading">
-            <p className="section-label">Психологи · сексологи · коучи · терапевты</p>
-            <h2>Спикеры <span>фестиваля</span></h2>
-            <p>Каждое выступление - не просто лекция, а практика, которую можно применить в жизни.</p>
-          </div>
-          <div className="speakers-track" ref={speakersRef}>
-            {speakers.map((speaker, index) => (
-              <button className="speaker-card" key={speaker.name} onClick={() => setSelectedSpeaker(speaker)}>
-                <div className={`speaker-visual ${speaker.tone}${speaker.image ? " has-photo" : ""}`}>
-                  {speaker.image && (
-                    <img src={speaker.image} alt={speaker.name} loading="lazy" style={{ objectPosition: speaker.imagePosition }} />
-                  )}
-                  <span className="speaker-index">{String(index + 1).padStart(2, "0")}</span>
-                  {!speaker.image && <strong>{speaker.initials}</strong>}
-                  <span className="speaker-open"><ArrowIcon /></span>
-                  <span className="speaker-action">Нажмите - подробнее</span>
-                </div>
-                <div className="speaker-card-copy">
-                  <h3>{speaker.name}</h3>
-                  <p>{speaker.role}</p>
-                  <span>Тема: {speaker.topic}</span>
-                </div>
-              </button>
-            ))}
-          </div>
-          <div className="slider-footer">
-            <div className="scroll-hint">Нажмите на карточку, чтобы узнать подробнее</div>
-            <div className="slider-controls" aria-label="Навигация по спикерам">
-              <button type="button" onClick={() => scrollSlider(speakersRef.current, -1)} aria-label="Предыдущие спикеры"><ChevronIcon direction="left" /></button>
-              <button type="button" onClick={() => scrollSlider(speakersRef.current, 1)} aria-label="Следующие спикеры"><ChevronIcon direction="right" /></button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="section cta-section">
-        <div className="container cta-card">
-          <div>
-            <p className="section-label">Открыт набор экспертов</p>
-            <h2>Хотите стать <span>спикером фестиваля?</span></h2>
-            <p>Если у вас есть уникальный опыт, исследования или практические кейсы в теме отношений, психологии, семьи или партнерства - оставляйте заявку.</p>
-          </div>
-          <a className="secondary-button" href={`${telegramUrl}?text=${encodeURIComponent("Хочу стать спикером фестиваля МЖ")}`} target="_blank" rel="noreferrer">Стать спикером <i className="button-icon"><ArrowIcon /></i></a>
-        </div>
-      </section>
-
-      <section className="section program-section" id="program">
-        <div className="container">
-          <div className="section-heading split-heading">
-            <div>
-              <p className="section-label">22 августа · начало в 12:00</p>
-              <h2>Программа <span>фестиваля</span></h2>
-            </div>
-            <p>Шесть смысловых блоков проведут вас от понимания собственных сценариев к новому взгляду на союз, близость и деньги.</p>
-          </div>
-          <div className="program-list">
-            {program.map((block, index) => (
-              <article className="program-card" key={block.label}>
-                <div className="program-number">{String(index + 1).padStart(2, "0")}</div>
-                <div className="program-copy">
-                  <span>{block.label}</span>
-                  <h3>{block.title}</h3>
-                  <ul>{block.topics.map((topic) => <li key={topic}>{topic}</li>)}</ul>
-                </div>
-              </article>
-            ))}
-          </div>
-          <p className="program-note">Программа может быть дополнена. Точный тайминг выступлений будет опубликован ближе к фестивалю.</p>
-        </div>
-      </section>
+      <ProgramSection />
+      <SpeakersSection
+        trackRef={speakersRef}
+        onSelect={setSelectedSpeaker}
+        onScroll={(direction) => scrollSlider(speakersRef.current, direction)}
+      />
 
       <section className="section partners-section">
         <div className="container">
@@ -1317,6 +1297,8 @@ export default function Home() {
         </div>
       </section>
 
+      <BonusSection />
+
       <section className="section pricing-section" id="pricing">
         <div className="container">
           <div className="section-heading center-heading">
@@ -1329,6 +1311,10 @@ export default function Home() {
               <article className={`price-card ${ticket.featured ? "featured" : ""}`} key={ticket.name}>
                   {ticket.featured && <div className="popular">Самый выгодный</div>}
                 <div className="price-head"><h3>{ticket.name}</h3><strong>{ticket.price}</strong><span>{ticket.note}</span></div>
+                <div className="ticket-kit" aria-label="Материалы участника">
+                  <div className="ticket-program"><span>МЖ</span><b>Программа</b><small>22 августа</small></div>
+                  <div className="ticket-workbook"><span>Рабочая</span><b>тетрадь</b><i /></div>
+                </div>
                 <ul>{ticket.items.map((item) => <li className={item.includes("50 000") || item.includes("100 000") ? "gift-highlight" : ""} key={item}><b>✓</b>{item}</li>)}</ul>
                 <p>{ticket.description}</p>
                 <div className="price-timeline"><span>Следующая цена <b>{ticket.nextPrice}</b></span><span>Финальная цена <b>{ticket.finalPrice}</b></span></div>
@@ -1350,26 +1336,20 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section faq-section">
-        <div className="container faq-grid">
-          <div><p className="section-label">FAQ и логистика</p><h2>Перед тем как <span>приехать</span></h2><p>Ключевая информация о фестивале, площадке и формате участия.</p></div>
-          <div className="faq-list">
-            <details open>
-              <summary>Что входит в билет на фестиваль?</summary>
-              <p>Билет дает доступ к программе, выступлениям, интерактивным форматам, тематическим зонам и нетворкингу. Наполнение зависит от выбранного тарифа.</p>
-            </details>
-            <details>
-              <summary>Где пройдет фестиваль и во сколько приезжать?</summary>
-              <p>Санкт-Петербург, Дворец Кваренги, Казанская улица, 7. Начало в 12:00. Сбор гостей начинается заранее.</p>
-            </details>
-            <details>
-              <summary>Можно ли прийти вдвоем?</summary>
-              <p>Да. Фестиваль подходит и отдельным участникам, и парам. Для знакомства и общения предусмотрены специальные форматы.</p>
-            </details>
-            <details>
-              <summary>Будут ли знакомства и общение?</summary>
-              <p>Да. В программе есть speed dating, открытый нетворкинг, экспертная зона и дополнительные активности для знакомства.</p>
-            </details>
+      <section className="section logistics-section" id="logistics">
+        <div className="container logistics-card">
+          <div className="logistics-main">
+            <p className="section-label">Сохраните этот экран</p>
+            <span className="logistics-date">22.08.2026</span>
+            <h2>Дворец <span>Кваренги</span></h2>
+            <p className="logistics-address">Санкт-Петербург<br />Казанская улица, 7</p>
+            <a className="primary-button" href="https://yandex.ru/maps/?text=%D0%94%D0%B2%D0%BE%D1%80%D0%B5%D1%86%20%D0%9A%D0%B2%D0%B0%D1%80%D0%B5%D0%BD%D0%B3%D0%B8%2C%20%D0%9A%D0%B0%D0%B7%D0%B0%D0%BD%D1%81%D0%BA%D0%B0%D1%8F%207" target="_blank" rel="noreferrer"><span>Открыть маршрут</span><i className="button-icon"><ArrowIcon /></i></a>
+          </div>
+          <div className="logistics-facts">
+            <article><span>11:00</span><p>Начало регистрации гостей</p></article>
+            <article><span>12:00</span><p>Старт основной программы</p></article>
+            <article><span>20:00</span><p>Завершение фестивального дня</p></article>
+            <div className="logistics-note"><strong>Возьмите с собой</strong><p>Билет в телефоне, документ, зарядное устройство и вопросы, которые давно откладывали.</p></div>
           </div>
         </div>
       </section>
@@ -1399,6 +1379,7 @@ export default function Home() {
               <h2 id="speaker-modal-title">{selectedSpeaker.name}</h2>
               <p className="modal-role">{selectedSpeaker.role}</p>
               <div className="modal-topic"><span>Тема выступления</span><strong>{selectedSpeaker.topic}</strong></div>
+              <div className="modal-outcome"><span>Что вы получите</span><strong>{speakerOutcomes[selectedSpeaker.name]}</strong></div>
               {selectedSpeaker.description && <p className="modal-description">{selectedSpeaker.description}</p>}
               <ul>{selectedSpeaker.facts.map((fact) => <li key={fact}>{fact}</li>)}</ul>
             </div>

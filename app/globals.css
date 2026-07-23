@@ -3650,3 +3650,810 @@ footer {
   outline: 3px solid var(--coral);
   outline-offset: 3px;
 }
+
+/* Conversion-focused redesign, July 2026 */
+h1,
+h2,
+h3,
+.hero h1,
+.hero h1 em,
+.section-heading h2,
+.speaker-card-copy h3,
+.program-copy h3,
+.price-head h3,
+.modal-copy h2 {
+  font-family: var(--font-sans), Arial, sans-serif;
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: -.055em;
+}
+
+.hero h1 em,
+h2 span {
+  font-style: normal;
+}
+
+.hero-grid {
+  grid-template-columns: minmax(0, 1.08fr) minmax(360px, .72fr);
+  gap: clamp(44px, 7vw, 100px);
+}
+
+.hero-lead {
+  max-width: 780px;
+  font-size: clamp(23px, 2.2vw, 35px);
+  font-weight: 750;
+  line-height: 1.18;
+  letter-spacing: -.035em;
+}
+
+.hero-copy {
+  max-width: 720px;
+  font-size: 16px;
+  line-height: 1.68;
+}
+
+.hero-manifesto-card {
+  min-height: 590px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  padding: 38px;
+  border: 8px solid rgba(255, 255, 255, .9);
+  border-radius: 32px;
+  color: var(--white);
+  background:
+    radial-gradient(circle at 85% 10%, rgba(246, 201, 173, .34), transparent 32%),
+    linear-gradient(155deg, #2b1719 0%, #701e2c 62%, #be4450 100%);
+  box-shadow: 0 28px 80px rgba(69, 25, 31, .24);
+}
+
+.hero-manifesto-card::before {
+  content: "МЖ";
+  position: absolute;
+  right: -34px;
+  bottom: -44px;
+  color: rgba(255, 255, 255, .075);
+  font-family: var(--font-sans), Arial, sans-serif;
+  font-size: 230px;
+  font-weight: 900;
+  letter-spacing: -.12em;
+  line-height: .8;
+}
+
+.hero-manifesto-date,
+.hero-manifesto-copy {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-manifesto-date {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.hero-manifesto-date strong {
+  font-size: 86px;
+  font-weight: 850;
+  line-height: .78;
+  letter-spacing: -.09em;
+}
+
+.hero-manifesto-date span {
+  padding-top: 4px;
+  color: var(--peach);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.25;
+  text-transform: uppercase;
+}
+
+.hero-manifesto-copy > span {
+  display: block;
+  max-width: 340px;
+  margin-bottom: 20px;
+  color: var(--peach);
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: .1em;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+.hero-manifesto-copy h2 {
+  max-width: 440px;
+  color: var(--white);
+  font-size: clamp(38px, 4vw, 58px);
+  line-height: .98;
+}
+
+.hero-manifesto-copy h2 b {
+  color: var(--peach);
+}
+
+.hero-manifesto-copy p {
+  max-width: 380px;
+  margin: 22px 0 0;
+  color: rgba(255, 255, 255, .72);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.intro-promises {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  margin-top: 58px;
+}
+
+.intro-promises > div {
+  min-height: 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--white);
+}
+
+.intro-promises span {
+  color: var(--coral-dark);
+  font-size: 10px;
+  font-weight: 850;
+}
+
+.intro-promises strong {
+  max-width: 170px;
+  font-size: 17px;
+  line-height: 1.25;
+}
+
+.connection-result-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.connection-result-grid article {
+  min-height: 180px;
+}
+
+.connection-scenario {
+  background: #fff5ed !important;
+}
+
+.connection-strength {
+  background: #f1ead7 !important;
+}
+
+.connection-partner-fit {
+  background: #f0e8f5 !important;
+}
+
+.connection-result-head h3 {
+  margin-top: 8px;
+  color: var(--coral-dark);
+  font-size: 17px;
+  font-weight: 850;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.connection-result-head > strong {
+  display: block;
+  max-width: 760px;
+  margin-top: 12px;
+  font-size: clamp(32px, 4vw, 52px);
+  line-height: 1.03;
+}
+
+.audience-grid {
+  align-items: stretch;
+}
+
+.audience-card,
+.audience-card:nth-child(2) {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0;
+  color: var(--ink);
+  background: var(--white);
+  transform: none;
+}
+
+.audience-card:hover,
+.audience-card:nth-child(2):hover {
+  transform: translateY(-7px);
+}
+
+.audience-image {
+  height: 320px;
+  position: relative;
+  overflow: hidden;
+}
+
+.audience-image::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 35%;
+  background: linear-gradient(transparent, rgba(20, 11, 10, .38));
+}
+
+.audience-image img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.audience-card-body {
+  flex: 1;
+  padding: 27px;
+}
+
+.audience-card .card-top {
+  margin-bottom: 24px;
+  color: var(--muted);
+}
+
+.audience-card h3 {
+  color: var(--ink);
+  font-size: 34px;
+  line-height: 1.02;
+}
+
+.audience-card li {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.audience-card li b {
+  color: var(--coral-dark);
+}
+
+.format-content {
+  min-height: 250px;
+}
+
+.format-content h3 {
+  font-size: 33px;
+  line-height: 1.02;
+}
+
+.format-content p {
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.why-grid {
+  grid-template-columns: minmax(360px, .8fr) minmax(0, 1.2fr);
+  align-items: stretch;
+}
+
+.why-portrait {
+  min-height: 650px;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+  padding: 36px;
+  border-radius: 30px;
+  background-image:
+    linear-gradient(to top, rgba(27, 14, 14, .78), transparent 52%),
+    url("/stories/career-tired.webp");
+  background-position: center;
+  background-size: cover;
+  box-shadow: var(--shadow);
+}
+
+.why-portrait span {
+  color: var(--white);
+  font-size: clamp(40px, 5vw, 70px);
+  font-weight: 800;
+  line-height: .94;
+  letter-spacing: -.07em;
+}
+
+.why-portrait b {
+  color: var(--peach);
+}
+
+.date-accent {
+  font-size: clamp(20px, 2vw, 28px);
+  font-weight: 750;
+  line-height: 1.35;
+}
+
+.theme-list {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.theme-list > div {
+  min-height: 170px;
+  align-items: flex-end;
+  border: 0;
+  border-radius: 24px;
+  background: var(--white);
+}
+
+.theme-list > div:nth-child(4n + 1) {
+  color: var(--white);
+  background: #231817;
+}
+
+.theme-list > div:nth-child(4n + 2) {
+  color: var(--white);
+  background: var(--coral-dark);
+}
+
+.theme-list > div:nth-child(4n + 3) {
+  background: #ead8b0;
+}
+
+.theme-list > div:nth-child(4n) {
+  background: #f2e6e8;
+}
+
+.theme-list p {
+  font-size: clamp(18px, 2vw, 25px);
+  font-weight: 750;
+  line-height: 1.23;
+}
+
+.program-list {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.program-card {
+  min-height: 510px;
+  grid-template-columns: 68px 1fr;
+  align-content: start;
+  border: 0;
+  border-radius: 28px;
+  background: var(--white);
+}
+
+.program-card-2 {
+  background: #f1e6d0;
+}
+
+.program-card-3 {
+  color: var(--white);
+  background: #2b1b1b;
+}
+
+.program-card-4 {
+  color: var(--white);
+  background: #87313c;
+}
+
+.program-card-3 .program-copy > span,
+.program-card-4 .program-copy > span,
+.program-card-3 .program-copy li,
+.program-card-4 .program-copy li,
+.program-card-3 .program-speakers,
+.program-card-4 .program-speakers {
+  color: rgba(255, 255, 255, .72);
+}
+
+.program-copy > span {
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.program-copy h3 {
+  margin-top: 12px;
+  font-size: clamp(35px, 4vw, 52px);
+  line-height: .98;
+}
+
+.program-copy ul {
+  margin-top: 28px;
+}
+
+.program-speakers,
+.program-result {
+  margin: 24px 0 0;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.program-result {
+  padding: 18px;
+  border-radius: 16px;
+  color: var(--ink);
+  background: rgba(255, 255, 255, .84);
+}
+
+.speaker-card {
+  min-width: min(390px, 82vw);
+  flex-basis: min(390px, 82vw);
+}
+
+.speaker-card-copy {
+  min-height: 400px;
+  padding: 27px;
+}
+
+.speaker-card-copy h3 {
+  font-size: 31px;
+}
+
+.speaker-topic,
+.speaker-outcome,
+.speaker-proof {
+  display: block;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.speaker-proof {
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 850;
+}
+
+.speaker-outcome {
+  color: var(--coral-dark);
+  font-weight: 750;
+}
+
+.modal-outcome {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 20px;
+  border-radius: 18px;
+  background: #f2ead8;
+}
+
+.modal-outcome span {
+  color: var(--coral-dark);
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.modal-outcome strong {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.pricing-grid {
+  align-items: stretch;
+}
+
+.price-card,
+.price-card.featured {
+  min-height: 0;
+  transform: none;
+}
+
+.price-card:nth-child(1) {
+  background: var(--white);
+}
+
+.price-card:nth-child(2) {
+  color: var(--ink);
+  background: linear-gradient(155deg, #f3dfab, #d5b15d);
+  box-shadow: 0 30px 90px rgba(122, 88, 20, .25);
+}
+
+.price-card:nth-child(3) {
+  color: var(--white);
+  background: #1c1514;
+}
+
+.price-card:nth-child(3) .price-head > span,
+.price-card:nth-child(3) > p,
+.price-card:nth-child(3) li,
+.price-card:nth-child(3) .price-timeline span {
+  color: rgba(255, 255, 255, .7);
+}
+
+.price-card:nth-child(3) li,
+.price-card:nth-child(3) .price-timeline {
+  border-color: rgba(255, 255, 255, .12);
+}
+
+.price-card:nth-child(3) > a {
+  color: #1c1514;
+  background: var(--white);
+}
+
+.price-head strong {
+  font-size: 48px;
+}
+
+.ticket-kit {
+  min-height: 155px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  margin: 24px 0 8px;
+  padding: 20px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, .4);
+}
+
+.ticket-program,
+.ticket-workbook {
+  width: 105px;
+  height: 126px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 13px;
+  border-radius: 5px 12px 12px 5px;
+  box-shadow: 0 12px 28px rgba(30, 20, 16, .2);
+}
+
+.ticket-program {
+  color: var(--white);
+  background: linear-gradient(155deg, #a73140, #2a171a);
+  transform: rotate(-4deg);
+}
+
+.ticket-workbook {
+  color: var(--ink);
+  background: #fffaf1;
+  transform: rotate(4deg) translateY(4px);
+}
+
+.ticket-program span,
+.ticket-workbook span {
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.ticket-program b,
+.ticket-workbook b {
+  margin-top: 3px;
+  font-size: 15px;
+  line-height: 1;
+}
+
+.ticket-program small {
+  margin-top: 10px;
+  color: var(--peach);
+  font-size: 8px;
+}
+
+.ticket-workbook i {
+  height: 34px;
+  margin-top: 14px;
+  background: repeating-linear-gradient(to bottom, transparent 0 6px, rgba(33, 25, 22, .16) 6px 7px);
+}
+
+.logistics-section {
+  color: var(--white);
+  background: var(--paper);
+}
+
+.logistics-card {
+  display: grid;
+  grid-template-columns: 1.08fr .92fr;
+  overflow: hidden;
+  border-radius: 34px;
+  background: #1b1413;
+  box-shadow: var(--shadow);
+}
+
+.logistics-main {
+  min-height: 590px;
+  position: relative;
+  padding: 68px;
+  background:
+    radial-gradient(circle at 15% 15%, rgba(237, 92, 85, .35), transparent 35%),
+    linear-gradient(145deg, #211616, #4f1d25);
+}
+
+.logistics-main::after {
+  content: "МЖ";
+  position: absolute;
+  right: -20px;
+  bottom: 12px;
+  color: rgba(255, 255, 255, .055);
+  font-size: 200px;
+  font-weight: 900;
+  letter-spacing: -.13em;
+}
+
+.logistics-date {
+  display: block;
+  margin: 28px 0 22px;
+  color: var(--peach);
+  font-size: clamp(42px, 6vw, 82px);
+  font-weight: 850;
+  line-height: .9;
+  letter-spacing: -.08em;
+}
+
+.logistics-main h2 {
+  color: var(--white);
+  font-size: clamp(50px, 7vw, 92px);
+  line-height: .9;
+}
+
+.logistics-address {
+  margin: 30px 0;
+  color: rgba(255, 255, 255, .72);
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.logistics-facts {
+  display: grid;
+  align-content: center;
+  padding: 54px;
+  background: #2b201e;
+}
+
+.logistics-facts article {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 22px;
+  align-items: center;
+  padding: 22px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, .12);
+}
+
+.logistics-facts article span {
+  color: var(--peach);
+  font-size: 32px;
+  font-weight: 850;
+}
+
+.logistics-facts article p,
+.logistics-note p {
+  margin: 0;
+  color: rgba(255, 255, 255, .7);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.logistics-note {
+  margin-top: 30px;
+  padding: 24px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, .08);
+}
+
+.logistics-note strong {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--white);
+}
+
+@media (max-width: 1000px) {
+  .intro-promises {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .why-grid,
+  .logistics-card {
+    grid-template-columns: 1fr;
+  }
+
+  .why-portrait {
+    min-height: 560px;
+  }
+
+  .program-card {
+    min-height: 0;
+  }
+}
+
+@media (max-width: 850px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-manifesto-card {
+    width: min(560px, 100%);
+    min-height: 540px;
+    justify-self: center;
+  }
+
+  .program-list,
+  .theme-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-lead {
+    font-size: 22px;
+  }
+
+  .hero-copy {
+    font-size: 14px;
+  }
+
+  .hero-button {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .hero-manifesto-card {
+    min-height: 500px;
+    padding: 27px;
+    border-width: 5px;
+    border-radius: 24px;
+  }
+
+  .hero-manifesto-date strong {
+    font-size: 72px;
+  }
+
+  .intro-promises {
+    grid-template-columns: 1fr;
+    margin-top: 38px;
+  }
+
+  .intro-promises > div {
+    min-height: 92px;
+  }
+
+  .connection-result-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .audience-card,
+  .audience-card:nth-child(2) {
+    min-height: 0;
+  }
+
+  .audience-image {
+    height: 330px;
+  }
+
+  .why-portrait {
+    min-height: 470px;
+    padding: 25px;
+  }
+
+  .program-card {
+    grid-template-columns: 48px 1fr;
+    padding: 21px;
+  }
+
+  .program-number {
+    width: 44px;
+    height: 44px;
+  }
+
+  .program-copy h3 {
+    font-size: 34px;
+  }
+
+  .speaker-card-copy {
+    min-height: 360px;
+  }
+
+  .logistics-main,
+  .logistics-facts {
+    padding: 34px 24px;
+  }
+
+  .logistics-main {
+    min-height: 520px;
+  }
+
+  .logistics-facts article {
+    grid-template-columns: 90px 1fr;
+  }
+}
