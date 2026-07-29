@@ -3140,6 +3140,25 @@ footer {
   line-height: 1.68;
 }
 
+.modal-detail-outcomes {
+  margin-top: 24px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: #fffaf2;
+}
+
+.modal-detail-outcomes > strong {
+  display: block;
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.modal-copy .modal-detail-outcomes ul {
+  margin: 14px 0 0;
+}
+
 .modal-copy ul {
   display: grid;
   gap: 10px;
