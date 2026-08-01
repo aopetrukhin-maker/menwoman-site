@@ -724,3 +724,576 @@
     font-size: 30px;
   }
 }
+
+/* Final compact-layout overrides */
+.connection-section,
+.dark-section,
+.formats-section,
+.dating-section,
+.program-section,
+.speakers-section,
+.bonus-section,
+.pricing-section,
+.partners-section,
+.partnership-section,
+.logistics-section,
+.final-cta-section {
+  padding-top: 92px;
+  padding-bottom: 92px;
+}
+
+.audience-image {
+  height: 230px;
+}
+
+.audience-card-body {
+  padding: 24px;
+}
+
+.audience-card .card-top {
+  margin-bottom: 16px;
+}
+
+.audience-card h3 {
+  font-size: 29px;
+}
+
+.audience-card ul {
+  padding-top: 22px;
+}
+
+.formats-track {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+  overflow: visible;
+}
+
+.format-card,
+.format-card-01,
+.format-card-02,
+.format-card-03,
+.format-card-04,
+.format-card-05 {
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  grid-column: auto;
+  grid-row: auto;
+  border: 1px solid rgba(33, 25, 22, .12);
+  border-radius: 22px;
+  background: var(--white);
+  box-shadow: none;
+}
+
+.format-number {
+  padding: 22px 24px 0;
+  color: var(--coral-dark);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .12em;
+}
+
+.format-card .format-content {
+  min-height: 0;
+  padding: 24px;
+}
+
+.format-card .format-content::before {
+  width: 30px;
+  margin-bottom: 18px;
+}
+
+.format-card .format-benefit {
+  min-height: 0;
+  margin-bottom: 10px;
+  font-size: 9px;
+}
+
+.format-card .format-content h3,
+.format-card-03 .format-content h3,
+.format-card-04 .format-content h3,
+.format-card-05 .format-content h3 {
+  font-size: 28px;
+}
+
+.format-card .format-content p {
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.program-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.program-card,
+.program-card:nth-child(3n + 2) {
+  min-height: 0;
+  display: block;
+  padding: 0;
+  overflow: hidden;
+  border-radius: 22px;
+  transform: none;
+}
+
+.program-card > summary {
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr) 38px;
+  gap: 20px;
+  align-items: center;
+  padding: 24px 28px;
+}
+
+.program-card .program-copy {
+  padding: 0 28px 28px 106px;
+}
+
+.program-card .program-copy ul {
+  margin-top: 0;
+}
+
+.speaker-card-copy {
+  min-height: 330px;
+}
+
+.bonus-hero {
+  min-height: 0;
+  margin-bottom: 26px;
+}
+
+.bonus-copy {
+  padding: 48px;
+}
+
+.bonus-grid-compact {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.bonus-grid-compact article {
+  min-height: 112px;
+  padding: 20px;
+}
+
+.bonus-grid-compact h3 {
+  margin-top: 18px;
+  font-size: 18px;
+}
+
+.pricing-grid {
+  align-items: start;
+}
+
+.price-card,
+.price-card.featured {
+  min-height: 0;
+  padding: 28px;
+  transform: none;
+}
+
+.price-card .ticket-product-scene {
+  min-height: 210px;
+  margin: 20px 0;
+  border-radius: 20px;
+}
+
+.price-card .ticket-product-scene img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.price-card-vip .ticket-highlight-list span {
+  color: var(--white);
+  background: rgba(255, 255, 255, .09);
+}
+
+@media (max-width: 1080px) {
+  .formats-track {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .format-card-05 {
+    grid-column: 1 / -1;
+  }
+
+  .bonus-grid-compact {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .connection-section,
+  .dark-section,
+  .formats-section,
+  .dating-section,
+  .program-section,
+  .speakers-section,
+  .bonus-section,
+  .pricing-section,
+  .partners-section,
+  .partnership-section,
+  .logistics-section,
+  .final-cta-section {
+    padding-top: 62px;
+    padding-bottom: 62px;
+  }
+
+  .formats-track {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .format-card,
+  .format-card-01,
+  .format-card-02,
+  .format-card-03,
+  .format-card-04,
+  .format-card-05 {
+    width: 100%;
+    grid-column: auto;
+  }
+
+  .program-card > summary {
+    grid-template-columns: 42px minmax(0, 1fr) 30px;
+    gap: 12px;
+    padding: 20px;
+  }
+
+  .program-card .program-copy {
+    padding: 0 20px 22px 74px;
+  }
+
+  .speaker-card-copy {
+    min-height: 0;
+  }
+
+  .bonus-copy {
+    padding: 30px;
+  }
+
+  .bonus-grid-compact {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .bonus-grid-compact article {
+    min-height: 98px;
+    padding: 16px;
+  }
+
+  .bonus-grid-compact h3 {
+    font-size: 15px;
+  }
+
+  .price-card .ticket-product-scene {
+    min-height: 185px;
+  }
+}
+
+.hero-facts-card {
+  min-height: 500px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow: hidden;
+  padding: 40px;
+  border: 8px solid rgba(255, 255, 255, .9);
+  border-radius: 32px;
+  color: var(--white);
+  background:
+    radial-gradient(circle at 85% 8%, rgba(246, 201, 173, .36), transparent 34%),
+    linear-gradient(155deg, #2b1719 0%, #701e2c 62%, #be4450 100%);
+  box-shadow: 0 28px 80px rgba(69, 25, 31, .24);
+}
+
+.hero-facts-card::before {
+  content: "МЖ";
+  position: absolute;
+  top: 25px;
+  right: -30px;
+  color: rgba(255, 255, 255, .08);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 230px;
+  font-weight: 800;
+  letter-spacing: -.12em;
+  line-height: .8;
+}
+
+.hero-facts-card > span,
+.hero-facts-card ul {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-facts-card > span {
+  margin-bottom: 22px;
+  color: var(--peach);
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+}
+
+.hero-facts-card ul {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hero-facts-card li {
+  padding: 15px 0;
+  border-top: 1px solid rgba(255, 255, 255, .18);
+  font-size: clamp(18px, 1.75vw, 24px);
+  font-weight: 750;
+  line-height: 1.2;
+}
+
+.hero-facts-card li b {
+  color: var(--butter);
+}
+
+.connection-compact {
+  position: relative;
+  z-index: 2;
+}
+
+.connection-compact > summary {
+  display: flex;
+  gap: 32px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 30px 34px;
+  border: 1px solid rgba(255, 255, 255, .16);
+  border-radius: 26px;
+  background: rgba(255, 255, 255, .06);
+  cursor: pointer;
+  list-style: none;
+}
+
+.connection-compact > summary::-webkit-details-marker,
+.program-card > summary::-webkit-details-marker,
+.ticket-details > summary::-webkit-details-marker {
+  display: none;
+}
+
+.connection-compact > summary > span {
+  display: grid;
+  gap: 6px;
+}
+
+.connection-compact > summary small {
+  color: var(--peach);
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.connection-compact > summary strong {
+  color: var(--white);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(36px, 4vw, 58px);
+  line-height: .95;
+}
+
+.connection-compact > summary em {
+  color: rgba(255, 255, 255, .66);
+  font-size: 13px;
+  font-style: normal;
+}
+
+.connection-compact > summary > b {
+  min-width: 190px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 20px;
+  border-radius: 999px;
+  color: var(--white);
+  background: var(--coral-dark);
+  font-size: 13px;
+}
+
+.connection-compact > summary i {
+  width: 20px;
+  height: 20px;
+  display: grid;
+  place-items: center;
+}
+
+.connection-compact > summary svg {
+  width: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+}
+
+.connection-compact[open] > summary {
+  border-radius: 26px 26px 0 0;
+}
+
+.connection-compact .connection-experience {
+  padding: 24px;
+  border: 1px solid rgba(255, 255, 255, .16);
+  border-top: 0;
+  border-radius: 0 0 26px 26px;
+  background: rgba(255, 255, 255, .04);
+}
+
+.connection-compact .connection-question-card {
+  min-height: 0;
+}
+
+.program-card > summary {
+  cursor: pointer;
+  list-style: none;
+}
+
+.program-summary-copy {
+  display: grid;
+  gap: 5px;
+}
+
+.program-summary-copy small {
+  color: var(--coral-dark);
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+
+.program-summary-copy strong {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(26px, 3vw, 38px);
+  line-height: 1;
+}
+
+.program-summary-copy em {
+  color: var(--muted);
+  font-size: 11px;
+  font-style: normal;
+  line-height: 1.4;
+}
+
+.program-card-3 .program-summary-copy small,
+.program-card-4 .program-summary-copy small,
+.program-card-3 .program-summary-copy em,
+.program-card-4 .program-summary-copy em {
+  color: rgba(255, 255, 255, .66);
+}
+
+.program-toggle {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .4);
+  font-size: 24px;
+  font-weight: 400;
+  transition: transform .2s ease;
+}
+
+.program-card[open] .program-toggle {
+  transform: rotate(45deg);
+}
+
+.speakers-toggle {
+  display: block;
+  margin: 24px auto 0;
+  padding: 14px 22px;
+  border: 1px solid rgba(33, 25, 22, .16);
+  border-radius: 999px;
+  color: var(--ink);
+  background: var(--white);
+  font-size: 12px;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.ticket-details {
+  margin-top: 18px;
+  border-top: 1px solid rgba(33, 25, 22, .14);
+  border-bottom: 1px solid rgba(33, 25, 22, .14);
+}
+
+.price-card-vip .ticket-details {
+  border-color: rgba(255, 255, 255, .15);
+}
+
+.ticket-details > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0;
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  list-style: none;
+}
+
+.ticket-details > summary b {
+  font-size: 20px;
+  transition: transform .2s ease;
+}
+
+.ticket-details[open] > summary b {
+  transform: rotate(45deg);
+}
+
+.ticket-details ul {
+  padding-bottom: 12px;
+}
+
+.ticket-details + .price-timeline {
+  margin-top: 18px;
+}
+
+@media (max-width: 760px) {
+  .hero-facts-card {
+    min-height: 0;
+    padding: 28px;
+    border-width: 5px;
+  }
+
+  .hero-facts-card::before {
+    top: 30px;
+    font-size: 150px;
+  }
+
+  .hero-facts-card li {
+    font-size: 17px;
+  }
+
+  .connection-compact > summary {
+    display: grid;
+    gap: 22px;
+    padding: 24px;
+  }
+
+  .connection-compact > summary strong {
+    font-size: 36px;
+  }
+
+  .connection-compact > summary > b {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .connection-compact .connection-experience {
+    padding: 10px;
+  }
+
+  .program-summary-copy strong {
+    font-size: 26px;
+  }
+}

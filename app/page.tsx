@@ -316,49 +316,36 @@ const speakers: Speaker[] = [
   },
 ];
 
-const introPromises = [
-  "Без скучных лекций",
-  "Честные разговоры",
-  "Реальные ситуации",
-  "Практики и знакомства",
-  "Конкретные ответы",
-];
-
 const formats = [
   {
     number: "01",
-    title: "Главная сцена",
-    benefit: "Понять, что происходит в ваших отношениях",
-    text: "Сильные выступления, честные дискуссии и разборы реальных ситуаций - без скучных лекций и общих советов.",
-    image: "https://noname-events.ru/mj/main-scene.jpg",
+    title: "Выступления",
+    benefit: "Понять причины",
+    text: "19 экспертов разберут знакомства, близость, секс, конфликты, деньги и личные границы.",
   },
   {
     number: "02",
-    title: "Нетворкинг-пространство",
-    benefit: "Встретить людей своего уровня и ценностей",
-    text: "Знакомства не остаются на волю случая: ведущие, вопросы и механики общения помогают начать настоящий разговор.",
-    image: "https://noname-events.ru/mj/networking.jpg",
+    title: "Практики",
+    benefit: "Попробовать сразу",
+    text: "Интерактивы и упражнения помогут не только услышать идеи, но и применить их к своей ситуации.",
   },
   {
     number: "03",
-    title: "Экспертная маркет-зона",
-    benefit: "Получить личный ответ на свой вопрос",
-    text: "Психологи, телесные специалисты и практики работают с участниками лично: консультации, мини-диагностики и точечные разборы.",
-    image: "https://noname-events.ru/mj/market.jpg",
+    title: "Знакомства",
+    benefit: "Начать разговор",
+    text: "Браслеты и вопросы о ценностях снимают неловкость и помогают знакомиться без пустых переписок.",
   },
   {
     number: "04",
-    title: "Система браслетов",
-    benefit: "Снять первый барьер для знакомства",
-    text: "Цвет сразу показывает комфортный формат общения. Вы понимаете, к кому можно подойти, еще до первого слова.",
-    imageClass: "format-image-bracelets",
+    title: "Личные разборы",
+    benefit: "Получить свой ответ",
+    text: "В экспертной зоне можно пройти мини-диагностику и точечно обсудить личный запрос.",
   },
   {
     number: "05",
-    title: "Еще больше форматов",
-    benefit: "Не просто слушать - прожить этот день",
-    text: "Speed dating, мастер-классы, групповые практики, партнерские активности и открытый нетворкинг в течение всего фестиваля.",
-    imageClass: "format-image-editorial",
+    title: "Записи и подарки",
+    benefit: "Продолжить после",
+    text: "В старших тарифах - записи всех выступлений и подарки партнёров до 100 000 ₽.",
   },
 ];
 
@@ -368,33 +355,21 @@ const audience = [
     label: "Если вы в поиске отношений",
     title: "Новый союз без старых сценариев",
     image: "/stories/audience-search.webp",
-    points: [
-      "Поймете, почему выбираете «не тех» и как найти партнера с похожими ценностями",
-      "Узнаете, как восстановиться после расставания и снова открыться любви",
-      "Научитесь замечать тревожные сигналы еще в начале отношений",
-    ],
+    points: ["Поймете, почему выбираете «не тех»", "Определите критерии подходящего партнера"],
   },
   {
     number: "02",
     label: "Если вы в отношениях",
     title: "Пара как команда, а не поле борьбы",
     image: "/stories/audience-conflict.webp",
-    points: [
-      "Поймете, как слышать партнера и не превращать разговор в ссору",
-      "Узнаете, как перестать конкурировать и стать настоящей командой",
-      "Разберете модели финансовых отношений и разговор о деньгах без конфликтов",
-    ],
+    points: ["Увидите свой сценарий конфликтов", "Найдёте шаг к доверию и близости"],
   },
   {
     number: "03",
-    label: "Если вы давно вместе",
-    title: "Близость, которая выдерживает время",
-    image: "/stories/audience-longterm.webp",
-    points: [
-      "Поймете, как вернуть страсть и оставаться интересными друг другу",
-      "Получите новые способы проходить кризисы без разрушения семьи",
-      "Разберетесь, как не потерять себя в семье, быте и родительстве",
-    ],
+    label: "Если хотите понять себя",
+    title: "Перестать жить по старому сценарию",
+    image: "/stories/career-tired.webp",
+    points: ["Поймете, куда уходит энергия", "Соберёте конкретный следующий шаг"],
   },
 ];
 
@@ -618,17 +593,6 @@ const connectionStatusCopy: Record<ConnectionStatus, string> = {
   self: "Понимание своего кода помогает замечать подходящих людей и не соглашаться на связь, в которой приходится отказываться от себя.",
 };
 
-const talkTopics = [
-  "Возможно ли встретить любовь после 35?",
-  "Должна ли женщина вкладываться в семейный бюджет?",
-  "Можно ли простить измену и сохранить отношения?",
-  "Почему успешные женщины выбирают недоступных мужчин?",
-  "Что убивает секс в длительных отношениях?",
-  "Кто должен зарабатывать больше?",
-  "Как не стать мамой собственному мужчине?",
-  "Можно ли построить отношения и не потерять себя?",
-];
-
 const program = [
   {
     label: "Почему вы снова выбираете не тех?",
@@ -848,39 +812,59 @@ function BonusSection() {
       <div className="container">
         <div className="bonus-hero">
           <div className="bonus-copy">
-            <p className="section-label">Подарочный фонд фестиваля</p>
-            <h2>Соберите подарки на <span>50 000 или 100 000 ₽</span></h2>
-            <p className="bonus-lead">Вы сами собираете индивидуальную корзину из доступных сертификатов, услуг и товаров спикеров, спонсоров и партнёров - без случайного набора ненужных купонов.</p>
-            <div className="bonus-rule"><strong>от 5 000 ₽</strong><span>номинал сертификатов в каталоге</span></div>
+            <p className="section-label">Подарки и записи</p>
+            <h2>Больше пользы <span>после фестиваля</span></h2>
+            <p className="bonus-lead">С тарифа «Перезагрузка» вы получаете записи всех выступлений и выбираете подарки под себя.</p>
           </div>
           <div className="bonus-tiers" aria-label="Подарки по тарифам">
-            <article><span>Тариф</span><h3>Перезагрузка</h3><strong>до 50 000 ₽</strong><p>в персональной корзине</p></article>
-            <article className="bonus-tier-vip"><span>Тариф</span><h3>VIP</h3><strong>до 100 000 ₽</strong><p>в расширенной корзине</p></article>
+            <article><span>Перезагрузка</span><h3>Записи всех спикеров</h3><strong>до 50 000 ₽</strong><p>подарков и сертификатов</p></article>
+            <article className="bonus-tier-vip"><span>VIP</span><h3>Максимальный набор</h3><strong>до 100 000 ₽</strong><p>подарков и сертификатов</p></article>
           </div>
         </div>
 
-        <div className="bonus-catalog-heading">
-          <p className="section-label">Выбирайте то, что нужно именно вам</p>
-          <h3>Что будет в каталоге подарков</h3>
-        </div>
-        <div className="bonus-grid">
-          <article><span>01</span><h3>SPA и восстановление</h3><p>SPA-комплексы, массаж, телесные практики, уходовые и расслабляющие процедуры.</p></article>
-          <article><span>02</span><h3>Здоровье и красота</h3><p>Диагностика, медицинские центры, косметология, салоны красоты и программы ухода.</p></article>
-          <article><span>03</span><h3>Кафе и рестораны</h3><p>Депозиты, сертификаты, гастрономические наборы и предложения food-партнёров.</p></article>
-          <article><span>04</span><h3>Консультации спикеров</h3><p>Личные разборы по отношениям, психологии, здоровью, деньгам, карьере и самореализации.</p></article>
-          <article><span>05</span><h3>Обучение и развитие</h3><p>Мастер-классы, практикумы, игры, тренинги и участие в клубных программах.</p></article>
-          <article><span>06</span><h3>Товары партнёров</h3><p>Косметика, парфюмерия, БАДы, продукты, одежда, аксессуары и товары брендов.</p></article>
-        </div>
-
-        <div className="bonus-process">
-          <div className="bonus-process-heading"><p className="section-label">Три шага</p><h3>Вы выбираете - мы отправляем</h3></div>
-          <ol>
-            <li><b>01</b><div><strong>Выберите тариф</strong><p>«Перезагрузка» - корзина до 50 000 ₽. VIP - до 100 000 ₽.</p></div></li>
-            <li><b>02</b><div><strong>Соберите набор на фестивале</strong><p>Выберите из актуального каталога то, чем действительно будете пользоваться.</p></div></li>
-            <li><b>03</b><div><strong>Получите сертификаты</strong><p>На следующий день организаторы отправят выбранный набор и инструкции по активации.</p></div></li>
-          </ol>
+        <div className="bonus-grid bonus-grid-compact" aria-label="Категории подарков">
+          <article><span>01</span><h3>SPA</h3></article>
+          <article><span>02</span><h3>Здоровье</h3></article>
+          <article><span>03</span><h3>Рестораны</h3></article>
+          <article><span>04</span><h3>Консультации</h3></article>
+          <article><span>05</span><h3>Обучение</h3></article>
+          <article><span>06</span><h3>Товары брендов</h3></article>
         </div>
         <p className="bonus-footnote">Состав каталога зависит от подтверждённых предложений партнёров. Конкретные услуги, сроки действия и доступность выбора будут указаны в каталоге фестиваля.</p>
+      </div>
+    </section>
+  );
+}
+
+function PricingSection() {
+  return (
+    <section className="section pricing-section" id="pricing">
+      <div className="container">
+        <div className="section-heading center-heading">
+          <p className="section-label">Билеты</p>
+          <h2>Выберите <span>формат участия</span></h2>
+          <p>Главная разница видна сразу. Полный состав можно открыть внутри карточки.</p>
+        </div>
+        <div className="pricing-grid">
+          {tickets.map((ticket) => (
+            <article className={`price-card price-card-${ticket.tier} ${ticket.featured ? "featured" : ""}`} key={ticket.name}>
+              {ticket.featured && <div className="popular">Самый выгодный</div>}
+              <div className="price-head"><h3>{ticket.name}</h3><strong>{ticket.price}</strong><span>{ticket.note}</span></div>
+              <div className={`ticket-product-scene ticket-product-scene-${ticket.tier}`}>
+                <img src={ticket.mockupImage} alt={ticket.mockupAlt} loading="lazy" />
+              </div>
+              <div className="ticket-highlight-list">
+                {ticket.highlights.map((highlight) => <span key={highlight}>{highlight}</span>)}
+              </div>
+              <details className="ticket-details">
+                <summary>Полный состав тарифа <b>+</b></summary>
+                <ul>{ticket.items.map((item) => <li className={item.includes("50 000") || item.includes("100 000") ? "gift-highlight" : ""} key={item}><b>✓</b>{item}</li>)}</ul>
+              </details>
+              <div className="price-timeline"><span>Следующая цена <b>{ticket.nextPrice}</b></span><span>Финальная цена <b>{ticket.finalPrice}</b></span></div>
+              <a href={ticketUrl} target="_blank" rel="noreferrer">Купить билет <i className="button-icon"><ArrowIcon /></i></a>
+            </article>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -891,21 +875,22 @@ function ProgramSection() {
     <section className="section program-section" id="program">
       <div className="container">
         <div className="section-heading split-heading">
-          <div><p className="section-label">22 августа · программа с 13:00</p><h2>Не расписание лекций.<br /><span>Маршрут изменений.</span></h2></div>
-          <p>Шесть смысловых частей проведут от повторяющихся сценариев к понятному следующему шагу в знакомствах, близости, деньгах и границах.</p>
+          <div><p className="section-label">22 августа · с 13:00</p><h2>Шесть главных <span>вопросов дня</span></h2></div>
+          <p>Откройте тему, чтобы увидеть выступления и результат.</p>
         </div>
         <div className="program-list">
           {program.map((block, index) => (
-            <article className={`program-card program-card-${(index % 4) + 1}`} key={block.label}>
-              <div className="program-number">{String(index + 1).padStart(2, "0")}</div>
+            <details className={`program-card program-card-${(index % 4) + 1}`} key={block.label}>
+              <summary>
+                <span className="program-number">{String(index + 1).padStart(2, "0")}</span>
+                <span className="program-summary-copy"><small>{block.label}</small><strong>{block.title}</strong><em>{block.speakers}</em></span>
+                <b className="program-toggle">+</b>
+              </summary>
               <div className="program-copy">
-                <span>{block.label}</span>
-                <h3>{block.title}</h3>
                 <ul>{block.topics.map((topic) => <li key={topic}>{topic}</li>)}</ul>
-                <p className="program-speakers"><b>Спикеры:</b> {block.speakers}</p>
                 <p className="program-result"><b>Результат:</b> {block.result}</p>
               </div>
-            </article>
+            </details>
           ))}
         </div>
         <p className="program-note">Точные время и распределение по двум залам будут опубликованы после финального согласования программы.</p>
@@ -918,10 +903,14 @@ function SpeakersSection({
   trackRef,
   onSelect,
   onScroll,
+  showAll,
+  onToggleAll,
 }: {
   trackRef: { current: HTMLDivElement | null };
   onSelect: (speaker: Speaker) => void;
   onScroll: (direction: -1 | 1) => void;
+  showAll: boolean;
+  onToggleAll: () => void;
 }) {
   return (
     <>
@@ -930,10 +919,10 @@ function SpeakersSection({
           <div className="section-heading center-heading">
             <p className="section-label">Психологи · сексологи · коучи · терапевты</p>
             <h2>Спикеры <span>фестиваля</span></h2>
-            <p>На карточке сразу видно тему, подтверждённый факт и конкретный результат для участника.</p>
+            <p>Сначала - восемь главных лиц программы. Нажмите на карточку, чтобы увидеть подробности.</p>
           </div>
           <div className="speakers-track" ref={trackRef}>
-            {speakers.map((speaker, index) => (
+            {(showAll ? speakers : speakers.slice(0, 8)).map((speaker, index) => (
               <button className="speaker-card" key={speaker.name} onClick={() => onSelect(speaker)}>
                 <div className={`speaker-visual ${speaker.tone}${speaker.image ? " has-photo" : ""}`}>
                   {speaker.image && <img src={speaker.image} alt={speaker.name} loading="lazy" style={{ objectPosition: speaker.imagePosition }} />}
@@ -947,7 +936,6 @@ function SpeakersSection({
                   <p>{speaker.role}</p>
                   <span className="speaker-topic">Тема: {speaker.topic}</span>
                   <strong className="speaker-proof">{speaker.facts[0]}</strong>
-                  <span className="speaker-outcome">Что получите: {speakerOutcomes[speaker.name]}</span>
                 </div>
               </button>
             ))}
@@ -959,6 +947,7 @@ function SpeakersSection({
               <button type="button" onClick={() => onScroll(1)} aria-label="Следующие спикеры"><ChevronIcon direction="right" /></button>
             </div>
           </div>
+          <button className="speakers-toggle" type="button" onClick={onToggleAll}>{showAll ? "Показать главных спикеров" : `Посмотреть всех ${speakers.length} спикеров`}</button>
         </div>
       </section>
       <section className="section cta-section">
@@ -973,6 +962,7 @@ function SpeakersSection({
 
 export default function Home() {
   const [selectedSpeaker, setSelectedSpeaker] = useState<Speaker | null>(null);
+  const [showAllSpeakers, setShowAllSpeakers] = useState(false);
   const [cookieVisible, setCookieVisible] = useState(false);
   const [connectionStep, setConnectionStep] = useState(0);
   const [connectionStatus, setConnectionStatus] = useState<ConnectionStatus | null>(null);
@@ -1092,64 +1082,38 @@ export default function Home() {
               <p className="kicker">Фестиваль отношений нового времени</p>
               <h1>Мужчина и Женщина.<br /><em>Перезагрузка</em></h1>
               <p className="hero-lead">Для тех, кто хочет встретить своего человека, вернуть близость в паре или перестать повторять старые сценарии.</p>
-              <p className="hero-copy">За один день вы поймёте, что мешает вашим отношениям сейчас, и получите конкретный следующий шаг - к знакомству, близости или новому союзу.</p>
               <div className="hero-actions">
-                <a className="primary-button hero-button" href="#pricing"><span>Выбрать билет</span><i className="button-icon"><ArrowIcon /></i></a>
+                <a className="primary-button hero-button" href="#pricing"><span>Выбрать билет от 990 ₽</span><i className="button-icon"><ArrowIcon /></i></a>
                 <a className="hero-quiz-link" href="#connection-code"><b>90 секунд</b><span>Узнать свой код связи</span></a>
               </div>
             </div>
-            <div className="hero-manifesto-card" aria-label="Главное о фестивале">
-              <div className="hero-manifesto-date"><strong>22</strong><span>августа<br />2026</span></div>
-              <div className="hero-manifesto-copy">
-                <span>Один день вместо ещё одного года сомнений</span>
-                <h2>Не идеальные отношения.<br />А <b>живые и взрослые.</b></h2>
-                <p>Сцена, практики, знакомства и личные ответы экспертов в одном пространстве.</p>
-              </div>
+            <div className="hero-facts-card" aria-label="Что будет на фестивале">
+              <span>За один день</span>
+              <ul>
+                <li><b>{speakers.length}</b> экспертов</li>
+                <li><b>2</b> зала</li>
+                <li>Практики и личные разборы</li>
+                <li>Живые знакомства</li>
+                <li>Подарки до <b>100 000 ₽</b></li>
+              </ul>
             </div>
           </div>
           <div className="stats-bar">
-            <div><strong>8 часов</strong><span>погружения</span></div>
-            <div><strong>500+</strong><span>участников</span></div>
-            <div><strong>18+</strong><span>спикеров</span></div>
-            <div><strong>5</strong><span>форматов</span></div>
+            <div><strong>Второй</strong><span>фестиваль проекта</span></div>
+            <div><strong>550</strong><span>гостей на прошлом событии</span></div>
+            <div><strong>{speakers.length}</strong><span>спикеров</span></div>
+            <div><strong>2 зала</strong><span>одна программа</span></div>
           </div>
-        </div>
-      </section>
-
-      <section className="section intro-section">
-        <div className="container intro-grid">
-          <div>
-            <p className="section-label">Добро пожаловать на фестиваль</p>
-            <h2>Не слушать про отношения.<br /><span>Начать понимать свои.</span></h2>
-          </div>
-          <div className="intro-copy">
-            <p>Здесь не будет скучных лекций и универсальных советов про «идеальные отношения».</p>
-            <p>Это пространство для честного разговора о том, как совмещать семью и личную реализацию в мире быстрых изменений.</p>
-          </div>
-        </div>
-        <div className="container intro-promises" aria-label="Что будет на фестивале">
-          {introPromises.map((promise, index) => <div key={promise}><span>{String(index + 1).padStart(2, "0")}</span><strong>{promise}</strong></div>)}
         </div>
       </section>
 
       <section className="section connection-section" id="connection-code">
-        <div className="container connection-shell">
-          <div className="connection-pitch">
-            <p className="section-label">Интерактив фестиваля · 90 секунд</p>
-            <h2>С кем вам <span>действительно</span> по пути?</h2>
-            <p className="connection-lead">Узнайте свой код связи — без гороскопов, банальных типологий и оценки «правильно» или «неправильно». Пройдите короткий тест.</p>
-            <div className="connection-promises" aria-label="Что вы получите">
-              <span>Как вы строите близость</span>
-              <span>Что мешает отношениям</span>
-              <span>Какой партнёр вам подходит</span>
-              <span>Что делать дальше</span>
-            </div>
-            <button className="connection-flow-cue" type="button" onClick={() => connectionQuizRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })}>
-              <span>Начните здесь — пройдите короткий тест</span>
-              <i><ArrowIcon /></i>
-            </button>
-          </div>
-
+        <div className="container">
+          <details className="connection-compact">
+            <summary>
+              <span><small>Интерактив · 90 секунд</small><strong>Узнайте свой код связи</strong><em>Как вы строите близость, кто вам подходит и что мешает отношениям</em></span>
+              <b>Пройти тест <i><ArrowIcon /></i></b>
+            </summary>
           <div className="connection-experience" id="connection-quiz" ref={connectionQuizRef}>
             {!connectionResult && (
               <div className="connection-question-card" aria-live="polite">
@@ -1260,6 +1224,7 @@ export default function Home() {
               </div>
             )}
           </div>
+          </details>
         </div>
       </section>
 
@@ -1267,10 +1232,10 @@ export default function Home() {
         <div className="container">
           <div className="section-heading split-heading">
             <div>
-              <p className="section-label">У каждого своя история</p>
-              <h2><span>На любом этапе</span> - свой разговор и ответ</h2>
+              <p className="section-label">Для кого фестиваль</p>
+              <h2>Выберите <span>свою ситуацию</span></h2>
             </div>
-            <p>Кто-то ищет любовь, кто-то возвращает близость, а кто-то хочет сделать хорошие отношения еще сильнее. Всех объединяет желание любить и быть любимым.</p>
+            <p>Три маршрута - поиск отношений, работа с парой или возвращение к себе.</p>
           </div>
           <div className="audience-grid">
             {audience.map((item) => (
@@ -1293,20 +1258,14 @@ export default function Home() {
       <section className="section formats-section" id="festival-formats">
         <div className="container">
           <div className="section-heading center-heading">
-            <p className="section-label">Вас ждет</p>
-            <h2>Пять форматов <span>одного сильного дня</span></h2>
-            <p>От общего опыта на главной сцене до точечных знакомств и личных разборов.</p>
+            <p className="section-label">За один день</p>
+            <h2>Не только слушать. <span>Участвовать.</span></h2>
+            <p>Всё главное - в пяти понятных форматах.</p>
           </div>
           <div className="formats-track">
-            {formats.map((format, index) => (
-              <article className={`format-card format-card-${index + 1}`} key={format.number}>
-                {format.image || format.imageClass ? (
-                  <div className={`format-image ${format.imageClass ?? ""}`} style={format.image ? { backgroundImage: `url(${format.image})` } : undefined}>
-                    <span>{format.number}</span>
-                  </div>
-                ) : (
-                  <div className="format-graphic"><span>{format.number}</span><strong>МЖ</strong></div>
-                )}
+            {formats.map((format) => (
+              <article className={`format-card format-card-${format.number}`} key={format.number}>
+                <span className="format-number">{format.number}</span>
                 <div className="format-content">
                   <span className="format-benefit">{format.benefit}</span>
                   <h3>{format.title}</h3>
@@ -1327,13 +1286,7 @@ export default function Home() {
           <div className="dating-copy">
             <p className="section-label">Дейтинг и браслеты</p>
             <h2>Сразу видно, <span>кто открыт к знакомству</span></h2>
-            <p className="dating-lead">Без неловких догадок, случайных подкатов и вопроса «а человек вообще свободен?». На регистрации выберите браслет - и окружающие поймут, какой формат общения вам подходит.</p>
-
-            <div className="dating-benefits">
-              <article><b>01</b><div><strong>Выберите свой цвет</strong><p>Получите браслет на регистрации и обозначьте комфортный формат общения.</p></div></article>
-              <article><b>02</b><div><strong>Замечайте взаимный интерес</strong><p>Цвет помогает быстро понять, к кому можно подойти познакомиться.</p></div></article>
-              <article><b>03</b><div><strong>Начните не с банальностей</strong><p>Используйте «Код связи» и карточки с вопросами о ценностях, близости и целях.</p></div></article>
-            </div>
+            <p className="dating-lead">Выберите браслет на регистрации. Цвет покажет окружающим комфортный для вас формат общения - без неловких догадок.</p>
 
             <a className="primary-button dating-button" href="#pricing"><span>Выбрать билет</span><i className="button-icon"><ArrowIcon /></i></a>
           </div>
@@ -1363,43 +1316,17 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section why-section">
-        <div className="container why-grid">
-          <div className="why-portrait" role="img" aria-label="Успешная женщина в момент эмоциональной усталости">
-            <span>Сильная.<br />Успешная.<br /><b>Уставшая.</b></span>
-          </div>
-          <div>
-            <p className="section-label">Почему так происходит</p>
-            <h2>Проблемы часто начинаются, когда <span>карьера и самореализация идут в гору</span></h2>
-            <p className="why-copy">Навыки, которые помогают зарабатывать и развиваться, могут убивать близость: привычка контролировать, нежелание быть уязвимым, вечная занятость и усталость.</p>
-            <p className="date-accent">Вы увидите, какие привычки разрушают близость, и найдёте работающую модель отношений без отказа от карьеры и себя.</p>
-          </div>
-        </div>
-      </section>
-
-      <section className="section themes-section">
-        <div className="container">
-          <div className="section-heading split-heading">
-            <div>
-              <p className="section-label">Разберем честно</p>
-              <h2>Реальные конфликты <span>современных пар</span></h2>
-            </div>
-            <p>Не абстрактная теория, а вопросы, которые влияют на выбор партнера, деньги, секс, доверие и будущее семьи.</p>
-          </div>
-          <div className="theme-list">
-            {talkTopics.map((topic, index) => (
-              <div key={topic}><span>{String(index + 1).padStart(2, "0")}</span><p>{topic}</p></div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       <ProgramSection />
       <SpeakersSection
         trackRef={speakersRef}
         onSelect={setSelectedSpeaker}
         onScroll={(direction) => scrollSlider(speakersRef.current, direction)}
+        showAll={showAllSpeakers}
+        onToggleAll={() => setShowAllSpeakers((current) => !current)}
       />
+
+      <BonusSection />
+      <PricingSection />
 
       <section className="section partners-section">
         <div className="container">
@@ -1430,69 +1357,6 @@ export default function Home() {
         </div>
       </section>
 
-      <BonusSection />
-
-      <section className="section pricing-section" id="pricing">
-        <div className="container">
-          <div className="section-heading center-heading">
-            <p className="section-label">Выбирайте глубину участия</p>
-            <h2>Билеты на <span>фестиваль</span></h2>
-            <p>«Старт» - билет и рабочая тетрадь. С «Перезагрузки» добавляются записи выступлений всех спикеров, подарки и дополнительные привилегии.</p>
-          </div>
-          <div className="pricing-grid">
-            {tickets.map((ticket) => (
-              <article className={`price-card price-card-${ticket.tier} ${ticket.featured ? "featured" : ""}`} key={ticket.name}>
-                  {ticket.featured && <div className="popular">Самый выгодный</div>}
-                <div className="price-head"><h3>{ticket.name}</h3><strong>{ticket.price}</strong><span>{ticket.note}</span></div>
-                <div className={`ticket-showcase ticket-showcase-${ticket.tier}`} aria-label={`Главные преимущества тарифа ${ticket.name}`}>
-                  <div className="ticket-showcase-head">
-                    <span>{ticket.visualLabel}</span>
-                    <strong>{ticket.visualValue}</strong>
-                    <small>{ticket.visualNote}</small>
-                  </div>
-                  <div className={`ticket-product-scene ticket-product-scene-${ticket.tier}`}>
-                    <img src={ticket.mockupImage} alt={ticket.mockupAlt} />
-                    <span className="ticket-product-kicker">
-                      {ticket.tier === "start" ? "Комплект участника" : ticket.tier === "reload" ? "Бонусы начинаются здесь" : "Максимальная комплектация"}
-                    </span>
-                  </div>
-                  <div className={`ticket-bonus-stack ticket-bonus-stack-${ticket.tier}`}>
-                    {ticket.mockupItems.map((item) => (
-                      <span
-                        className={item.title.includes("₽") ? "ticket-bonus-gold" : item.title === "VIP-доступ" ? "ticket-bonus-dark" : ""}
-                        key={item.title}
-                      >
-                        <b>{item.title}</b>
-                        <small>{item.note}</small>
-                      </span>
-                    ))}
-                  </div>
-                  <div className="ticket-highlight-list">
-                    {ticket.highlights.map((highlight) => <span key={highlight}>{highlight}</span>)}
-                  </div>
-                </div>
-                <div className="ticket-includes-title"><span>Полный состав тарифа</span><b>{ticket.items.length} возможностей</b></div>
-                <ul>{ticket.items.map((item) => <li className={item.includes("50 000") || item.includes("100 000") ? "gift-highlight" : ""} key={item}><b>✓</b>{item}</li>)}</ul>
-                <p>{ticket.description}</p>
-                <div className="price-timeline"><span>Следующая цена <b>{ticket.nextPrice}</b></span><span>Финальная цена <b>{ticket.finalPrice}</b></span></div>
-                <a href={ticketUrl} target="_blank" rel="noreferrer">Купить билет <i className="button-icon"><ArrowIcon /></i></a>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="section final-cta-section">
-        <div className="container final-cta">
-          <p>22 августа · Санкт-Петербург</p>
-          <h2>Перезагрузите отношения.<br /><span>Не откладывайте жизнь на потом.</span></h2>
-          <div>
-            <a className="primary-button" href="#pricing"><span>Выбрать билет</span><i className="button-icon"><ArrowIcon /></i></a>
-            <a className="text-button" href={`${telegramUrl}?text=${encodeURIComponent("Хочу стать спикером или партнером фестиваля МЖ")}`} target="_blank" rel="noreferrer">Стать спикером или партнером</a>
-          </div>
-        </div>
-      </section>
-
       <section className="section logistics-section" id="logistics">
         <div className="container logistics-card">
           <div className="logistics-main">
@@ -1507,6 +1371,16 @@ export default function Home() {
             <article><span>13:00</span><p>Старт основной программы</p></article>
             <article><span>20:00</span><p>Завершение фестивального дня</p></article>
             <div className="logistics-note"><strong>Возьмите с собой</strong><p>Билет в телефоне, документ, зарядное устройство и вопросы, которые давно откладывали.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section final-cta-section">
+        <div className="container final-cta">
+          <p>22 августа · Санкт-Петербург</p>
+          <h2>Можно снова отложить отношения.<br /><span>Или сделать первый реальный шаг.</span></h2>
+          <div>
+            <a className="primary-button" href="#pricing"><span>Выбрать билет от 990 ₽</span><i className="button-icon"><ArrowIcon /></i></a>
           </div>
         </div>
       </section>
