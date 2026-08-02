@@ -903,14 +903,10 @@ function SpeakersSection({
   trackRef,
   onSelect,
   onScroll,
-  showAll,
-  onToggleAll,
 }: {
   trackRef: { current: HTMLDivElement | null };
   onSelect: (speaker: Speaker) => void;
   onScroll: (direction: -1 | 1) => void;
-  showAll: boolean;
-  onToggleAll: () => void;
 }) {
   return (
     <>
@@ -919,10 +915,10 @@ function SpeakersSection({
           <div className="section-heading center-heading">
             <p className="section-label">Психологи · сексологи · коучи · терапевты</p>
             <h2>Спикеры <span>фестиваля</span></h2>
-            <p>Сначала - восемь главных лиц программы. Нажмите на карточку, чтобы увидеть подробности.</p>
+            <p>Все спикеры программы собраны здесь. Листайте карусель и нажмите на карточку, чтобы увидеть подробности.</p>
           </div>
           <div className="speakers-track" ref={trackRef}>
-            {(showAll ? speakers : speakers.slice(0, 8)).map((speaker, index) => (
+            {speakers.map((speaker, index) => (
               <button className="speaker-card" key={speaker.name} onClick={() => onSelect(speaker)}>
                 <div className={`speaker-visual ${speaker.tone}${speaker.image ? " has-photo" : ""}`}>
                   {speaker.image && <img src={speaker.image} alt={speaker.name} loading="lazy" style={{ objectPosition: speaker.imagePosition }} />}
@@ -947,7 +943,6 @@ function SpeakersSection({
               <button type="button" onClick={() => onScroll(1)} aria-label="Следующие спикеры"><ChevronIcon direction="right" /></button>
             </div>
           </div>
-          <button className="speakers-toggle" type="button" onClick={onToggleAll}>{showAll ? "Показать главных спикеров" : `Посмотреть всех ${speakers.length} спикеров`}</button>
         </div>
       </section>
       <section className="section cta-section">
@@ -962,7 +957,6 @@ function SpeakersSection({
 
 export default function Home() {
   const [selectedSpeaker, setSelectedSpeaker] = useState<Speaker | null>(null);
-  const [showAllSpeakers, setShowAllSpeakers] = useState(false);
   const [cookieVisible, setCookieVisible] = useState(false);
   const [connectionStep, setConnectionStep] = useState(0);
   const [connectionStatus, setConnectionStatus] = useState<ConnectionStatus | null>(null);
@@ -1321,8 +1315,6 @@ export default function Home() {
         trackRef={speakersRef}
         onSelect={setSelectedSpeaker}
         onScroll={(direction) => scrollSlider(speakersRef.current, direction)}
-        showAll={showAllSpeakers}
-        onToggleAll={() => setShowAllSpeakers((current) => !current)}
       />
 
       <BonusSection />
