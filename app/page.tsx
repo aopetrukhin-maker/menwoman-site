@@ -1004,6 +1004,14 @@ function PricingSection() {
     });
   };
 
+  const selectPairPurchase = () => {
+    setPurchaseMode("pair");
+    setQuantity(1);
+    window.requestAnimationFrame(() => {
+      document.getElementById("ticket-calculator")?.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+  };
+
   return (
     <section className="section pricing-section" id="pricing">
       <div className="container">
@@ -1012,6 +1020,15 @@ function PricingSection() {
           <h2>Выберите <span>формат участия</span></h2>
           <p>Главная разница видна сразу. Полный состав можно открыть внутри карточки.</p>
         </div>
+
+        <button className="pair-ticket-banner" type="button" onClick={selectPairPurchase} aria-controls="ticket-calculator">
+          <span>Новый формат</span>
+          <div>
+            <strong>Парные билеты -30%</strong>
+            <p>Два билета одного тарифа дешевле. Приходите с партнёром, другом, подругой, родственником или коллегой.</p>
+          </div>
+          <b>Выбрать парный билет <i className="button-icon"><ArrowIcon /></i></b>
+        </button>
 
         <div className={`sale-fomo-panel${activeStage.closed ? " is-closed" : ""}`} key={activeStage.id}>
           <div className="sale-fomo-status">
@@ -1053,12 +1070,6 @@ function PricingSection() {
             <div className="price-calculator-heading">
               <span>Билеты</span>
               <h3>{purchaseMode === "pair" ? "Купить парный билет" : "Купить билет"}</h3>
-            </div>
-
-            <div className="pair-ticket-callout">
-              <span>Идёте вдвоём?</span>
-              <strong>Парные билеты дешевле на 30%</strong>
-              <p>Приходите с партнёром, другом, подругой, родственником или коллегой.</p>
             </div>
 
             <div className="purchase-mode-switch" role="group" aria-label="Формат покупки">
