@@ -1011,7 +1011,7 @@ function PricingSection() {
           <div className="price-calculator" aria-label="Калькулятор стоимости билетов">
             <div className="price-calculator-heading">
               <span>Калькулятор</span>
-              <h3>Посчитайте билет сейчас</h3>
+              <h3>Купить билет</h3>
             </div>
 
             <div className="calculator-tiers" role="group" aria-label="Выберите тариф">
