@@ -18,6 +18,7 @@ type Speaker = {
 type ConnectionCode = "dialogue" | "support" | "spark" | "space" | "depth";
 type ConnectionStatus = "search" | "relationship" | "complicated" | "self";
 type TicketTier = "start" | "reload" | "vip";
+type PurchaseMode = "single" | "pair";
 
 type SaleStage = {
   id: string;
@@ -98,6 +99,8 @@ const saleStages: SaleStage[] = [
 
 const formatPrice = (price: number) => `${new Intl.NumberFormat("ru-RU").format(price)} ₽`;
 
+const getPairPricePerPerson = (price: number) => Math.floor((price * 0.7) / 10) * 10;
+
 const formatTicketCount = (count: number) => {
   const lastTwoDigits = count % 100;
   const lastDigit = count % 10;
@@ -108,6 +111,19 @@ const formatTicketCount = (count: number) => {
       : lastDigit >= 2 && lastDigit <= 4
         ? "билета"
         : "билетов";
+  return `${count} ${suffix}`;
+};
+
+const formatPairCount = (count: number) => {
+  const lastTwoDigits = count % 100;
+  const lastDigit = count % 10;
+  const suffix = lastTwoDigits >= 11 && lastTwoDigits <= 14
+    ? "пар"
+    : lastDigit === 1
+      ? "пара"
+      : lastDigit >= 2 && lastDigit <= 4
+        ? "пары"
+        : "пар";
   return `${count} ${suffix}`;
 };
 
@@ -889,6 +905,7 @@ function ArrowIcon() {
   );
 }
 
+
 function ChevronIcon({ direction }: { direction: "left" | "right" }) {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -930,6 +947,7 @@ function BonusSection() {
 function PricingSection() {
   const [saleSnapshot, setSaleSnapshot] = useState<SaleSnapshot | null>(null);
   const [calculatorTier, setCalculatorTier] = useState<TicketTier>("reload");
+  const [purchaseMode, setPurchaseMode] = useState<PurchaseMode>("single");
   const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
@@ -953,15 +971,38 @@ function PricingSection() {
   const nextStage = saleStages[Math.min(activeStageIndex + 1, saleStages.length - 1)];
   const countdown = getCountdownParts(saleSnapshot?.millisecondsLeft ?? 0);
   const selectedTicket = tickets.find((ticket) => ticket.tier === calculatorTier) ?? tickets[1];
-  const currentTotal = activeStage.prices[calculatorTier] * quantity;
-  const nextTotal = nextStage.prices[calculatorTier] * quantity;
-  const savings = Math.max(0, nextTotal - currentTotal);
+  const currentSinglePrice = activeStage.prices[calculatorTier];
+  const nextSinglePrice = nextStage.prices[calculatorTier];
+  const currentPairPricePerPerson = getPairPricePerPerson(currentSinglePrice);
+  const nextPairPricePerPerson = getPairPricePerPerson(nextSinglePrice);
+  const currentUnitPrice = purchaseMode === "pair" ? currentPairPricePerPerson * 2 : currentSinglePrice;
+  const nextUnitPrice = purchaseMode === "pair" ? nextPairPricePerPerson * 2 : nextSinglePrice;
+  const currentTotal = currentUnitPrice * quantity;
+  const nextTotal = nextUnitPrice * quantity;
+  const stageSavings = Math.max(0, nextTotal - currentTotal);
+  const pairSavings = purchaseMode === "pair"
+    ? Math.max(0, (currentSinglePrice * 2 - currentUnitPrice) * quantity)
+    : 0;
   const progress = activeStage.quota > 0
     ? Math.max(0, Math.min(100, ((activeStage.quota - activeStage.remaining) / activeStage.quota) * 100))
     : 100;
   const purchaseUrl = activeStage.closed
     ? `${telegramUrl}?text=${encodeURIComponent("Хочу уточнить наличие билетов на фестиваль МЖ")}`
+    : purchaseMode === "pair"
+      ? `${telegramUrl}?text=${encodeURIComponent(`Хочу купить парный билет «${selectedTicket.name}»: ${formatTicketCount(quantity * 2)} за ${formatPrice(currentTotal)}`)}`
+      : ticketUrl;
+  const cardPurchaseUrl = activeStage.closed
+    ? `${telegramUrl}?text=${encodeURIComponent("Хочу уточнить наличие билетов на фестиваль МЖ")}`
     : ticketUrl;
+
+  const selectPairTicket = (tier: TicketTier) => {
+    setCalculatorTier(tier);
+    setPurchaseMode("pair");
+    setQuantity(1);
+    window.requestAnimationFrame(() => {
+      document.getElementById("ticket-calculator")?.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+  };
 
   return (
     <section className="section pricing-section" id="pricing">
@@ -1008,10 +1049,35 @@ function PricingSection() {
             )}
           </div>
 
-          <div className="price-calculator" aria-label="Калькулятор стоимости билетов">
+          <div className={`price-calculator${purchaseMode === "pair" ? " is-pair" : ""}`} id="ticket-calculator" aria-label="Покупка билетов">
             <div className="price-calculator-heading">
-              <span>Калькулятор</span>
-              <h3>Купить билет</h3>
+              <span>Билеты</span>
+              <h3>{purchaseMode === "pair" ? "Купить парный билет" : "Купить билет"}</h3>
+            </div>
+
+            <div className="pair-ticket-callout">
+              <span>Идёте вдвоём?</span>
+              <strong>Парные билеты дешевле на 30%</strong>
+              <p>Приходите с партнёром, другом, подругой, родственником или коллегой.</p>
+            </div>
+
+            <div className="purchase-mode-switch" role="group" aria-label="Формат покупки">
+              <button
+                className={purchaseMode === "single" ? "is-active" : ""}
+                type="button"
+                aria-pressed={purchaseMode === "single"}
+                onClick={() => setPurchaseMode("single")}
+              >
+                Один билет
+              </button>
+              <button
+                className={purchaseMode === "pair" ? "is-active" : ""}
+                type="button"
+                aria-pressed={purchaseMode === "pair"}
+                onClick={() => setPurchaseMode("pair")}
+              >
+                Парный билет <b>-30%</b>
+              </button>
             </div>
 
             <div className="calculator-tiers" role="group" aria-label="Выберите тариф">
@@ -1022,14 +1088,18 @@ function PricingSection() {
                   key={ticket.tier}
                   onClick={() => setCalculatorTier(ticket.tier)}
                 >
-                  <span>{ticket.name}</span>
-                  <strong>{formatPrice(activeStage.prices[ticket.tier])}</strong>
+                  <span>{ticket.name}<small>{purchaseMode === "pair" ? "за двоих" : "за билет"}</small></span>
+                  <strong>
+                    {formatPrice(purchaseMode === "pair"
+                      ? getPairPricePerPerson(activeStage.prices[ticket.tier]) * 2
+                      : activeStage.prices[ticket.tier])}
+                  </strong>
                 </button>
               ))}
             </div>
 
             <div className="calculator-quantity">
-              <span>Количество билетов</span>
+              <span>{purchaseMode === "pair" ? "Количество пар" : "Количество билетов"}</span>
               <div>
                 <button type="button" onClick={() => setQuantity((current) => Math.max(1, current - 1))} aria-label="Уменьшить количество">−</button>
                 <strong>{quantity}</strong>
@@ -1037,19 +1107,37 @@ function PricingSection() {
               </div>
             </div>
 
-            <div className="calculator-result">
-              <div><span>Сейчас</span><strong>{formatPrice(currentTotal)}</strong></div>
-              {!activeStage.closed && activeStageIndex < saleStages.length - 2 && (
-                <div><span>После повышения</span><strong>{formatPrice(nextTotal)}</strong></div>
-              )}
-            </div>
-
-            {!activeStage.closed && savings > 0 && (
-              <p className="calculator-saving">Покупка сейчас экономит {formatPrice(savings)}</p>
+            {purchaseMode === "pair" ? (
+              <>
+                <div className="calculator-result pair-result">
+                  <div><span>На человека</span><strong>{formatPrice(currentPairPricePerPerson)}</strong></div>
+                  <div><span>{quantity === 1 ? "За двоих" : `За ${formatPairCount(quantity)}`}</span><strong>{formatPrice(currentTotal)}</strong></div>
+                </div>
+                <p className="calculator-saving pair-saving">Ваша выгода - {formatPrice(pairSavings)}</p>
+                {!activeStage.closed && activeStageIndex < saleStages.length - 2 && (
+                  <p className="calculator-next-price">После повышения - {formatPrice(nextTotal)} за {quantity === 1 ? "двоих" : formatPairCount(quantity)}</p>
+                )}
+              </>
+            ) : (
+              <>
+                <div className="calculator-result">
+                  <div><span>Сейчас</span><strong>{formatPrice(currentTotal)}</strong></div>
+                  {!activeStage.closed && activeStageIndex < saleStages.length - 2 && (
+                    <div><span>После повышения</span><strong>{formatPrice(nextTotal)}</strong></div>
+                  )}
+                </div>
+                {!activeStage.closed && stageSavings > 0 && (
+                  <p className="calculator-saving">Покупка сейчас экономит {formatPrice(stageSavings)}</p>
+                )}
+              </>
             )}
 
             <a href={purchaseUrl} target="_blank" rel="noreferrer">
-              {activeStage.closed ? "Уточнить наличие" : `Выбрать «${selectedTicket.name}»`}
+              {activeStage.closed
+                ? "Уточнить наличие"
+                : purchaseMode === "pair"
+                  ? `Купить ${formatTicketCount(quantity * 2)} за ${formatPrice(currentTotal)}`
+                  : `Выбрать «${selectedTicket.name}»`}
               <i className="button-icon"><ArrowIcon /></i>
             </a>
           </div>
@@ -1078,7 +1166,12 @@ function PricingSection() {
                 <span>{activeStage.closed || activeStageIndex >= saleStages.length - 2 ? "Текущая цена" : "Следующая цена"}<b>{formatPrice(activeStage.closed || activeStageIndex >= saleStages.length - 2 ? activeStage.prices[ticket.tier] : nextStage.prices[ticket.tier])}</b></span>
                 <span>Финальная цена <b>{ticket.finalPrice}</b></span>
               </div>
-              <a href={purchaseUrl} target="_blank" rel="noreferrer">{activeStage.closed ? "Уточнить наличие" : "Купить билет"} <i className="button-icon"><ArrowIcon /></i></a>
+              {!activeStage.closed && (
+                <button className="pair-card-link" type="button" onClick={() => selectPairTicket(ticket.tier)}>
+                  Для двоих - {formatPrice(getPairPricePerPerson(activeStage.prices[ticket.tier]))} с человека
+                </button>
+              )}
+              <a href={cardPurchaseUrl} target="_blank" rel="noreferrer">{activeStage.closed ? "Уточнить наличие" : "Купить билет"} <i className="button-icon"><ArrowIcon /></i></a>
             </article>
           ))}
         </div>
