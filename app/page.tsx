@@ -1013,7 +1013,7 @@ function PricingSection() {
   };
 
   return (
-    <section className="section pricing-section" id="pricing">
+    <section className="section pricing-section" id="pricing" data-release="pair-tickets-visible">
       <div className="container">
         <div className="section-heading center-heading">
           <p className="section-label">Билеты</p>
