@@ -1504,6 +1504,83 @@
   letter-spacing: -.035em;
 }
 
+.pair-ticket-callout {
+  display: grid;
+  gap: 5px;
+  margin-top: 22px;
+  padding: 16px 18px;
+  border: 1px solid rgba(146, 93, 25, .16);
+  border-radius: 18px;
+  background: linear-gradient(135deg, #fff0c9, #f8dda3);
+}
+
+.pair-ticket-callout span {
+  color: #8b3b32;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.pair-ticket-callout strong {
+  color: #322117;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 23px;
+  font-weight: 700;
+  line-height: 1.05;
+}
+
+.pair-ticket-callout p {
+  margin: 2px 0 0;
+  color: rgba(50, 33, 23, .68);
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.purchase-mode-switch {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 5px;
+  margin-top: 12px;
+  padding: 5px;
+  border: 1px solid rgba(33, 25, 22, .1);
+  border-radius: 16px;
+  background: #f5ece3;
+}
+
+.purchase-mode-switch button {
+  min-width: 0;
+  padding: 12px 10px;
+  border: 0;
+  border-radius: 12px;
+  color: #68564e;
+  background: transparent;
+  font-size: 10px;
+  font-weight: 850;
+  cursor: pointer;
+  transition: color .2s ease, background .2s ease, box-shadow .2s ease, transform .2s ease;
+}
+
+.purchase-mode-switch button:hover {
+  transform: translateY(-1px);
+}
+
+.purchase-mode-switch button.is-active {
+  color: #fff;
+  background: #30201c;
+  box-shadow: 0 8px 22px rgba(48, 32, 28, .18);
+}
+
+.purchase-mode-switch button b {
+  margin-left: 3px;
+  color: #8b321f;
+  font-size: 9px;
+}
+
+.purchase-mode-switch button.is-active b {
+  color: #f7dda0;
+}
+
 .calculator-tiers {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1542,6 +1619,14 @@
   letter-spacing: .05em;
   text-overflow: ellipsis;
   text-transform: uppercase;
+}
+
+.calculator-tiers span small {
+  display: block;
+  margin-top: 3px;
+  opacity: .58;
+  font-size: 7px;
+  letter-spacing: .04em;
 }
 
 .calculator-tiers strong {
@@ -1636,6 +1721,65 @@
   font-size: 10px;
   font-weight: 850;
   text-align: center;
+}
+
+.price-calculator.is-pair {
+  border-color: rgba(190, 99, 51, .24);
+  background: linear-gradient(180deg, #fffdf9, #fff9ef);
+}
+
+.price-calculator.is-pair .pair-result > div:first-child {
+  background: #fff0c9;
+}
+
+.price-calculator.is-pair .pair-result > div:last-child {
+  background: #f7e3df;
+}
+
+.pair-saving {
+  color: #fff;
+  background: #b8473e;
+}
+
+.calculator-next-price {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.pair-card-link {
+  width: 100%;
+  margin: 14px 0 10px;
+  padding: 12px 14px;
+  border: 1px solid rgba(184, 71, 62, .28);
+  border-radius: 999px;
+  color: #9f3d35;
+  background: rgba(255, 255, 255, .72);
+  font-size: 10px;
+  font-weight: 850;
+  line-height: 1.25;
+  cursor: pointer;
+  transition: color .2s ease, border-color .2s ease, background .2s ease, transform .2s ease;
+}
+
+.pair-card-link:hover {
+  transform: translateY(-2px);
+  border-color: #b8473e;
+  color: #fff;
+  background: #b8473e;
+}
+
+.price-card-vip .pair-card-link {
+  border-color: rgba(247, 221, 160, .42);
+  color: #f7dda0;
+  background: rgba(255, 255, 255, .07);
+}
+
+.price-card-vip .pair-card-link:hover {
+  color: #30201c;
+  background: #f7dda0;
 }
 
 .price-calculator > a {
@@ -1751,6 +1895,22 @@
 
   .price-calculator-heading h3 {
     font-size: 37px;
+  }
+
+  .pair-ticket-callout {
+    padding: 15px;
+  }
+
+  .pair-ticket-callout strong {
+    font-size: 21px;
+  }
+
+  .purchase-mode-switch {
+    grid-template-columns: 1fr;
+  }
+
+  .purchase-mode-switch button {
+    min-height: 42px;
   }
 
   .calculator-tiers {
