@@ -931,44 +931,10 @@ function PricingSection() {
   const [saleSnapshot, setSaleSnapshot] = useState<SaleSnapshot | null>(null);
   const [calculatorTier, setCalculatorTier] = useState<TicketTier>("reload");
   const [quantity, setQuantity] = useState(1);
-  const previewClockRef = useRef<{ stageIndex: number; endsAt: number } | null>(null);
 
   useEffect(() => {
-    if (process.env.NODE_ENV !== "production") {
-      const params = new URLSearchParams(window.location.search);
-      const previewStage = Number(params.get("previewStage"));
-      const previewSeconds = Number(params.get("previewSeconds"));
-      if (
-        Number.isInteger(previewStage)
-        && previewStage >= 0
-        && previewStage < saleStages.length - 1
-        && Number.isFinite(previewSeconds)
-        && previewSeconds > 0
-      ) {
-        previewClockRef.current = {
-          stageIndex: previewStage,
-          endsAt: Date.now() + previewSeconds * 1000,
-        };
-      }
-    }
-
     const updateSaleState = () => {
       const now = Date.now();
-      const previewClock = previewClockRef.current;
-
-      if (previewClock) {
-        const previewExpired = now >= previewClock.endsAt;
-        const stageIndex = previewExpired
-          ? Math.min(previewClock.stageIndex + 1, saleStages.length - 1)
-          : previewClock.stageIndex;
-        const stage = saleStages[stageIndex];
-        const millisecondsLeft = previewExpired
-          ? stage.deadline ? Math.max(0, new Date(stage.deadline).getTime() - now) : 0
-          : Math.max(0, previewClock.endsAt - now);
-        setSaleSnapshot({ stageIndex, millisecondsLeft });
-        return;
-      }
-
       const stageIndex = getSaleStageIndex(now);
       const stage = saleStages[stageIndex];
       setSaleSnapshot({
