@@ -17,6 +17,23 @@ type Speaker = {
 
 type ConnectionCode = "dialogue" | "support" | "spark" | "space" | "depth";
 type ConnectionStatus = "search" | "relationship" | "complicated" | "self";
+type TicketTier = "start" | "reload" | "vip";
+
+type SaleStage = {
+  id: string;
+  label: string;
+  deadline: string | null;
+  deadlineLabel: string;
+  remaining: number;
+  quota: number;
+  prices: Record<TicketTier, number>;
+  closed?: boolean;
+};
+
+type SaleSnapshot = {
+  stageIndex: number;
+  millisecondsLeft: number;
+};
 
 type ConnectionAnswer = {
   label: string;
@@ -38,6 +55,80 @@ type SpeakerRoute = {
 
 const ticketUrl = "https://qtickets.ru/organizer/50526?base_color=ea1e63";
 const telegramUrl = "https://t.me/aopetrukhin";
+
+const saleStages: SaleStage[] = [
+  {
+    id: "early",
+    label: "Ранняя цена",
+    deadline: "2026-08-07T23:59:59+03:00",
+    deadlineLabel: "7 августа в 23:59 МСК",
+    remaining: 34,
+    quota: 120,
+    prices: { start: 990, reload: 1990, vip: 3990 },
+  },
+  {
+    id: "regular",
+    label: "Основная цена",
+    deadline: "2026-08-14T23:59:59+03:00",
+    deadlineLabel: "14 августа в 23:59 МСК",
+    remaining: 58,
+    quota: 150,
+    prices: { start: 1490, reload: 2990, vip: 5990 },
+  },
+  {
+    id: "final",
+    label: "Финальная цена",
+    deadline: "2026-08-22T12:00:00+03:00",
+    deadlineLabel: "22 августа в 12:00 МСК",
+    remaining: 40,
+    quota: 200,
+    prices: { start: 1990, reload: 3990, vip: 7990 },
+  },
+  {
+    id: "closed",
+    label: "Онлайн-продажа завершена",
+    deadline: null,
+    deadlineLabel: "Регистрация открыта на площадке",
+    remaining: 0,
+    quota: 0,
+    prices: { start: 1990, reload: 3990, vip: 7990 },
+    closed: true,
+  },
+];
+
+const formatPrice = (price: number) => `${new Intl.NumberFormat("ru-RU").format(price)} ₽`;
+
+const formatTicketCount = (count: number) => {
+  const lastTwoDigits = count % 100;
+  const lastDigit = count % 10;
+  const suffix = lastTwoDigits >= 11 && lastTwoDigits <= 14
+    ? "билетов"
+    : lastDigit === 1
+      ? "билет"
+      : lastDigit >= 2 && lastDigit <= 4
+        ? "билета"
+        : "билетов";
+  return `${count} ${suffix}`;
+};
+
+const getSaleStageIndex = (now: number) => {
+  const activeIndex = saleStages.findIndex((stage) => (
+    stage.deadline
+    && stage.remaining > 0
+    && now < new Date(stage.deadline).getTime()
+  ));
+  return activeIndex === -1 ? saleStages.length - 1 : activeIndex;
+};
+
+const getCountdownParts = (milliseconds: number) => {
+  const totalSeconds = Math.max(0, Math.floor(milliseconds / 1000));
+  return {
+    days: Math.floor(totalSeconds / 86400),
+    hours: Math.floor((totalSeconds % 86400) / 3600),
+    minutes: Math.floor((totalSeconds % 3600) / 60),
+    seconds: totalSeconds % 60,
+  };
+};
 
 const speakers: Speaker[] = [
   {
@@ -690,7 +781,7 @@ const partners = [
 const tickets = [
   {
     name: "Старт",
-    tier: "start",
+    tier: "start" as TicketTier,
     price: "990 ₽",
     note: "Количество билетов по этой цене ограничено",
     visualLabel: "Входит в стоимость",
@@ -718,7 +809,7 @@ const tickets = [
   },
   {
     name: "Перезагрузка",
-    tier: "reload",
+    tier: "reload" as TicketTier,
     price: "1 990 ₽",
     note: "Самый выгодный тариф",
     visualLabel: "Всё включено + бонусы",
@@ -755,7 +846,7 @@ const tickets = [
   },
   {
     name: "VIP",
-    tier: "vip",
+    tier: "vip" as TicketTier,
     price: "3 990 ₽",
     note: "Количество мест строго ограничено",
     visualLabel: "Максимум включено + бонусы",
@@ -837,6 +928,75 @@ function BonusSection() {
 }
 
 function PricingSection() {
+  const [saleSnapshot, setSaleSnapshot] = useState<SaleSnapshot | null>(null);
+  const [calculatorTier, setCalculatorTier] = useState<TicketTier>("reload");
+  const [quantity, setQuantity] = useState(1);
+  const previewClockRef = useRef<{ stageIndex: number; endsAt: number } | null>(null);
+
+  useEffect(() => {
+    if (process.env.NODE_ENV !== "production") {
+      const params = new URLSearchParams(window.location.search);
+      const previewStage = Number(params.get("previewStage"));
+      const previewSeconds = Number(params.get("previewSeconds"));
+      if (
+        Number.isInteger(previewStage)
+        && previewStage >= 0
+        && previewStage < saleStages.length - 1
+        && Number.isFinite(previewSeconds)
+        && previewSeconds > 0
+      ) {
+        previewClockRef.current = {
+          stageIndex: previewStage,
+          endsAt: Date.now() + previewSeconds * 1000,
+        };
+      }
+    }
+
+    const updateSaleState = () => {
+      const now = Date.now();
+      const previewClock = previewClockRef.current;
+
+      if (previewClock) {
+        const previewExpired = now >= previewClock.endsAt;
+        const stageIndex = previewExpired
+          ? Math.min(previewClock.stageIndex + 1, saleStages.length - 1)
+          : previewClock.stageIndex;
+        const stage = saleStages[stageIndex];
+        const millisecondsLeft = previewExpired
+          ? stage.deadline ? Math.max(0, new Date(stage.deadline).getTime() - now) : 0
+          : Math.max(0, previewClock.endsAt - now);
+        setSaleSnapshot({ stageIndex, millisecondsLeft });
+        return;
+      }
+
+      const stageIndex = getSaleStageIndex(now);
+      const stage = saleStages[stageIndex];
+      setSaleSnapshot({
+        stageIndex,
+        millisecondsLeft: stage.deadline ? Math.max(0, new Date(stage.deadline).getTime() - now) : 0,
+      });
+    };
+
+    updateSaleState();
+    const timer = window.setInterval(updateSaleState, 1000);
+    return () => window.clearInterval(timer);
+  }, []);
+
+  const activeStageIndex = saleSnapshot?.stageIndex ?? 0;
+  const activeStage = saleStages[activeStageIndex];
+  const nextStage = saleStages[Math.min(activeStageIndex + 1, saleStages.length - 1)];
+  const countdown = getCountdownParts(saleSnapshot?.millisecondsLeft ?? 0);
+  const selectedTicket = tickets.find((ticket) => ticket.tier === calculatorTier) ?? tickets[1];
+  const currentTotal = activeStage.prices[calculatorTier] * quantity;
+  const nextTotal = nextStage.prices[calculatorTier] * quantity;
+  const savings = Math.max(0, nextTotal - currentTotal);
+  const progress = activeStage.quota > 0
+    ? Math.max(0, Math.min(100, ((activeStage.quota - activeStage.remaining) / activeStage.quota) * 100))
+    : 100;
+  const purchaseUrl = activeStage.closed
+    ? `${telegramUrl}?text=${encodeURIComponent("Хочу уточнить наличие билетов на фестиваль МЖ")}`
+    : ticketUrl;
+
   return (
     <section className="section pricing-section" id="pricing">
       <div className="container">
@@ -845,11 +1005,99 @@ function PricingSection() {
           <h2>Выберите <span>формат участия</span></h2>
           <p>Главная разница видна сразу. Полный состав можно открыть внутри карточки.</p>
         </div>
+
+        <div className={`sale-fomo-panel${activeStage.closed ? " is-closed" : ""}`} key={activeStage.id}>
+          <div className="sale-fomo-status">
+            <div className="sale-stage-line">
+              <span>{activeStage.closed ? "Продажи" : `Этап ${activeStageIndex + 1} из 3`}</span>
+              <strong>{activeStage.label}</strong>
+            </div>
+            <h3>{activeStage.closed ? "Онлайн-продажа завершена" : "Цена вырастет через"}</h3>
+            <p>
+              {activeStage.closed
+                ? "Уточните наличие билетов у организатора или приобретите билет на регистрации."
+                : `${activeStage.deadlineLabel} или раньше, если закончится лимит этого этапа.`}
+            </p>
+
+            <div className="sale-countdown" aria-label="Обратный отсчёт до изменения цены" aria-live="polite">
+              {[
+                [countdown.days, "дней"],
+                [countdown.hours, "часов"],
+                [countdown.minutes, "минут"],
+                [countdown.seconds, "секунд"],
+              ].map(([value, label]) => (
+                <span key={label}>
+                  <b suppressHydrationWarning>{String(value).padStart(2, "0")}</b>
+                  <small>{label}</small>
+                </span>
+              ))}
+            </div>
+
+            {!activeStage.closed && (
+              <div className="sale-limit">
+                <div><span>Лимит этапа</span><strong>Осталось {formatTicketCount(activeStage.remaining)}</strong></div>
+                <div className="sale-limit-track"><i style={{ width: `${progress}%` }} /></div>
+                <p>Срабатывает первое условие: окончание времени или исчерпание лимита.</p>
+              </div>
+            )}
+          </div>
+
+          <div className="price-calculator" aria-label="Калькулятор стоимости билетов">
+            <div className="price-calculator-heading">
+              <span>Калькулятор</span>
+              <h3>Посчитайте билет сейчас</h3>
+            </div>
+
+            <div className="calculator-tiers" role="group" aria-label="Выберите тариф">
+              {tickets.map((ticket) => (
+                <button
+                  className={calculatorTier === ticket.tier ? "is-active" : ""}
+                  type="button"
+                  key={ticket.tier}
+                  onClick={() => setCalculatorTier(ticket.tier)}
+                >
+                  <span>{ticket.name}</span>
+                  <strong>{formatPrice(activeStage.prices[ticket.tier])}</strong>
+                </button>
+              ))}
+            </div>
+
+            <div className="calculator-quantity">
+              <span>Количество билетов</span>
+              <div>
+                <button type="button" onClick={() => setQuantity((current) => Math.max(1, current - 1))} aria-label="Уменьшить количество">−</button>
+                <strong>{quantity}</strong>
+                <button type="button" onClick={() => setQuantity((current) => Math.min(10, current + 1))} aria-label="Увеличить количество">+</button>
+              </div>
+            </div>
+
+            <div className="calculator-result">
+              <div><span>Сейчас</span><strong>{formatPrice(currentTotal)}</strong></div>
+              {!activeStage.closed && activeStageIndex < saleStages.length - 2 && (
+                <div><span>После повышения</span><strong>{formatPrice(nextTotal)}</strong></div>
+              )}
+            </div>
+
+            {!activeStage.closed && savings > 0 && (
+              <p className="calculator-saving">Покупка сейчас экономит {formatPrice(savings)}</p>
+            )}
+
+            <a href={purchaseUrl} target="_blank" rel="noreferrer">
+              {activeStage.closed ? "Уточнить наличие" : `Выбрать «${selectedTicket.name}»`}
+              <i className="button-icon"><ArrowIcon /></i>
+            </a>
+          </div>
+        </div>
+
         <div className="pricing-grid">
           {tickets.map((ticket) => (
             <article className={`price-card price-card-${ticket.tier} ${ticket.featured ? "featured" : ""}`} key={ticket.name}>
               {ticket.featured && <div className="popular">Самый выгодный</div>}
-              <div className="price-head"><h3>{ticket.name}</h3><strong>{ticket.price}</strong><span>{ticket.note}</span></div>
+              <div className="price-head">
+                <h3>{ticket.name}</h3>
+                <strong className="dynamic-ticket-price" key={`${activeStage.id}-${ticket.tier}`}>{formatPrice(activeStage.prices[ticket.tier])}</strong>
+                <span>{activeStage.closed ? "Уточните наличие у организатора" : ticket.note}</span>
+              </div>
               <div className={`ticket-product-scene ticket-product-scene-${ticket.tier}`}>
                 <img src={ticket.mockupImage} alt={ticket.mockupAlt} loading="lazy" />
               </div>
@@ -860,8 +1108,11 @@ function PricingSection() {
                 <summary>Полный состав тарифа <b>+</b></summary>
                 <ul>{ticket.items.map((item) => <li className={item.includes("50 000") || item.includes("100 000") ? "gift-highlight" : ""} key={item}><b>✓</b>{item}</li>)}</ul>
               </details>
-              <div className="price-timeline"><span>Следующая цена <b>{ticket.nextPrice}</b></span><span>Финальная цена <b>{ticket.finalPrice}</b></span></div>
-              <a href={ticketUrl} target="_blank" rel="noreferrer">Купить билет <i className="button-icon"><ArrowIcon /></i></a>
+              <div className="price-timeline">
+                <span>{activeStage.closed || activeStageIndex >= saleStages.length - 2 ? "Текущая цена" : "Следующая цена"}<b>{formatPrice(activeStage.closed || activeStageIndex >= saleStages.length - 2 ? activeStage.prices[ticket.tier] : nextStage.prices[ticket.tier])}</b></span>
+                <span>Финальная цена <b>{ticket.finalPrice}</b></span>
+              </div>
+              <a href={purchaseUrl} target="_blank" rel="noreferrer">{activeStage.closed ? "Уточнить наличие" : "Купить билет"} <i className="button-icon"><ArrowIcon /></i></a>
             </article>
           ))}
         </div>
