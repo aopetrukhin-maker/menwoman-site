@@ -54,7 +54,7 @@ type SpeakerRoute = {
   question: string;
 };
 
-const ticketUrl = "https://qtickets.ru/organizer/50526?base_color=ea1e63";
+const ticketUrl = "https://qtickets.ru/event/246143?base_color=ea1e63";
 const telegramUrl = "https://t.me/aopetrukhin";
 
 const saleStages: SaleStage[] = [
@@ -988,9 +988,7 @@ function PricingSection() {
     : 100;
   const purchaseUrl = activeStage.closed
     ? `${telegramUrl}?text=${encodeURIComponent("Хочу уточнить наличие билетов на фестиваль МЖ")}`
-    : purchaseMode === "pair"
-      ? `${telegramUrl}?text=${encodeURIComponent(`Хочу купить парный билет «${selectedTicket.name}»: ${formatTicketCount(quantity * 2)} за ${formatPrice(currentTotal)}`)}`
-      : ticketUrl;
+    : ticketUrl;
   const cardPurchaseUrl = activeStage.closed
     ? `${telegramUrl}?text=${encodeURIComponent("Хочу уточнить наличие билетов на фестиваль МЖ")}`
     : ticketUrl;
