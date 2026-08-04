@@ -1013,7 +1013,7 @@ function PricingSection() {
   };
 
   return (
-    <section className="section pricing-section" id="pricing" data-release="pair-tickets-visible">
+    <section className="section pricing-section" id="pricing" data-release="ticket-fomo-live-2026-08-04">
       <div className="container">
         <div className="section-heading center-heading">
           <p className="section-label">Билеты</p>
