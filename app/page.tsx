@@ -1019,6 +1019,31 @@ function PricingSection() {
           <p>Главная разница видна сразу. Полный состав можно открыть внутри карточки.</p>
         </div>
 
+        <article className="charity-impact-card" aria-labelledby="charity-impact-title">
+          <div className="charity-impact-stat" aria-label="Пять процентов с каждого билета">
+            <strong>5%</strong>
+            <span>с каждого билета</span>
+          </div>
+          <div className="charity-impact-copy">
+            <p className="charity-impact-label">Благотворительный партнёр фестиваля</p>
+            <h3 id="charity-impact-title">Каждый билет - вклад в помощь детям</h3>
+            <p>
+              5% с продажи каждого билета на фестиваль «Мужчина и Женщина. Перезагрузка»
+              мы передадим благотворительному фонду «Энби». Фонд помогает детям с диагнозом
+              «нейробластома» и их семьям по всей России.
+            </p>
+            <p className="charity-impact-fact">Каждую неделю в среднем шесть российских семей узнают об этом диагнозе у своего ребёнка.</p>
+            <div className="charity-impact-links">
+              <a href="https://neuroblastoma.help/" target="_blank" rel="noreferrer">Подробнее о фонде <i className="button-icon"><ArrowIcon /></i></a>
+              <a href="https://www.instagram.com/neuroblastoma_family" target="_blank" rel="noreferrer">Instagram фонда</a>
+            </div>
+          </div>
+          <div className="charity-impact-logo">
+            <img src="/partners/enbi.png" alt="Благотворительный фонд Энби" loading="lazy" />
+            <span>Первое в России объединение родителей детей с нейробластомой</span>
+          </div>
+        </article>
+
         <button className="pair-ticket-banner" type="button" onClick={selectPairPurchase} aria-controls="ticket-calculator">
           <span>Новый формат</span>
           <div>
