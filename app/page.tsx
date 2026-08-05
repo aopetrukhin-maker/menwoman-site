@@ -1019,7 +1019,7 @@ function PricingSection() {
           <p>Главная разница видна сразу. Полный состав можно открыть внутри карточки.</p>
         </div>
 
-        <article className="charity-impact-card" aria-labelledby="charity-impact-title">
+        <article className="charity-impact-card" id="charity-impact" aria-labelledby="charity-impact-title">
           <div className="charity-impact-stat" aria-label="Пять процентов с каждого билета">
             <strong>5%</strong>
             <span>с каждого билета</span>
@@ -1424,6 +1424,10 @@ export default function Home() {
                 <a className="primary-button hero-button" href="#pricing"><span>Выбрать билет от 990 ₽</span><i className="button-icon"><ArrowIcon /></i></a>
                 <a className="hero-quiz-link" href="#connection-code"><b>90 секунд</b><span>Узнать свой код связи</span></a>
               </div>
+              <a className="hero-charity-note" href="#charity-impact" aria-label="Подробнее о помощи фонду Энби">
+                <strong>5%</strong>
+                <span>Покупая билет, вы помогаете детям - передадим фонду «Энби»</span>
+              </a>
             </div>
             <div className="hero-facts-card" aria-label="Что будет на фестивале">
               <span>За один день</span>
