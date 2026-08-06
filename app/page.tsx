@@ -905,6 +905,15 @@ function ArrowIcon() {
   );
 }
 
+function HeartHandsIcon() {
+  return (
+    <svg viewBox="0 0 64 64" aria-hidden="true">
+      <path d="M32 51.5 12.8 33.8C5.2 26.7 7.1 14 17.3 11.2c6.2-1.7 11.2 1.5 14.7 6.2 3.5-4.7 8.5-7.9 14.7-6.2 10.2 2.8 12.1 15.5 4.5 22.6L32 51.5Z" />
+      <path d="M12.5 43.5c6.5 3.6 12.3 5.4 19.5 5.4M51.5 43.5c-6.5 3.6-12.3 5.4-19.5 5.4" />
+    </svg>
+  );
+}
+
 
 function ChevronIcon({ direction }: { direction: "left" | "right" }) {
   return (
@@ -1424,9 +1433,11 @@ export default function Home() {
                 <a className="primary-button hero-button" href="#pricing"><span>Выбрать билет от 990 ₽</span><i className="button-icon"><ArrowIcon /></i></a>
                 <a className="hero-quiz-link" href="#connection-code"><b>90 секунд</b><span>Узнать свой код связи</span></a>
               </div>
-              <a className="hero-charity-note" href="#charity-impact" aria-label="Подробнее о помощи фонду Энби">
-                <strong>5%</strong>
-                <span>Покупая билет, вы помогаете детям - передадим фонду «Энби»</span>
+              <a className="hero-charity-badge" href="#pricing" aria-label="5 процентов с каждого билета передадим фонду Энби">
+                <span className="hero-charity-mark"><HeartHandsIcon /></span>
+                <span className="hero-charity-percent">5%</span>
+                <span className="hero-charity-copy"><b>билета - детям</b><small>вместе с фондом «Энби»</small></span>
+                <img src="/partners/enbi.png" alt="Энби" />
               </a>
             </div>
             <div className="hero-facts-card" aria-label="Что будет на фестивале">
