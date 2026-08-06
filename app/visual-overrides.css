@@ -1,4 +1,129 @@
 /* Editorial visual upgrade: formats, bracelets and ticket product mockups */
+.hero-charity-badge {
+  width: min(100%, 620px);
+  min-height: 88px;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 58px auto 1fr 120px;
+  gap: 13px;
+  align-items: center;
+  margin-top: 22px;
+  padding: 12px 18px 12px 13px;
+  border: 1px solid rgba(157, 99, 31, .24);
+  border-radius: 23px;
+  color: #2b1d18;
+  background: linear-gradient(112deg, #fffaf2 0%, #fff 54%, #f4e3c7 100%);
+  box-shadow: 0 18px 44px rgba(76, 37, 24, .11);
+  text-decoration: none;
+  transition: transform .22s ease, box-shadow .22s ease;
+}
+
+.hero-charity-badge::before {
+  content: "";
+  width: 180px;
+  height: 180px;
+  position: absolute;
+  z-index: -1;
+  top: -105px;
+  right: 70px;
+  border-radius: 50%;
+  background: #d9ad68;
+  opacity: .12;
+  box-shadow: 0 0 0 28px rgba(217, 173, 104, .055), 0 0 0 56px rgba(217, 173, 104, .035);
+}
+
+.hero-charity-badge:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 23px 52px rgba(76, 37, 24, .16);
+}
+
+.hero-charity-mark {
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  border-radius: 18px;
+  color: #fff7ec;
+  background: linear-gradient(145deg, #44251d, #8c4736);
+  box-shadow: 0 9px 20px rgba(76, 37, 24, .22);
+}
+
+.hero-charity-mark svg {
+  width: 38px;
+  height: 38px;
+  fill: rgba(242, 196, 129, .9);
+  stroke: #fff7ec;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.hero-charity-percent {
+  color: #c23e48;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 40px;
+  font-weight: 800;
+  line-height: .85;
+  letter-spacing: -.08em;
+}
+
+.hero-charity-copy {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.hero-charity-copy b {
+  font-size: 14px;
+  font-weight: 900;
+  line-height: 1.05;
+}
+
+.hero-charity-copy small {
+  color: #80685c;
+  font-size: 10px;
+  font-weight: 750;
+  line-height: 1.2;
+}
+
+.hero-charity-badge > img {
+  width: 100%;
+  max-height: 34px;
+  display: block;
+  object-fit: contain;
+  object-position: right center;
+}
+
+@media (max-width: 640px) {
+  .hero-charity-badge {
+    grid-template-columns: 52px auto 1fr;
+    gap: 10px;
+    min-height: 76px;
+    margin-top: 18px;
+    padding: 10px 12px 10px 10px;
+    border-radius: 20px;
+  }
+
+  .hero-charity-mark {
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+  }
+
+  .hero-charity-mark svg {
+    width: 34px;
+    height: 34px;
+  }
+
+  .hero-charity-percent { font-size: 35px; }
+  .hero-charity-copy b { font-size: 12px; }
+  .hero-charity-copy small { font-size: 9px; }
+  .hero-charity-badge > img { display: none; }
+}
+
 .formats-section {
   background:
     radial-gradient(circle at 8% 14%, rgba(246, 201, 173, .34), transparent 24%),
