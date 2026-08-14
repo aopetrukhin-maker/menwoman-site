@@ -61,8 +61,8 @@ const saleStages: SaleStage[] = [
   {
     id: "early",
     label: "Ранняя цена",
-    deadline: "2026-08-11T23:59:59+03:00",
-    deadlineLabel: "11 августа в 23:59 МСК",
+    deadline: "2026-08-14T23:59:59+03:00",
+    deadlineLabel: "14 августа в 23:59 МСК",
     remaining: 34,
     quota: 120,
     prices: { start: 990, reload: 1990, vip: 3990 },
@@ -70,8 +70,8 @@ const saleStages: SaleStage[] = [
   {
     id: "regular",
     label: "Основная цена",
-    deadline: "2026-08-14T23:59:59+03:00",
-    deadlineLabel: "14 августа в 23:59 МСК",
+    deadline: "2026-08-18T23:59:59+03:00",
+    deadlineLabel: "18 августа в 23:59 МСК",
     remaining: 58,
     quota: 150,
     prices: { start: 1490, reload: 2990, vip: 5990 },
@@ -698,7 +698,6 @@ const connectionStatusCopy: Record<ConnectionStatus, string> = {
   relationship: "Пройдите тест вдвоём и сравните результаты. На фестивале программа даст вам общий контекст, чтобы обсудить близость, деньги, конфликты и будущее без привычного сценария.",
   complicated: "Ваш результат не принимает решение за вас, но даёт язык для честного разговора. На фестивале вы сможете посмотреть на ситуацию через разные подходы экспертов.",
   self: "Понимание своего кода помогает замечать подходящих людей и не соглашаться на связь, в которой приходится отказываться от себя.",};
-
 const program = [
   {
     label: "Почему вы снова выбираете не тех?",
@@ -1397,8 +1396,7 @@ export default function Home() {
           <details className="connection-compact">
             <summary>
               <span><small>Интерактив · 90 секунд</small><strong>Узнайте свой код связи</strong><em>Как вы строите близость, кто вам подходит и что мешает отношениям</em></span>              <b>Пройти тест <i><ArrowIcon /></i></b>
-            </summary>
-          <div className="connection-experience" id="connection-quiz" ref={connectionQuizRef}>
+            </summary>          <div className="connection-experience" id="connection-quiz" ref={connectionQuizRef}>
             {!connectionResult && (
               <div className="connection-question-card" aria-live="polite">
                 <div className="connection-progress-head">
@@ -1670,7 +1668,7 @@ export default function Home() {
       <footer>
         <div className="container footer-grid">
           <div><strong>МЖ</strong><p>Мужчина и Женщина.<br />Перезагрузка</p></div>
-          <div><span>Контакты</span><a href="mailto:noname.eventspb@gmail.com">noname.eventspb@gmail.com</a><a href={telegramUrl} target="_blank" rel="noreferrer">Telegram: @aopetrukhin</a></div>
+          <div><span>Задать вопрос</span><a href="tel:+79625759813">8 962 575-98-13</a><a href={telegramUrl} target="_blank" rel="noreferrer">Telegram: @aopetrukhin</a><a href="mailto:noname.eventspb@gmail.com">noname.eventspb@gmail.com</a></div>
           <div><span>Адрес</span><p>Санкт-Петербург<br />Дворец Кваренги, Казанская 7</p></div>
         </div>
         <div className="container footer-bottom"><span>© 2026 Фестиваль «Мужчина и Женщина»</span><a href="#">Вернуться к началу</a></div>
