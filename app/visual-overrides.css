@@ -1546,9 +1546,16 @@
   background: #f5d77f;
 }
 
-.sale-fomo-status > h3 {
+.sale-countdown-title {
   position: relative;
   z-index: 1;
+  display: flex;
+  gap: 18px;
+  align-items: center;
+}
+
+.sale-countdown-title h3 {
+  position: relative;
   margin: 0;
   color: #fff;
   font-family: var(--font-display), Georgia, serif;
@@ -1556,6 +1563,61 @@
   font-weight: 600;
   line-height: .92;
   letter-spacing: -.045em;
+}
+
+.ticking-clock {
+  width: 64px;
+  height: 64px;
+  position: relative;
+  flex: 0 0 64px;
+  border: 3px solid #f5d77f;
+  border-radius: 50%;
+  background: rgba(245, 215, 127, .08);
+  box-shadow: 0 0 0 7px rgba(245, 215, 127, .06);
+  animation: clock-pulse 1s steps(2, end) infinite;
+}
+
+.ticking-clock::after {
+  content: "";
+  width: 7px;
+  height: 7px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  border-radius: 50%;
+  background: #f5d77f;
+  transform: translate(-50%, -50%);
+}
+
+.ticking-clock i,
+.ticking-clock b {
+  position: absolute;
+  bottom: 50%;
+  left: calc(50% - 1px);
+  width: 2px;
+  border-radius: 999px;
+  background: #f5d77f;
+  transform-origin: 50% 100%;
+}
+
+.ticking-clock i {
+  height: 18px;
+  transform: rotate(35deg);
+}
+
+.ticking-clock b {
+  height: 23px;
+  background: #ff7468;
+  animation: clock-tick 6s steps(6, end) infinite;
+}
+
+@keyframes clock-tick {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes clock-pulse {
+  50% { box-shadow: 0 0 0 9px rgba(245, 215, 127, .11); }
 }
 
 .sale-fomo-status > p {
@@ -2352,8 +2414,19 @@
     margin-bottom: 20px;
   }
 
-  .sale-fomo-status > h3 {
-    font-size: 45px;
+  .sale-countdown-title {
+    gap: 13px;
+    align-items: flex-start;
+  }
+
+  .sale-countdown-title h3 {
+    font-size: 41px;
+  }
+
+  .ticking-clock {
+    width: 50px;
+    height: 50px;
+    flex-basis: 50px;
   }
 
   .sale-countdown {

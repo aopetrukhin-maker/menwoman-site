@@ -60,9 +60,9 @@ const telegramUrl = "https://t.me/aopetrukhin";
 const saleStages: SaleStage[] = [
   {
     id: "early",
-    label: "Ранняя цена",
-    deadline: "2026-08-14T23:59:59+03:00",
-    deadlineLabel: "14 августа в 23:59 МСК",
+    label: "Текущая цена",
+    deadline: "2026-08-16T23:59:59+03:00",
+    deadlineLabel: "16 августа в 23:59 МСК",
     remaining: 34,
     quota: 120,
     prices: { start: 990, reload: 1990, vip: 3990 },
@@ -1076,7 +1076,15 @@ function PricingSection() {
               <span>{activeStage.closed ? "Продажи" : `Этап ${activeStageIndex + 1} из 3`}</span>
               <strong>{activeStage.label}</strong>
             </div>
-            <h3>{activeStage.closed ? "Онлайн-продажа завершена" : "Цена вырастет через"}</h3>
+            <div className="sale-countdown-title">
+              {!activeStage.closed && (
+                <span className="ticking-clock" role="img" aria-label="Часы идут">
+                  <i />
+                  <b />
+                </span>
+              )}
+              <h3>{activeStage.closed ? "Онлайн-продажа завершена" : "До повышения цены"}</h3>
+            </div>
             <p>
               {activeStage.closed
                 ? "Уточните наличие билетов у организатора или приобретите билет на регистрации."
