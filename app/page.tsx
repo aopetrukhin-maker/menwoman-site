@@ -1648,7 +1648,7 @@ export default function Home() {
           </div>
 
           <div className="bracelet-stage" aria-label="Значения браслетов фестиваля">
-            <div className="bracelet-product" role="img" aria-label="Зеленый, желтый и красный браслеты фестиваля">
+            <div className="bracelet-product" role="img" aria-label="Зелёный и красный браслеты фестиваля">
               <div className="bracelet-product-caption">
                 <span>Вы получаете браслет на входе</span>
                 <strong>Цвет говорит за вас</strong>
@@ -1658,10 +1658,6 @@ export default function Home() {
               <article className="bracelet-legend-green">
                 <b aria-hidden="true" />
                 <div><span>Зелёный</span><strong>Открыт к знакомствам</strong><p>Хочу встретить своего человека.</p></div>
-              </article>
-              <article className="bracelet-legend-yellow">
-                <b aria-hidden="true" />
-                <div><span>Жёлтый</span><strong>Открыт к общению</strong><p>Можно подойти и начать разговор.</p></div>
               </article>
               <article className="bracelet-legend-red">
                 <b aria-hidden="true" />
