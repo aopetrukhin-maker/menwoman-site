@@ -169,7 +169,7 @@ const speakers: Speaker[] = [
     initials: "АК · СШ",
     tone: "rose",
     image: "/speakers/kardash-shits.webp",
-    imagePosition: "center 45%",
+    imagePosition: "center top",
   },
   {
     name: "Анна Рацун",
@@ -248,12 +248,15 @@ const speakers: Speaker[] = [
     description:
       "Лала покажет, как двигаться к своим целям без разрушения отношений, эмоционального истощения и потери контакта с собой.",
     facts: [
-      "Психолог по отношениям",
-      "Работает с вопросами реализации и самоценности",
-      "Помогает укреплять психическое здоровье и внутреннюю опору",
+      "Автор курса «Системно-образная терапия как универсальный инструмент психологии»",
+      "Более 7 500 часов индивидуальной психологической практики",
+      "Работает со взрослыми, подростками и семейными парами",
+      "Специалист по психологической помощи при тревожных расстройствах, панических атаках и депрессивных состояниях",
     ],
     initials: "ЛП",
     tone: "violet",
+    image: "/speakers/lala-popova.webp",
+    imagePosition: "center 18%",
   },
   {
     name: "Александр Кардашов",
@@ -787,16 +790,11 @@ const partners = [
   { name: "Линчевская Юлиана", image: "/partners/linchevskaya.webp" },
   { name: "Только по делу", image: "/partners/tolko.jpg" },
   { name: "Дворец Кваренги", image: "/partners/quarenghi.jpg" },
-  { name: "БИЗ.Дельники", image: "/partners/bizdelniki.jpg" },
-  { name: "Бизнес События СПБ", image: "/partners/busines.jpg" },
-  { name: "ЯПокупаю", image: "/partners/pokupau.jpg" },
   { name: "Женский клуб Петербурга", image: "/partners/women-club.png" },
-  { name: "ПроЯвись", image: "/partners/proyavis.jpg" },
   { name: "Дедушка Русского Пара", image: "/partners/dedushka.png" },
   { name: "Жанна Кузнецова", image: "/partners/kuznezova.jpg" },
   { name: "Body Impulse", image: "/partners/bi.png" },
-  { name: "ADORO", image: "/partners/adoro.jpg" },
-  { name: "от Паунти - где звучит", image: "/partners/paunty.jpg" },
+  { name: "Хвойный квас", image: "/partners/hvoyny-kvas.webp" },
 ];
 
 const tickets = [
