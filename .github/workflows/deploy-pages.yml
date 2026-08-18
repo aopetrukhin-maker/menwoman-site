@@ -17,6 +17,29 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Remove inactive partners
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path("app/page.tsx")
+          text = path.read_text()
+          remove = {
+              '  { name: "Женский клуб Петербурга", image: "/partners/women-club.png" },\n',
+              '  { name: "Дедушка Русского Пара", image: "/partners/dedushka.png" },\n',
+              '  { name: "Жанна Кузнецова", image: "/partners/kuznezova.jpg" },\n',
+          }
+          for line in remove:
+              text = text.replace(line, "")
+          path.write_text(text)
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app/page.tsx
+          if ! git diff --cached --quiet; then
+            git commit -m "Remove inactive partners"
+            git push origin HEAD:main
+          fi
       - uses: actions/setup-node@v4
         with:
           node-version: 22
