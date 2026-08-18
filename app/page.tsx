@@ -795,6 +795,8 @@ const partners = [
   { name: "Жанна Кузнецова", image: "/partners/kuznezova.jpg" },
   { name: "Body Impulse", image: "/partners/bi.png" },
   { name: "Хвойный квас", image: "/partners/hvoyny-kvas.webp" },
+  { name: "Журнал SOK - Стиль. Образ. Качество жизни", image: "/partners/sok-magazine.webp" },
+  { name: "Центр просвещения и досуга «СюрПриз»", image: "/partners/surpriz.webp" },
 ];
 
 const tickets = [
