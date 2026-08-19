@@ -9,6 +9,7 @@ text = text.replace('    label: "Основная цена",', '    label: "Те
 text = text.replace('    deadline: "2026-08-18T23:59:59+03:00",', '    deadline: "2026-08-19T23:59:59+03:00",');
 text = text.replace('    deadlineLabel: "18 августа в 23:59 МСК",', '    deadlineLabel: "19 августа в 23:59 МСК - повышение уже завтра",');
 text = text.replace('  const activeStageIndex = saleSnapshot?.stageIndex ?? 0;', '  const activeStageIndex = saleSnapshot?.stageIndex ?? 1;');
+text = text.replaceAll('Выбрать билет от 990 ₽', 'Выбрать билет от 1 490 ₽');
 
 const pairHelperAnchor = 'const getPairPricePerPerson = (price: number) => Math.floor((price * 0.7) / 10) * 10;';
 const pairHelper = `${pairHelperAnchor}\n\nconst getPairTotalPrice = (stage: SaleStage, tier: TicketTier) => {\n  if (stage.id === "regular") {\n    const qticketsPairPrices: Record<TicketTier, number> = { start: 2080, reload: 4180, vip: 8380 };\n    return qticketsPairPrices[tier];\n  }\n  return getPairPricePerPerson(stage.prices[tier]) * 2;\n};`;
