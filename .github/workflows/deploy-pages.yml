@@ -17,6 +17,188 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Sync QTickets prices and spotlight calculator
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          page = Path("app/page.tsx")
+          text = page.read_text()
+
+          replacements = {
+              '    label: "Основная цена",\n    deadline: "2026-08-18T23:59:59+03:00",\n    deadlineLabel: "18 августа в 23:59 МСК",\n':
+              '    label: "Текущая цена",\n    deadline: "2026-08-19T23:59:59+03:00",\n    deadlineLabel: "19 августа в 23:59 МСК - повышение уже завтра",\n',
+              'const getPairPricePerPerson = (price: number) => Math.floor((price * 0.7) / 10) * 10;\n':
+              'const getPairPricePerPerson = (price: number) => Math.floor((price * 0.7) / 10) * 10;\n\nconst getPairTotalPrice = (stage: SaleStage, tier: TicketTier) => {\n  if (stage.id === "regular") {\n    const qticketsPairPrices: Record<TicketTier, number> = { start: 2080, reload: 4180, vip: 8380 };\n    return qticketsPairPrices[tier];\n  }\n  return getPairPricePerPerson(stage.prices[tier]) * 2;\n};\n',
+              '  const currentPairPricePerPerson = getPairPricePerPerson(currentSinglePrice);\n  const nextPairPricePerPerson = getPairPricePerPerson(nextSinglePrice);\n  const currentUnitPrice = purchaseMode === "pair" ? currentPairPricePerPerson * 2 : currentSinglePrice;\n  const nextUnitPrice = purchaseMode === "pair" ? nextPairPricePerPerson * 2 : nextSinglePrice;\n':
+              '  const currentPairTotalPrice = getPairTotalPrice(activeStage, calculatorTier);\n  const nextPairTotalPrice = getPairTotalPrice(nextStage, calculatorTier);\n  const currentPairPricePerPerson = Math.floor(currentPairTotalPrice / 2);\n  const nextPairPricePerPerson = Math.floor(nextPairTotalPrice / 2);\n  const currentUnitPrice = purchaseMode === "pair" ? currentPairTotalPrice : currentSinglePrice;\n  const nextUnitPrice = purchaseMode === "pair" ? nextPairTotalPrice : nextSinglePrice;\n',
+              '          <div className={`price-calculator${purchaseMode === "pair" ? " is-pair" : ""}`} id="ticket-calculator" aria-label="Покупка билетов">\n            <div className="price-calculator-heading">\n              <span>Билеты</span>\n              <h3>{purchaseMode === "pair" ? "Купить парный билет" : "Купить билет"}</h3>\n            </div>\n':
+              '          <div className={`price-calculator${purchaseMode === "pair" ? " is-pair" : ""}`} id="ticket-calculator" aria-label="Калькулятор стоимости билетов">\n            <div className="calculator-price-alert">\n              <strong>Цены QTickets сейчас</strong>\n              <span>Повышение 20 августа</span>\n            </div>\n            <div className="price-calculator-heading">\n              <span>Калькулятор билетов</span>\n              <h3>{purchaseMode === "pair" ? "Посчитайте парный билет" : "Посчитайте стоимость за 10 секунд"}</h3>\n              <p className="price-calculator-lead">Выберите формат, тариф и количество - итог пересчитается сразу.</p>\n            </div>\n',
+          }
+
+          for old, new in replacements.items():
+              if old not in text:
+                  raise SystemExit(f"Expected fragment not found:\n{old[:180]}")
+              text = text.replace(old, new, 1)
+
+          text = text.replace(
+              'getPairPricePerPerson(activeStage.prices[ticket.tier]) * 2',
+              'getPairTotalPrice(activeStage, ticket.tier)'
+          )
+          page.write_text(text)
+
+          css = Path("app/visual-overrides.css")
+          css_text = css.read_text()
+          marker = "/* Ticket calculator spotlight - 2026-08-19 */"
+          if marker not in css_text:
+              css_text += r'''
+
+/* Ticket calculator spotlight - 2026-08-19 */
+.price-calculator {
+  position: relative;
+  overflow: visible !important;
+  border: 3px solid #ea1e63 !important;
+  border-radius: 30px !important;
+  background: linear-gradient(135deg, #ffffff 0%, #fff5f8 52%, #fff0f5 100%) !important;
+  box-shadow: 0 30px 80px rgba(234, 30, 99, .22), 0 10px 28px rgba(33, 25, 22, .10) !important;
+}
+
+.calculator-price-alert {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: -4px 0 18px;
+  padding: 12px 16px;
+  border-radius: 16px;
+  color: #fff;
+  background: linear-gradient(100deg, #ea1e63, #b80c4c);
+  box-shadow: 0 12px 28px rgba(234, 30, 99, .26);
+}
+
+.calculator-price-alert strong {
+  font-size: 14px;
+  font-weight: 950;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.calculator-price-alert span {
+  padding: 6px 10px;
+  border-radius: 999px;
+  color: #7e1239;
+  background: #fff;
+  font-size: 12px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.price-calculator-heading > span {
+  color: #ea1e63 !important;
+  font-weight: 950 !important;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.price-calculator-heading h3 {
+  margin-top: 5px !important;
+  font-size: clamp(30px, 4vw, 48px) !important;
+  line-height: .98 !important;
+  letter-spacing: -.04em !important;
+}
+
+.price-calculator-lead {
+  max-width: 650px;
+  margin: 10px 0 0;
+  color: #6d5860;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.calculator-tiers button {
+  min-height: 92px !important;
+  border-width: 2px !important;
+}
+
+.calculator-tiers button.is-active {
+  border-color: #ea1e63 !important;
+  box-shadow: 0 12px 30px rgba(234, 30, 99, .16) !important;
+}
+
+.calculator-tiers button strong {
+  font-size: 28px !important;
+  font-weight: 950 !important;
+}
+
+.calculator-result {
+  border: 2px solid rgba(234, 30, 99, .18) !important;
+  background: #fff !important;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.8), 0 14px 32px rgba(53, 25, 34, .08) !important;
+}
+
+.calculator-result strong {
+  color: #c70e51 !important;
+  font-size: clamp(30px, 4vw, 44px) !important;
+  font-weight: 950 !important;
+}
+
+.price-calculator > a {
+  min-height: 58px !important;
+  font-size: 16px !important;
+  font-weight: 950 !important;
+  box-shadow: 0 16px 34px rgba(234, 30, 99, .28) !important;
+}
+
+@media (max-width: 720px) {
+  .price-calculator {
+    margin-top: 18px !important;
+    padding: 22px 14px 16px !important;
+    border-radius: 24px !important;
+  }
+
+  .calculator-price-alert {
+    align-items: flex-start;
+    flex-direction: column;
+    margin-bottom: 16px;
+    padding: 12px 13px;
+  }
+
+  .calculator-price-alert span {
+    font-size: 11px;
+  }
+
+  .price-calculator-heading h3 {
+    font-size: 31px !important;
+  }
+
+  .price-calculator-lead {
+    font-size: 13px;
+  }
+
+  .calculator-tiers button {
+    min-height: 84px !important;
+  }
+
+  .calculator-tiers button strong {
+    font-size: 24px !important;
+  }
+
+  .calculator-result strong {
+    font-size: 34px !important;
+  }
+}
+'''
+              css.write_text(css_text)
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app/page.tsx app/visual-overrides.css
+          if ! git diff --cached --quiet; then
+            git commit -m "Sync QTickets prices and spotlight calculator"
+            git push origin HEAD:main
+          fi
       - uses: actions/setup-node@v4
         with:
           node-version: 22
