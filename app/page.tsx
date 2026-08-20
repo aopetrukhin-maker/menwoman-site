@@ -70,8 +70,8 @@ const saleStages: SaleStage[] = [
   {
     id: "regular",
     label: "Основная цена",
-    deadline: "2026-08-18T23:59:59+03:00",
-    deadlineLabel: "18 августа в 23:59 МСК",
+    deadline: "2026-08-21T23:59:59+03:00",
+    deadlineLabel: "21 августа в 23:59 МСК",
     remaining: 58,
     quota: 150,
     prices: { start: 1490, reload: 2990, vip: 5990 },
