@@ -59,9 +59,28 @@
 
 .attendees-marquee {
   width: 100%;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
+  cursor: grab;
+  touch-action: pan-x;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
   mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+}
+
+.attendees-marquee::-webkit-scrollbar {
+  display: none;
+}
+
+.attendees-marquee:active {
+  cursor: grabbing;
+}
+
+.attendees-marquee:hover .attendees-track,
+.attendees-marquee:focus-within .attendees-track,
+.attendees-marquee:active .attendees-track {
+  animation-play-state: paused;
 }
 
 .attendees-track {
@@ -69,7 +88,7 @@
   width: max-content;
   gap: 18px;
   will-change: transform;
-  animation: attendees-run 19s linear infinite;
+  animation: attendees-run 32s linear infinite;
 }
 
 .attendees-group {
@@ -155,6 +174,10 @@
   .attendees-marquee {
     -webkit-mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent);
     mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent);
+  }
+
+  .attendees-track {
+    animation-duration: 36s;
   }
 
   .attendee-card {
