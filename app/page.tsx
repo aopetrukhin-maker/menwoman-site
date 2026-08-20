@@ -471,9 +471,9 @@ const formats = [
   },
   {
     number: "05",
-    title: "Записи и подарки",
+    title: "Подарки",
     benefit: "Продолжить после",
-    text: "В старших тарифах - записи всех выступлений и подарки партнёров до 100 000 ₽.",
+    text: "В старших тарифах - подарки и сертификаты партнёров на сумму до 100 000 ₽.",
   },
 ];
 
@@ -820,6 +820,28 @@ const partners = [
   { name: "Философия Здоровья доктора К. С. Суханова", image: "/partners/philosophy-health-sukhanov.jpg" },
 ];
 
+const attendees = [
+  { name: "Юлия", age: 27, reason: "Иду за новыми знаниями в психологии отношений и эмоциями.", image: "/attendees/yulia-27.webp" },
+  { name: "Анастасия", age: 20, reason: "Прихожу за вдохновением, интересна психология личного развития.", image: "/attendees/anastasia-20.webp" },
+  { name: "Савва", age: 24, reason: "Иду в надежде обрести чудесные знакомства и близких единомышленников.", image: "/attendees/savva-24.webp" },
+  { name: "Полина", age: 24, reason: "Хочу добавить в свои отношения гармонии, а также найти новые способы саморазвития.", image: "/attendees/polina-24.webp" },
+  { name: "Алексей", age: 34, reason: "Мне интересна тема личного развития и внутренней трансформации. Такие события помогают понять, что моя работа необходима людям.", image: "/attendees/alexey-34.webp" },
+  { name: "Соня", age: 26, reason: "Хочу обрести стабильность и гармонию в отношениях.", image: "/attendees/sonya-26.webp" },
+  { name: "Максим", age: 27, reason: "Хочу найти точку роста и научиться сохранять стабильность во всех сферах жизни.", image: "/attendees/maxim-27.webp" },
+  { name: "Алина", age: 36, reason: "Мне интересно всё, что связано с личным развитием. Люблю слушать разных психологов и находить новые инсайты.", image: "/attendees/alina-36.webp" },
+  { name: "Анна", age: 26, reason: "Иду за эмоциями, а эмоции - это для меня счастье.", image: "/attendees/anna-26.webp" },
+  { name: "Диана", age: 27, reason: "Иду весело провести оставшиеся дни лета, обзавестись новыми знакомствами и узнать что-то новое.", image: "/attendees/diana-27.webp" },
+  { name: "Юлия", age: 27, reason: "Наступает новый период жизни, поэтому я открыта новым знакомствам и полезной информации по психологии.", image: "/attendees/yulia2-27.webp" },
+  { name: "Маргарита", age: 23, reason: "Надоело тратить время на сайтах знакомств - хочется живого общения.", image: "/attendees/margarita-23.webp" },
+  { name: "Вадим", age: 29, reason: "Иду за новыми знакомствами.", image: "/attendees/vadim-29.webp" },
+  { name: "Вероника", age: 23, reason: "Иду за вдохновением, новыми знакомствами и яркими впечатлениями!", image: "/attendees/veronika-23.webp" },
+  { name: "Александр", age: 27, reason: "Хочу разнообразить свою рутину.", image: "/attendees/alexander-27.webp" },
+  { name: "Ксения", age: 23, reason: "Хочу добавить в жизнь красок.", image: "/attendees/ksenia-23.webp" },
+  { name: "Елена", age: 38, reason: "Мне интересна тема взаимоотношений. Предпочитаю общение вживую и стараюсь постоянно развиваться.", image: "/attendees/elena-38.webp" },
+  { name: "Евгения", age: 45, reason: "Мне интересна психология отношений и живые знакомства.", image: "/attendees/evgenia-45.webp" },
+  { name: "Глеб", age: 27, reason: "Хочу стать ещё более привлекательным для своей партнёрши и увидеть свои ошибки в стратегии заработка.", image: "/attendees/gleb-27.webp" },
+];
+
 const tickets = [
   {
     name: "Старт",
@@ -828,14 +850,14 @@ const tickets = [
     note: "Количество билетов по этой цене ограничено",
     visualLabel: "Входит в стоимость",
     visualValue: "Полный день",
-    visualNote: "Билет и рабочая тетрадь участника",
+    visualNote: "Весь фестивальный день и основные форматы",
     mockupImage: "/visuals/tariff-start-v2.webp",
-    mockupAlt: "Билет на фестиваль и рабочая тетрадь участника",
+    mockupAlt: "Билет на фестиваль и доступ ко всем основным форматам",
     mockupItems: [
       { title: "Билет", note: "Весь фестивальный день" },
-      { title: "Рабочая тетрадь", note: "Для практик и заметок" },
+      { title: "Все форматы", note: "Выступления, практики и знакомства" },
     ],
-    highlights: ["Вход на весь день", "Рабочая тетрадь", "Все основные форматы"],
+    highlights: ["Вход на весь день", "Все выступления", "Все основные форматы"],
     nextPrice: "1 490 ₽",
     finalPrice: "1 990 ₽",
     description: "Для тех, кто хочет познакомиться с фестивалем, послушать экспертов и провести насыщенный день.",
@@ -846,7 +868,6 @@ const tickets = [
       "Доступ в экспертные и бренд-зоны",
       "Знакомства и открытый нетворкинг",
       "Электронная программа фестиваля",
-      "Рабочая тетрадь участника фестиваля",
     ],
   },
   {
@@ -856,15 +877,14 @@ const tickets = [
     note: "Самый выгодный тариф",
     visualLabel: "Всё включено + бонусы",
     visualValue: "до 50 000 ₽",
-    visualNote: "Тетрадь, записи всех выступлений и подарки",
+    visualNote: "Приоритетный доступ и подарки партнёров",
     mockupImage: "/visuals/tariff-reload-v2.webp",
-    mockupAlt: "Билет, рабочая тетрадь, записи выступлений и подарочные сертификаты",
+    mockupAlt: "Билет, приоритетный доступ и подарочные сертификаты",
     mockupItems: [
-      { title: "Рабочая тетрадь", note: "Практики и личные выводы" },
-      { title: "Записи всех спикеров", note: "Если не успели попасть на всё" },
+      { title: "Приоритет", note: "Зона перед сценой и быстрая регистрация" },
       { title: "до 50 000 ₽", note: "Подарки и сертификаты" },
     ],
-    highlights: ["Подарки до 50 000 ₽", "Записи всех спикеров", "Приоритетная зона"],
+    highlights: ["Подарки до 50 000 ₽", "Экспертная мини-диагностика", "Приоритетная зона"],
     nextPrice: "2 990 ₽",
     finalPrice: "3 990 ₽",
     description: "Для тех, кто хочет активно включиться, поработать со своими запросами и получить максимум пользы.",
@@ -875,7 +895,7 @@ const tickets = [
       "Участие в общих практиках и интерактивах",
       "Доступ в экспертные и бренд-зоны",
       "Знакомства и открытый нетворкинг",
-      "Электронная программа и рабочая тетрадь",
+      "Электронная программа фестиваля",
       "Места в приоритетной зоне перед сценой",
       "Отдельная быстрая регистрация без общей очереди",
       "Приоритетный доступ на практики с ограниченным количеством участников",
@@ -883,7 +903,6 @@ const tickets = [
       "Индивидуальная корзина подарков и сертификатов на сумму до 50 000 ₽",
       "Доступ в закрытый Telegram-чат участников",
       "Полезные материалы от спикеров после события",
-      "Записи выступлений всех спикеров - если не успели попасть на всё",
     ],
   },
   {
@@ -893,15 +912,15 @@ const tickets = [
     note: "Количество мест строго ограничено",
     visualLabel: "Максимум включено + бонусы",
     visualValue: "до 100 000 ₽",
-    visualNote: "Расширенный набор, записи и VIP-привилегии",
+    visualNote: "Расширенный набор подарков и VIP-привилегии",
     mockupImage: "/visuals/tariff-vip-v2.webp",
-    mockupAlt: "VIP-билет, рабочая тетрадь, записи выступлений и расширенный набор подарков",
+    mockupAlt: "VIP-билет, закрытый нетворкинг и расширенный набор подарков",
     mockupItems: [
-      { title: "Записи всех спикеров", note: "Смотрите после фестиваля" },
+      { title: "Закрытый нетворкинг", note: "Со спикерами и партнёрами" },
       { title: "до 100 000 ₽", note: "Подарки и сертификаты" },
       { title: "VIP-доступ", note: "Первые ряды и закрытый нетворкинг" },
     ],
-    highlights: ["Подарки до 100 000 ₽", "Записи всех спикеров", "VIP-доступ и первые ряды"],
+    highlights: ["Подарки до 100 000 ₽", "Закрытый нетворкинг", "VIP-доступ и первые ряды"],
     nextPrice: "5 990 ₽",
     finalPrice: "7 990 ₽",
     description: "Максимальный уровень участия, личного общения и комфорта на фестивале.",
@@ -909,14 +928,14 @@ const tickets = [
       "Вход на фестиваль на весь день и доступ ко всем выступлениям",
       "Участие во всех общих практиках и интерактивах",
       "Доступ в экспертные и бренд-зоны",
-      "Электронная программа и рабочая тетрадь",
+      "Электронная программа фестиваля",
       "Лучшие места в первых рядах",
       "Отдельная VIP-регистрация",
       "Закрытая встреча и нетворкинг со спикерами, партнёрами и организаторами",
       "Приоритетная запись на экспертные разборы от спикеров",
       "Увеличенная корзина подарков и сертификатов на сумму до 100 000 ₽",
       "Доступ в закрытый Telegram-чат участников",
-      "Полезные материалы и записи выступлений всех спикеров после события",
+      "Полезные материалы от спикеров после события",
       "Профессиональные фотографии с площадки",
       "Приглашение на закрытые встречи проекта после фестиваля",
     ],
@@ -955,12 +974,12 @@ function BonusSection() {
       <div className="container">
         <div className="bonus-hero">
           <div className="bonus-copy">
-            <p className="section-label">Подарки и записи</p>
+            <p className="section-label">Подарки партнёров</p>
             <h2>Больше пользы <span>после фестиваля</span></h2>
-            <p className="bonus-lead">С тарифа «Перезагрузка» вы получаете записи всех выступлений и выбираете подарки под себя.</p>
+            <p className="bonus-lead">С тарифа «Перезагрузка» вы получаете подарки и сертификаты партнёров, которые можно выбрать под себя.</p>
           </div>
           <div className="bonus-tiers" aria-label="Подарки по тарифам">
-            <article><span>Перезагрузка</span><h3>Записи всех спикеров</h3><strong>до 50 000 ₽</strong><p>подарков и сертификатов</p></article>
+            <article><span>Перезагрузка</span><h3>Индивидуальный набор</h3><strong>до 50 000 ₽</strong><p>подарков и сертификатов</p></article>
             <article className="bonus-tier-vip"><span>VIP</span><h3>Максимальный набор</h3><strong>до 100 000 ₽</strong><p>подарков и сертификатов</p></article>
           </div>
         </div>
@@ -974,6 +993,35 @@ function BonusSection() {
           <article><span>06</span><h3>Товары брендов</h3></article>
         </div>
         <p className="bonus-footnote">Состав каталога зависит от подтверждённых предложений партнёров. Конкретные услуги, сроки действия и доступность выбора будут указаны в каталоге фестиваля.</p>
+      </div>
+    </section>
+  );
+}
+
+function AttendeeSection() {
+  const attendeeCards = attendees.map((attendee) => (
+    <article className="attendee-card" key={`${attendee.name}-${attendee.age}-${attendee.image}`}>
+      <img src={attendee.image} alt={`${attendee.name}, ${attendee.age}`} loading="lazy" />
+      <div>
+        <span>Я иду на фестиваль</span>
+        <h3>{attendee.name}, {attendee.age}</h3>
+        <p>{attendee.reason}</p>
+      </div>
+    </article>
+  ));
+
+  return (
+    <section className="attendees-section" aria-labelledby="attendees-title">
+      <div className="container attendees-heading">
+        <p className="section-label">Люди, которых вы встретите</p>
+        <h2 id="attendees-title">Я иду <span>на фестиваль</span></h2>
+        <p>У каждого своя причина. Но все придут за живыми эмоциями, новыми знаниями и настоящим общением.</p>
+      </div>
+      <div className="attendees-marquee">
+        <div className="attendees-track">
+          <div className="attendees-group">{attendeeCards}</div>
+          <div className="attendees-group" aria-hidden="true">{attendeeCards}</div>
+        </div>
       </div>
     </section>
   );
@@ -1226,7 +1274,18 @@ function PricingSection() {
                 <span>{activeStage.closed ? "Уточните наличие у организатора" : "Цена за 1 билет"}</span>
               </div>
               <div className={`ticket-product-scene ticket-product-scene-${ticket.tier}`}>
-                <img src={ticket.mockupImage} alt={ticket.mockupAlt} loading="lazy" />
+                <div className="ticket-product-art" role="img" aria-label={ticket.mockupAlt}>
+                  <div className="ticket-product-pass">
+                    <span>МЖ · 22.08.2026</span>
+                    <strong>{ticket.name}</strong>
+                    <small>Дворец Кваренги</small>
+                  </div>
+                  <div className="ticket-product-benefits">
+                    {ticket.mockupItems.map((item) => (
+                      <span key={item.title}><b>{item.title}</b><small>{item.note}</small></span>
+                    ))}
+                  </div>
+                </div>
               </div>
               <div className="ticket-highlight-list">
                 {ticket.highlights.map((highlight) => <span key={highlight}>{highlight}</span>)}
@@ -1489,6 +1548,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <AttendeeSection />
 
       <section className="section connection-section" id="connection-code">
         <div className="container">

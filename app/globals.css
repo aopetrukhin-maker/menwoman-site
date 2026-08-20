@@ -16,6 +16,185 @@
   --shadow: 0 24px 80px rgba(70, 40, 28, .12);
 }
 
+/* Attendees marquee */
+.attendees-section {
+  overflow: hidden;
+  padding: 96px 0 104px;
+  background:
+    radial-gradient(circle at 10% 10%, rgba(194, 27, 53, 0.1), transparent 32%),
+    linear-gradient(180deg, #fffaf7 0%, #f4e9e7 100%);
+}
+
+.attendees-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 460px);
+  align-items: end;
+  gap: 20px 48px;
+  margin-bottom: 44px;
+}
+
+.attendees-heading .section-label {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+
+.attendees-heading h2 {
+  margin: 0;
+  color: #1c1514;
+  font-size: clamp(3rem, 6vw, 6.8rem);
+  line-height: 0.88;
+  letter-spacing: -0.07em;
+}
+
+.attendees-heading h2 span {
+  color: #bd2037;
+}
+
+.attendees-heading > p:last-child {
+  margin: 0;
+  color: #6f625f;
+  font-size: 1.1rem;
+  line-height: 1.55;
+}
+
+.attendees-marquee {
+  width: 100%;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+}
+
+.attendees-track {
+  display: flex;
+  width: max-content;
+  gap: 18px;
+  will-change: transform;
+  animation: attendees-run 19s linear infinite;
+}
+
+.attendees-group {
+  display: flex;
+  gap: 18px;
+}
+
+.attendee-card {
+  width: 300px;
+  min-width: 300px;
+  height: 520px;
+  overflow: hidden;
+  border: 1px solid rgba(55, 35, 31, 0.14);
+  border-radius: 30px;
+  background: #fff;
+  box-shadow: 0 24px 60px rgba(64, 33, 29, 0.12);
+}
+
+.attendee-card img {
+  display: block;
+  width: 100%;
+  height: 330px;
+  object-fit: cover;
+}
+
+.attendee-card > div {
+  padding: 20px 22px 24px;
+}
+
+.attendee-card span {
+  color: #bd2037;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.attendee-card h3 {
+  margin: 8px 0 10px;
+  color: #1b1514;
+  font-size: 1.45rem;
+  line-height: 1;
+}
+
+.attendee-card p {
+  display: -webkit-box;
+  margin: 0;
+  overflow: hidden;
+  color: #655956;
+  font-size: 0.94rem;
+  line-height: 1.42;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+}
+
+@keyframes attendees-run {
+  to { transform: translateX(calc(-50% - 9px)); }
+}
+
+@media (max-width: 720px) {
+  .attendees-section {
+    padding: 64px 0 72px;
+  }
+
+  .attendees-heading {
+    display: block;
+    margin-bottom: 30px;
+  }
+
+  .attendees-heading .section-label {
+    margin-bottom: 14px;
+  }
+
+  .attendees-heading h2 {
+    font-size: clamp(3.1rem, 16vw, 4.8rem);
+  }
+
+  .attendees-heading > p:last-child {
+    margin-top: 22px;
+    font-size: 1rem;
+  }
+
+  .attendees-marquee {
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent);
+  }
+
+  .attendee-card {
+    width: 254px;
+    min-width: 254px;
+    height: 460px;
+    border-radius: 24px;
+  }
+
+  .attendee-card img {
+    height: 286px;
+  }
+
+  .attendee-card > div {
+    padding: 17px 18px 20px;
+  }
+
+  .attendee-card h3 {
+    font-size: 1.28rem;
+  }
+
+  .attendee-card p {
+    font-size: 0.86rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .attendees-track {
+    animation: none;
+  }
+
+  .attendees-marquee {
+    overflow-x: auto;
+  }
+
+  .attendees-group[aria-hidden="true"] {
+    display: none;
+  }
+}
+
 * {
   box-sizing: border-box;
 }

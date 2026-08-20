@@ -1031,6 +1031,93 @@
   object-fit: cover;
 }
 
+.ticket-product-art {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: .85fr 1.15fr;
+  gap: 12px;
+  padding: 18px;
+  background:
+    radial-gradient(circle at 84% 16%, rgba(255, 255, 255, .38), transparent 30%),
+    linear-gradient(140deg, #a71c32, #5e101d);
+}
+
+.ticket-product-scene-reload .ticket-product-art {
+  background:
+    radial-gradient(circle at 84% 16%, rgba(255, 255, 255, .34), transparent 30%),
+    linear-gradient(140deg, #b87828, #6d3d0a);
+}
+
+.ticket-product-scene-vip .ticket-product-art {
+  background:
+    radial-gradient(circle at 84% 16%, rgba(244, 214, 139, .26), transparent 30%),
+    linear-gradient(140deg, #191416, #050304);
+}
+
+.ticket-product-pass {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 15px;
+  border: 1px solid rgba(255, 255, 255, .55);
+  border-radius: 16px;
+  color: #fff;
+  background: rgba(255, 255, 255, .1);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .24);
+}
+
+.ticket-product-pass span,
+.ticket-product-pass small {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.ticket-product-pass strong {
+  font-size: clamp(1.15rem, 2vw, 1.65rem);
+  line-height: .95;
+  text-transform: uppercase;
+}
+
+.ticket-product-benefits {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+}
+
+.ticket-product-benefits > span {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  padding: 9px 11px;
+  border: 1px solid rgba(255, 255, 255, .28);
+  border-radius: 12px;
+  color: #fff;
+  background: rgba(255, 255, 255, .12);
+  backdrop-filter: blur(8px);
+}
+
+.ticket-product-benefits b {
+  overflow: hidden;
+  font-size: 11px;
+  line-height: 1.15;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ticket-product-benefits small {
+  margin-top: 3px;
+  color: rgba(255, 255, 255, .76);
+  font-size: 8px;
+  line-height: 1.2;
+}
+
 .price-card-vip .ticket-highlight-list span {
   color: var(--white);
   background: rgba(255, 255, 255, .09);
