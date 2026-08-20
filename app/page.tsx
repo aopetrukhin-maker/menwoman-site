@@ -55,7 +55,7 @@ type SpeakerRoute = {
 };
 
 const ticketUrl = "https://qtickets.ru/event/246143?base_color=ea1e63";
-const telegramUrl = "https://t.me/aopetrukhin";
+const telegramUrl = "https://t.me/redheadlitle";
 
 const saleStages: SaleStage[] = [
   {
@@ -817,6 +817,7 @@ const partners = [
   { name: "Хвойный квас", image: "/partners/hvoyny-kvas.webp" },
   { name: "Журнал SOK - Стиль. Образ. Качество жизни", image: "/partners/sok-magazine.webp" },
   { name: "Центр просвещения и досуга «СюрПриз»", image: "/partners/surpriz.webp" },
+  { name: "Философия Здоровья доктора К. С. Суханова", image: "/partners/philosophy-health-sukhanov.jpg" },
 ];
 
 const tickets = [
@@ -1761,7 +1762,7 @@ export default function Home() {
       <footer>
         <div className="container footer-grid">
           <div><strong>МЖ</strong><p>Мужчина и Женщина.<br />Перезагрузка</p></div>
-          <div><span>Задать вопрос</span><a href="tel:+79625759813">8 962 575-98-13</a><a href={telegramUrl} target="_blank" rel="noreferrer">Telegram: @aopetrukhin</a><a href="mailto:noname.eventspb@gmail.com">noname.eventspb@gmail.com</a></div>
+          <div><span>Задать вопрос</span><a href="tel:+79625759813">8 962 575-98-13</a><a href={telegramUrl} target="_blank" rel="noreferrer">Telegram: @redheadlitle</a><a href="mailto:noname.eventspb@gmail.com">noname.eventspb@gmail.com</a></div>
           <div><span>Адрес</span><p>Санкт-Петербург<br />Дворец Кваренги, Казанская 7</p></div>
         </div>
         <div className="container footer-bottom"><span>© 2026 Фестиваль «Мужчина и Женщина»</span><a href="#">Вернуться к началу</a></div>
