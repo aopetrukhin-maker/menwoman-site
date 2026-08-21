@@ -1203,6 +1203,29 @@
   .price-card .ticket-product-scene {
     min-height: 185px;
   }
+
+  .ticket-product-art {
+    grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+    gap: 10px;
+    padding: 16px;
+  }
+
+  .ticket-product-pass {
+    padding: 12px;
+  }
+
+  .ticket-product-pass strong {
+    max-width: 100%;
+    overflow: hidden;
+    font-size: clamp(.68rem, 3.1vw, .82rem);
+    letter-spacing: -.035em;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .ticket-product-benefits > span {
+    padding: 8px 9px;
+  }
 }
 
 .hero-facts-card {
