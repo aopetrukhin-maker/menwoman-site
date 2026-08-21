@@ -818,6 +818,7 @@ const partners = [
   { name: "Журнал SOK - Стиль. Образ. Качество жизни", image: "/partners/sok-magazine.webp" },
   { name: "Центр просвещения и досуга «СюрПриз»", image: "/partners/surpriz.webp" },
   { name: "Философия Здоровья доктора К. С. Суханова", image: "/partners/philosophy-health-sukhanov.jpg" },
+  { name: "LEVEL UP - Свидание в Темноте", image: "/partners/level-up-date-in-dark.svg" },
 ];
 
 const attendees = [
