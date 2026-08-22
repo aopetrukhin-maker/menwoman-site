@@ -78,12 +78,12 @@ const saleStages: SaleStage[] = [
   },
   {
     id: "final",
-    label: "Финальная цена",
-    deadline: "2026-08-22T12:00:00+03:00",
-    deadlineLabel: "22 августа в 12:00 МСК",
+    label: "Продажа открыта",
+    deadline: "2026-08-22T20:00:00+03:00",
+    deadlineLabel: "22 августа в 20:00 МСК",
     remaining: 40,
     quota: 200,
-    prices: { start: 1990, reload: 3990, vip: 7990 },
+    prices: { start: 1490, reload: 2990, vip: 5900 },
   },
   {
     id: "closed",
@@ -92,14 +92,14 @@ const saleStages: SaleStage[] = [
     deadlineLabel: "Регистрация открыта на площадке",
     remaining: 0,
     quota: 0,
-    prices: { start: 1990, reload: 3990, vip: 7990 },
+    prices: { start: 1490, reload: 2990, vip: 5900 },
     closed: true,
   },
 ];
 
 const formatPrice = (price: number) => `${new Intl.NumberFormat("ru-RU").format(price)} ₽`;
 
-const getPairPricePerPerson = (price: number) => Math.floor((price * 0.7) / 10) * 10;
+const getPairTotalPrice = (tier: TicketTier, price: number) => tier === "vip" && price === 5900 ? 8380 : Math.floor((price * 1.4) / 10) * 10;
 
 const formatTicketCount = (count: number) => {
   const lastTwoDigits = count % 100;
@@ -1058,10 +1058,10 @@ function PricingSection() {
   const selectedTicket = tickets.find((ticket) => ticket.tier === calculatorTier) ?? tickets[1];
   const currentSinglePrice = activeStage.prices[calculatorTier];
   const nextSinglePrice = nextStage.prices[calculatorTier];
-  const currentPairPricePerPerson = getPairPricePerPerson(currentSinglePrice);
-  const nextPairPricePerPerson = getPairPricePerPerson(nextSinglePrice);
-  const currentUnitPrice = purchaseMode === "pair" ? currentPairPricePerPerson * 2 : currentSinglePrice;
-  const nextUnitPrice = purchaseMode === "pair" ? nextPairPricePerPerson * 2 : nextSinglePrice;
+  const currentPairPrice = getPairTotalPrice(calculatorTier, currentSinglePrice);
+  const nextPairPrice = getPairTotalPrice(calculatorTier, nextSinglePrice);
+  const currentUnitPrice = purchaseMode === "pair" ? currentPairPrice : currentSinglePrice;
+  const nextUnitPrice = purchaseMode === "pair" ? nextPairPrice : nextSinglePrice;
   const currentTotal = currentUnitPrice * quantity;
   const nextTotal = nextUnitPrice * quantity;
   const stageSavings = Math.max(0, nextTotal - currentTotal);
@@ -1216,7 +1216,7 @@ function PricingSection() {
                   <span>{ticket.name}<small>{purchaseMode === "pair" ? "за двоих" : "за билет"}</small></span>
                   <strong>
                     {formatPrice(purchaseMode === "pair"
-                      ? getPairPricePerPerson(activeStage.prices[ticket.tier]) * 2
+                      ? getPairTotalPrice(ticket.tier, activeStage.prices[ticket.tier])
                       : activeStage.prices[ticket.tier])}
                   </strong>
                 </button>
@@ -1302,7 +1302,7 @@ function PricingSection() {
               </div>
               {!activeStage.closed && (
                 <button className="pair-card-link" type="button" onClick={() => selectPairTicket(ticket.tier)}>
-                  2 билета - {formatPrice(getPairPricePerPerson(activeStage.prices[ticket.tier]) * 2)} за двоих
+                  2 билета - {formatPrice(getPairTotalPrice(ticket.tier, activeStage.prices[ticket.tier]))} за двоих
                 </button>
               )}
               <a href={cardPurchaseUrl} target="_blank" rel="noreferrer">{activeStage.closed ? "Уточнить наличие" : "Купить билет"} <i className="button-icon"><ArrowIcon /></i></a>
