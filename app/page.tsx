@@ -1236,7 +1236,7 @@ function PricingSection() {
               <>
                 <div className="calculator-result pair-result">
                   <div><span>{quantity === 1 ? "Итого за 2 билета" : `Итого за ${formatTicketCount(quantity * 2)}`}</span><strong>{formatPrice(currentTotal)}</strong></div>
-                  <div><span>Для сравнения - за человека</span><strong>{formatPrice(currentPairPricePerPerson)}</strong></div>
+                  <div><span>Для сравнения - за человека</span><strong>{formatPrice(currentPairPrice / 2)}</strong></div>
                 </div>
                 <p className="calculator-saving pair-saving">Ваша выгода - {formatPrice(pairSavings)}</p>
                 {!activeStage.closed && activeStageIndex < saleStages.length - 2 && (
