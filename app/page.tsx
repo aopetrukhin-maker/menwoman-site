@@ -1490,9 +1490,9 @@ export default function Home() {
           <a href="#pricing"><span>●</span> Тарифы</a>
           <a href="/gifts/"><span>●</span> Подарки</a>
         </div>
-        <a className="nav-bonus-cta" href="#bonuses" aria-label="Забери подарки на сумму до 100 000 рублей">
-          <span className="nav-bonus-full">Забери 100 000 ₽</span>
-          <span className="nav-bonus-short">100 000 ₽</span>
+        <a className="nav-bonus-cta" href="/gifts/" aria-label="Забрать подарки">
+          <span className="nav-bonus-full">Забрать подарки</span>
+          <span className="nav-bonus-short">Подарки</span>
         </a>
         <details className="mobile-nav">
           <summary aria-label="Открыть меню">Меню</summary>
@@ -1872,4 +1872,3 @@ export default function Home() {
     </main>
   );
 }
-
