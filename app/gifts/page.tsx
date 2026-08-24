@@ -5,6 +5,13 @@ import access from "./access.json";
 import styles from "./gifts.module.css";
 
 type AccessRecord = { tier: "reload" | "vip"; sets: number };
+
+// Общие тестовые адреса не привязаны к заказу и могут одновременно
+// использоваться на любом количестве устройств.
+const SHARED_TEST_ACCESS: Record<string, AccessRecord> = {
+  "test@menwoman.ru": { tier: "vip", sets: 1 },
+  "test2@menwoman.ru": { tier: "vip", sets: 2 },
+};
 type Gift = {
   id: string; partner: string; title: string; price: number | null; quantity: number | null;
   format: string; term: string; contact?: string; details: string;
@@ -132,8 +139,10 @@ export default function GiftsPage() {
 
   async function login(event: FormEvent) {
     event.preventDefault(); setError("");
-    const key = await hashEmail(email);
-    const record = (access as Record<string, AccessRecord>)[key];
+    const normalizedEmail = email.trim().toLowerCase();
+    const testRecord = SHARED_TEST_ACCESS[normalizedEmail];
+    const key = testRecord ? "" : await hashEmail(normalizedEmail);
+    const record = testRecord || (access as Record<string, AccessRecord>)[key];
     if (!record) { setError("Эта почта не найдена среди билетов «Перезагрузка» и VIP. Проверьте адрес, указанный при покупке."); return; }
     setPerson(record); setCarts(Array.from({length: record.sets}, () => ({}))); setActiveSet(0);
   }
