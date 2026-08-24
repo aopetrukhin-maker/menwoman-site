@@ -51,12 +51,17 @@ export default function GiftsPage() {
   const [email, setEmail] = useState("");
   const [person, setPerson] = useState<AccessRecord | null>(null);
   const [error, setError] = useState("");
-  const [cart, setCart] = useState<Record<string, number>>({});
+  const [activeSet, setActiveSet] = useState(0);
+  const [carts, setCarts] = useState<Record<string, number>[]>([{}]);
   const [filter, setFilter] = useState("");
   const [finished, setFinished] = useState(false);
-  const budget = person ? (person.tier === "vip" ? 100000 : 50000) * person.sets : 0;
+  const budget = person ? (person.tier === "vip" ? 100000 : 50000) : 0;
+  const cart = carts[activeSet] || {};
   const total = useMemo(() => GIFTS.reduce((sum, gift) => sum + (gift.price || 0) * (cart[gift.id] || 0), 0), [cart]);
   const selected = GIFTS.filter((gift) => cart[gift.id]);
+  const setTotal = (setCart: Record<string, number>) => GIFTS.reduce((sum, gift) => sum + (gift.price || 0) * (setCart[gift.id] || 0), 0);
+  const allReady = person ? Array.from({length: person.sets}).every((_, index) => Object.keys(carts[index] || {}).length > 0) : false;
+  const allTotal = carts.reduce((sum, setCart) => sum + setTotal(setCart), 0);
   const visible = GIFTS.filter((gift) => `${gift.partner} ${gift.title}`.toLowerCase().includes(filter.toLowerCase()));
 
   async function login(event: FormEvent) {
@@ -64,7 +69,7 @@ export default function GiftsPage() {
     const key = await hashEmail(email);
     const record = (access as Record<string, AccessRecord>)[key];
     if (!record) { setError("Эта почта не найдена среди билетов «Перезагрузка» и VIP. Проверьте адрес или напишите организатору."); return; }
-    setPerson(record);
+    setPerson(record); setCarts(Array.from({length: record.sets}, () => ({}))); setActiveSet(0);
   }
 
   function add(gift: Gift) {
@@ -73,17 +78,20 @@ export default function GiftsPage() {
     if (next > budget) { setError(`Лимит превышен на ${money(next - budget)}.`); return; }
     const count = cart[gift.id] || 0;
     if (gift.quantity !== null && count >= gift.quantity) return;
-    setError(""); setCart({ ...cart, [gift.id]: count + 1 });
+    setError(""); setCarts((current) => current.map((item, index) => index === activeSet ? { ...item, [gift.id]: count + 1 } : item));
   }
 
   function remove(gift: Gift) {
     const count = cart[gift.id] || 0;
-    if (count <= 1) { const copy = { ...cart }; delete copy[gift.id]; setCart(copy); }
-    else setCart({ ...cart, [gift.id]: count - 1 });
+    setCarts((current) => current.map((item, index) => {
+      if (index !== activeSet) return item;
+      if (count <= 1) { const copy = { ...item }; delete copy[gift.id]; return copy; }
+      return { ...item, [gift.id]: count - 1 };
+    }));
   }
 
   function finishSelection() {
-    window.localStorage.setItem("mj-gift-selection", JSON.stringify({ emailHash: "verified", cart, total, createdAt: new Date().toISOString() }));
+    window.localStorage.setItem("mj-gift-selection", JSON.stringify({ emailHash: "verified", carts, total: allTotal, createdAt: new Date().toISOString() }));
     setFinished(true);
   }
 
@@ -95,19 +103,20 @@ export default function GiftsPage() {
     <div className={styles.limits}><span>Перезагрузка <b>до 50 000 ₽</b></span><span>VIP <b>до 100 000 ₽</b></span></div>
     <form onSubmit={login} className={styles.form}><label>Почта, указанная при покупке билета</label><div><input type="email" required value={email} onChange={(e)=>setEmail(e.target.value)} placeholder="name@example.com"/><button>Открыть каталог</button></div></form>
     {error && <p className={styles.error}>{error}</p>}
-    <p className={styles.note}>Если билет был «для двоих», лимит автоматически удваивается. По вопросам доступа: <a href="https://t.me/redheadlitle">@redheadlitle</a>.</p>
+    <p className={styles.note}>Если билет был «для двоих», откроются два отдельных набора с полным лимитом для каждого участника. По вопросам доступа: <a href="https://t.me/redheadlitle">@redheadlitle</a>.</p>
   </section></main>;
 
   if (finished) return <main className={styles.page}><section className={styles.finish}>
     <p className={styles.eyebrow}>НАБОР СФОРМИРОВАН</p><h1>Выбор сохранён</h1>
     <p className={styles.lead}>Сделайте скриншот этой страницы. Для получения подарков отправьте организатору почту из заказа и список ниже.</p>
-    <div className={styles.receipt}>{selected.map(g=><div key={g.id}><b>{g.title}</b><span>{g.partner} · {cart[g.id]} шт. · {g.price ? money(g.price * cart[g.id]) : "номинал уточняется"}</span>{g.contact && <small>Контакт: {g.contact}</small>}</div>)}</div>
-    <div className={styles.summary}><span>Итого</span><b>{money(total)}</b></div>
+    <div className={styles.receipt}>{carts.map((setCart, index)=><section className={styles.receiptGroup} key={index}><h2>Участник {index + 1}</h2>{GIFTS.filter(g=>setCart[g.id]).map(g=><div key={g.id}><b>{g.title}</b><span>{g.partner} · {setCart[g.id]} шт. · {g.price ? money(g.price * setCart[g.id]) : "номинал уточняется"}</span>{g.contact && <small>Контакт: {g.contact}</small>}</div>)}<strong>Итого: {money(setTotal(setCart))}</strong></section>)}</div>
+    <div className={styles.summary}><span>Всего по всем наборам</span><b>{money(allTotal)}</b></div>
     <a className={styles.telegram} href={`https://t.me/redheadlitle`}>Написать организатору</a>
   </section></main>;
 
   return <main className={styles.page}>
     <header className={styles.header}><div><p className={styles.eyebrow}>ВАШ ПОДАРОЧНЫЙ ФОНД</p><h1>Каталог подарков</h1><p>{person.tier === "vip" ? "Тариф VIP" : "Тариф «Перезагрузка»"}{person.sets > 1 ? ` · ${person.sets} набора` : ""}</p></div><a href="/">На главную</a></header>
+    {person.sets > 1 && <div className={styles.setTabs}>{carts.map((setCart,index)=><button key={index} className={index === activeSet ? styles.setTabActive : styles.setTab} onClick={()=>{setActiveSet(index);setError("");}}><span>Участник {index + 1}</span><b>{money(setTotal(setCart))} из {money(budget)}</b></button>)}</div>}
     <div className={styles.budget}><div><span>Выбрано</span><b>{money(total)}</b></div><div><span>Доступно</span><b>{money(budget - total)}</b></div><div className={styles.bar}><i style={{width:`${Math.min(100,total/budget*100)}%`}}/></div></div>
     <div className={styles.tools}><input value={filter} onChange={(e)=>setFilter(e.target.value)} placeholder="Найти подарок или партнёра"/><span>{visible.length} подарков</span></div>
     {error && <p className={styles.error}>{error}</p>}
@@ -117,6 +126,6 @@ export default function GiftsPage() {
       <dl><div><dt>Формат</dt><dd>{gift.format}</dd></div><div><dt>Срок</dt><dd>{gift.term}</dd></div></dl>
       <div className={styles.cardBottom}><b>{gift.price === null ? "Номинал уточняется" : money(gift.price)}</b>{gift.price === null ? <button disabled>Скоро</button> : <div className={styles.counter}>{cart[gift.id] ? <button onClick={()=>remove(gift)}>−</button> : null}<span>{cart[gift.id] || ""}</span><button onClick={()=>add(gift)}>+</button></div>}</div>
     </article>)}</section>
-    <aside className={styles.cart}><div><span>{selected.length ? `${selected.length} позиций` : "Корзина пуста"}</span><b>{money(total)} из {money(budget)}</b></div><button disabled={!selected.length} onClick={finishSelection}>Сформировать набор</button></aside>
+    <aside className={styles.cart}><div><span>{person.sets > 1 ? `Участник ${activeSet + 1}: ` : ""}{selected.length ? `${selected.length} позиций` : "корзина пуста"}</span><b>{money(total)} из {money(budget)}</b></div><button disabled={!allReady} onClick={finishSelection}>{person.sets > 1 ? "Сформировать 2 набора" : "Сформировать набор"}</button></aside>
   </main>;
 }
