@@ -1488,6 +1488,7 @@ export default function Home() {
           <a href="#speakers"><span>●</span> Спикеры</a>
           <a href="#partnership"><span>●</span> Партнерство</a>
           <a href="#pricing"><span>●</span> Тарифы</a>
+          <a href="/gifts/"><span>●</span> Подарки</a>
         </div>
         <a className="nav-bonus-cta" href="#bonuses" aria-label="Забери подарки на сумму до 100 000 рублей">
           <span className="nav-bonus-full">Забери 100 000 ₽</span>
@@ -1502,6 +1503,7 @@ export default function Home() {
             <a href="#speakers">Спикеры</a>
             <a href="#partnership">Партнерство</a>
             <a href="#pricing">Тарифы</a>
+            <a href="/gifts/">Получить подарки</a>
           </div>
         </details>
       </nav>
@@ -1870,3 +1872,4 @@ export default function Home() {
     </main>
   );
 }
+
