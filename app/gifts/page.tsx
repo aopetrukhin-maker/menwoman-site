@@ -10,7 +10,13 @@ type Gift = {
   format: string; term: string; contact?: string; details: string;
 };
 
-type ProviderInfo = { bio: string; href?: string; linkLabel?: string };
+type ProviderInfo = {
+  bio: string;
+  publicHref?: string;
+  publicLabel?: string;
+  redeemHref?: string;
+  redeemLabel?: string;
+};
 type GiftValue = { forWhom: string; includes: string[]; result: string };
 
 const PROVIDERS: Record<string, ProviderInfo> = {
@@ -18,21 +24,21 @@ const PROVIDERS: Record<string, ProviderInfo> = {
   "Анна Рацун": { bio:"Психолог-сексолог, член Ассоциации сексологов России." },
   "Инна Мартынова": { bio:"Дипломированный психолог и коуч по отношениям, игропрактик, женский тренер и спикер мужских и женских сообществ." },
   "Евгения Цапина": { bio:"Психолог, коуч, расстановщик и энерготерапевт. Работает с повторяющимися жизненными сценариями и внутренними ограничениями." },
-  "Дмитрий Елунин": { bio:"Интегративный психолог, супервизор ПСИ 2.0, телесно-ориентированный и групповой терапевт.", href:"https://t.me/Elunin_Dmitry_Psy", linkLabel:"Telegram эксперта" },
+  "Дмитрий Елунин": { bio:"Интегративный психолог, супервизор ПСИ 2.0, телесно-ориентированный и групповой терапевт.", publicHref:"https://www.instagram.com/elunin_dmitry_psy", publicLabel:"Социальная сеть эксперта" },
   "Татьяна Щербакова": { bio:"Эксперт по знакомствам и замужеству, основательница «Академии замужества», лауреат премии «Женщина года - 2026»." },
-  "Александр Кардашов": { bio:"Доктор психологии, семейный и перинатальный психолог, гипнотерапевт, акмеолог и НЛП-тренер.", href:"https://t.me/alexkarpsy", linkLabel:"Telegram эксперта" },
+  "Александр Кардашов": { bio:"Доктор психологии, семейный и перинатальный психолог, гипнотерапевт, акмеолог и НЛП-тренер.", publicHref:"https://www.instagram.com/alexkarpsy", publicLabel:"Социальная сеть эксперта" },
   "Ольга Жильникова": { bio:"Психолог-сексолог и телесный терапевт с опытом более 19 лет, мета-тренер." },
   "Людмила Беликова": { bio:"Коуч, мастер восточных практик, специалист по нейрографике и работе с тибетскими поющими чашами." },
   "Олеся Дроздова": { bio:"Аттестованный советник по личным и семейным финансам." },
-  "Виктория Оргеневская": { bio:"Бизнес-консультант и маркетолог с 2009 года, более 2500 консультаций, автор методики «Взлёт».", href:"https://t.me/gostinaya_optimistki", linkLabel:"Telegram-канал эксперта" },
-  "Мария": { bio:"Телесный терапевт, сексолог, энергопрактик и автор метода телесного самопрограммирования.", href:"https://t.me/mariwwonder", linkLabel:"Telegram эксперта" },
-  "Лала Попова": { bio:"Психолог по отношениям, реализации и психическому здоровью. Более 7500 часов индивидуальной практики.", href:"https://t.me/Lala_Popova", linkLabel:"Telegram эксперта" },
-  "Катия Шведова": { bio:"Мотивационный спикер, основательница клуба «Код Многомерности», спикер Синергии с 2018 года.", href:"https://t.me/Katiya_ya", linkLabel:"Telegram эксперта" },
-  "Елена Солнечная": { bio:"Нейрокинезиолог, нейробиохакер, эксперт по эмоциональной устойчивости и постоянный эксперт федеральных телеканалов.", href:"https://elenasun.ru/", linkLabel:"Сайт эксперта" },
+  "Виктория Оргеневская": { bio:"Бизнес-консультант и маркетолог с 2009 года, более 2500 консультаций, автор методики «Взлёт».", publicHref:"https://t.me/VZLET_probusiness", publicLabel:"Telegram-канал «Взлёт»" },
+  "Мария": { bio:"Телесный терапевт, сексолог, энергопрактик и автор метода телесного самопрограммирования." },
+  "Лала Попова": { bio:"Психолог по отношениям, реализации и психическому здоровью. Более 7500 часов индивидуальной практики.", publicHref:"https://t.me/Psycho_LalaPopova", publicLabel:"Telegram-канал психолога" },
+  "Катия Шведова": { bio:"Мотивационный спикер, основательница клуба «Код Многомерности», спикер Синергии с 2018 года.", publicHref:"https://t.me/kod_mnogo", publicLabel:"Telegram-канал эксперта" },
+  "Елена Солнечная": { bio:"Нейрокинезиолог, нейробиохакер, эксперт по эмоциональной устойчивости и постоянный эксперт федеральных телеканалов.", publicHref:"https://elenasun.ru/", publicLabel:"Сайт эксперта" },
   "Елена Забанова": { bio:"Врач и учёный, кандидат медицинских наук по двум специальностям, 47 лет профессионального стажа." },
-  "MONTANA": { bio:"Магазин одежды культового джинсового бренда MONTANA.", href:"https://montanajeans.uds.app/c/certificates/receive?token=04c7dd44982d37430e3cb1b1c3e2944e1593bb7d3bc500fa7a7e638c9d7923d4", linkLabel:"Получить сертификат MONTANA" },
-  "Нуждички": { bio:"Сервис аренды вещей: техника, оборудование для мероприятий, товары для дома, отдыха, спорта и реабилитации - когда вещь нужна временно, а покупать её невыгодно.", href:"https://nuzhdikchki.uds.app/c/certificates/receive?token=ee4b0df8ad8fc61f2ee993a42b27906afcb352b8e7a9c0bbbcacbbafcd5a9ad0", linkLabel:"Посмотреть сервис и сертификат" },
-  "Боди Импульс": { bio:"Проект для запуска собственной SPA-студии. Сертификат уменьшает первоначальные затраты на открытие.", linkLabel:"Условия у представителя партнёра" },
+  "MONTANA": { bio:"Магазин одежды культового джинсового бренда MONTANA.", publicHref:"https://montanajeans.ru/", publicLabel:"Сайт компании", redeemHref:"https://montanajeans.uds.app/c/certificates/receive?token=04c7dd44982d37430e3cb1b1c3e2944e1593bb7d3bc500fa7a7e638c9d7923d4", redeemLabel:"Получить сертификат MONTANA" },
+  "Нуждички": { bio:"Сервис аренды вещей: техника, оборудование для мероприятий, товары для дома, отдыха, спорта и реабилитации - когда вещь нужна временно, а покупать её невыгодно.", publicHref:"https://nuzhdichki.ru/", publicLabel:"Каталог компании", redeemHref:"https://nuzhdikchki.uds.app/c/certificates/receive?token=ee4b0df8ad8fc61f2ee993a42b27906afcb352b8e7a9c0bbbcacbbafcd5a9ad0", redeemLabel:"Получить сертификат «Нуждички»" },
+  "Боди Импульс": { bio:"Проект для запуска собственной SPA-студии. Сертификат уменьшает первоначальные затраты на открытие." },
 };
 
 const GIFT_VALUES: Record<string, GiftValue> = {
@@ -97,6 +103,16 @@ async function hashEmail(email: string) {
 
 const money = (value: number) => new Intl.NumberFormat("ru-RU").format(value) + " ₽";
 
+function giftContact(gift: Gift) {
+  const provider = PROVIDERS[gift.partner];
+  if (provider?.redeemHref) return { href: provider.redeemHref, label: provider.redeemLabel || "Получить подарок" };
+  const contact = gift.contact?.trim();
+  if (!contact) return null;
+  if (contact.startsWith("@")) return { href: `https://t.me/${contact.slice(1)}`, label: `Написать ${contact}` };
+  if (contact.startsWith("http://") || contact.startsWith("https://")) return { href: contact, label: "Открыть контакт" };
+  return { href: `https://${contact}`, label: `Открыть ${contact}` };
+}
+
 export default function GiftsPage() {
   const [email, setEmail] = useState("");
   const [person, setPerson] = useState<AccessRecord | null>(null);
@@ -118,7 +134,7 @@ export default function GiftsPage() {
     event.preventDefault(); setError("");
     const key = await hashEmail(email);
     const record = (access as Record<string, AccessRecord>)[key];
-    if (!record) { setError("Эта почта не найдена среди билетов «Перезагрузка» и VIP. Проверьте адрес или напишите организатору."); return; }
+    if (!record) { setError("Эта почта не найдена среди билетов «Перезагрузка» и VIP. Проверьте адрес, указанный при покупке."); return; }
     setPerson(record); setCarts(Array.from({length: record.sets}, () => ({}))); setActiveSet(0);
   }
 
@@ -154,11 +170,12 @@ export default function GiftsPage() {
   </section></main>;
 
   if (finished) return <main className={styles.page}><section className={styles.finish}>
-    <p className={styles.eyebrow}>НАБОР СФОРМИРОВАН</p><h1>Выбор сохранён</h1>
-    <p className={styles.lead}>Сделайте скриншот этой страницы. Для получения подарков отправьте организатору почту из заказа и список ниже.</p>
-    <div className={styles.receipt}>{carts.map((setCart, index)=><section className={styles.receiptGroup} key={index}><h2>Участник {index + 1}</h2>{GIFTS.filter(g=>setCart[g.id]).map(g=><div key={g.id}><b>{g.title}</b><span>{g.partner} · {setCart[g.id]} шт. · {g.price ? money(g.price * setCart[g.id]) : "номинал уточняется"}</span>{g.contact && <small>Контакт: {g.contact}</small>}</div>)}<strong>Итого: {money(setTotal(setCart))}</strong></section>)}</div>
+    <p className={styles.eyebrow}>НАБОР СФОРМИРОВАН</p><h1>Подарки и контакты</h1>
+    <p className={styles.lead}>Всё готово: ниже открыты прямые контакты выбранных экспертов и компаний. Нажмите кнопку нужного подарка и договоритесь о получении напрямую. При обращении назовите почту из заказа и сохраните скриншот этой страницы.</p>
+    <div className={styles.receipt}>{carts.map((setCart, index)=><section className={styles.receiptGroup} key={index}><h2>Участник {index + 1}</h2>{GIFTS.filter(g=>setCart[g.id]).map(g=>{const contact=giftContact(g);return <div className={styles.receiptItem} key={g.id}><b>{g.title}</b><span>{g.partner} · {setCart[g.id]} шт. · {g.price ? money(g.price * setCart[g.id]) : "номинал уточняется"}</span><small>{g.format} · {g.term}</small>{contact ? <a className={styles.contactButton} href={contact.href} target="_blank" rel="noreferrer">{contact.label} →</a> : <p className={styles.contactPending}>Контакт партнёра уточняется. Этот подарок пока нельзя оформить автоматически.</p>}</div>})}<strong>Итого: {money(setTotal(setCart))}</strong></section>)}</div>
     <div className={styles.summary}><span>Всего по всем наборам</span><b>{money(allTotal)}</b></div>
-    <a className={styles.telegram} href={`https://t.me/redheadlitle`}>Написать организатору</a>
+    <button className={styles.saveButton} onClick={()=>window.print()}>Сохранить контакты в PDF / распечатать</button>
+    <p className={styles.savedNote}>Сделайте скриншот этого экрана, чтобы список подарков и активные контакты всегда были под рукой.</p>
   </section></main>;
 
   return <main className={styles.page}>
@@ -172,7 +189,7 @@ export default function GiftsPage() {
       <h2>{gift.title}</h2>{provider && <p className={styles.bio}><b>Кто дарит</b>{provider.bio}</p>}
       {value ? <div className={styles.value}><p><b>Для кого</b>{value.forWhom}</p><div><b>Что входит</b><ul>{value.includes.map(item=><li key={item}>{item}</li>)}</ul></div><p className={styles.result}><b>Что получите</b>{value.result}</p></div> : <p>{gift.details}</p>}
       <dl><div><dt>Формат</dt><dd>{gift.format}</dd></div><div><dt>Срок</dt><dd>{gift.term}</dd></div></dl>
-      {provider?.href && <a className={styles.providerLink} href={provider.href} target="_blank" rel="noreferrer">{provider.linkLabel || "Подробнее о партнёре"} ↗</a>}
+      {provider?.publicHref && <a className={styles.providerLink} href={provider.publicHref} target="_blank" rel="noreferrer">{provider.publicLabel || "Подробнее о партнёре"} ↗</a>}
       <div className={styles.cardBottom}><b>{gift.price === null ? "Номинал уточняется" : money(gift.price)}</b>{gift.price === null ? <button disabled>Скоро</button> : cart[gift.id] ? <button className={styles.chosen} onClick={()=>remove(gift)}>✓ Выбрано</button> : <button className={styles.choose} onClick={()=>add(gift)}>Выбрать</button>}</div>
     </article>})}</section>
     <aside className={styles.cart}><div><span>{person.sets > 1 ? `Участник ${activeSet + 1}: ` : ""}{selected.length ? `${selected.length} позиций` : "корзина пуста"}</span><b>{money(total)} из {money(budget)}</b></div><button disabled={!allReady} onClick={finishSelection}>{person.sets > 1 ? "Сформировать 2 набора" : "Сформировать набор"}</button></aside>
