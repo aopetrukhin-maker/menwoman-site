@@ -466,5 +466,13 @@
   "4c5f849326301fa15543189bf3e56679b620121e09e5acd58c6229270bb0959e": {
     "tier": "reload",
     "sets": 1
+  },
+  "9031a0c7d1133bd756f0f719cf49a8a3ae30af03cddf70c8e89479b18a102b0b": {
+    "tier": "vip",
+    "sets": 1
+  },
+  "de5250d4f60736edd2a9720ed41cd0c63c1fa53e7935e17d8bbad1ff85f13b3e": {
+    "tier": "vip",
+    "sets": 1
   }
 }
