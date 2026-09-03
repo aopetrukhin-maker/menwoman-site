@@ -12,6 +12,7 @@ const SHARED_TEST_ACCESS: Record<string, AccessRecord> = {
   "test@menwoman.ru": { tier: "vip", sets: 1 },
   "test2@menwoman.ru": { tier: "vip", sets: 2 },
 };
+const TRACKING_URL = "https://menwoman-gifts-data.aopetrukhin.chatgpt.site/api/activity";
 type Gift = {
   id: string; partner: string; title: string; price: number | null; quantity: number | null;
   format: string; term: string; contact?: string; details: string;
@@ -180,6 +181,8 @@ export default function GiftsPage() {
   const [carts, setCarts] = useState<Record<string, number>[]>([{}]);
   const [filter, setFilter] = useState("");
   const [finished, setFinished] = useState(false);
+  const [verifiedEmailHash, setVerifiedEmailHash] = useState("");
+  const [saving, setSaving] = useState(false);
   const budget = person ? (person.tier === "vip" ? 100000 : 50000) : 0;
   const cart = carts[activeSet] || {};
   const total = useMemo(() => GIFTS.reduce((sum, gift) => sum + (gift.price || 0) * (cart[gift.id] || 0), 0), [cart]);
@@ -191,6 +194,24 @@ export default function GiftsPage() {
   const normalizedEmail = email.trim().toLowerCase();
   const emailReady = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail);
 
+  async function trackActivity(payload: {
+    event: "opened" | "submitted";
+    email: string;
+    emailHash: string;
+    tier: "reload" | "vip";
+    sets: number;
+    carts?: Record<string, number>[];
+    total?: number;
+  }) {
+    const response = await fetch(TRACKING_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      keepalive: true,
+    });
+    if (!response.ok) throw new Error("tracking_failed");
+  }
+
   async function login(event: FormEvent) {
     event.preventDefault(); setError("");
     if (!emailReady) { setError("Введите почту полностью, например name@example.com."); return; }
@@ -198,6 +219,15 @@ export default function GiftsPage() {
     const key = testRecord ? "" : await hashEmail(normalizedEmail);
     const record = testRecord || (access as Record<string, AccessRecord>)[key];
     if (!record) { setError("Эта почта не найдена среди билетов «Перезагрузка» и VIP. Проверьте адрес, указанный при покупке."); return; }
+    if (!testRecord) {
+      try {
+        await trackActivity({ event:"opened", email:normalizedEmail, emailHash:key, tier:record.tier, sets:record.sets });
+      } catch {
+        setError("Не удалось сохранить вход. Обновите страницу и попробуйте ещё раз.");
+        return;
+      }
+    }
+    setVerifiedEmailHash(key);
     setPerson(record); setCarts(Array.from({length: record.sets}, () => ({}))); setActiveSet(0);
   }
 
@@ -216,9 +246,20 @@ export default function GiftsPage() {
     }));
   }
 
-  function finishSelection() {
-    window.localStorage.setItem("mj-gift-selection", JSON.stringify({ emailHash: "verified", carts, total: allTotal, createdAt: new Date().toISOString() }));
-    setFinished(true);
+  async function finishSelection() {
+    if (!person || saving) return;
+    setSaving(true); setError("");
+    try {
+      if (verifiedEmailHash) {
+        await trackActivity({ event:"submitted", email:normalizedEmail, emailHash:verifiedEmailHash, tier:person.tier, sets:person.sets, carts, total:allTotal });
+      }
+      window.localStorage.setItem("mj-gift-selection", JSON.stringify({ emailHash: verifiedEmailHash || "test", carts, total: allTotal, createdAt: new Date().toISOString() }));
+      setFinished(true);
+    } catch {
+      setError("Не удалось сохранить набор. Проверьте интернет и нажмите «Сформировать» ещё раз.");
+    } finally {
+      setSaving(false);
+    }
   }
 
   if (!person) return <main className={styles.page}><section className={styles.login}>
@@ -255,6 +296,6 @@ export default function GiftsPage() {
       {provider?.publicHref && <a className={styles.providerLink} href={provider.publicHref} target="_blank" rel="noreferrer">{provider.publicLabel || "Подробнее о партнёре"} ↗</a>}
       <div className={styles.cardBottom}><b>{gift.price === null ? "Номинал уточняется" : money(gift.price)}</b>{gift.price === null ? <button disabled>Скоро</button> : cart[gift.id] ? <button className={styles.chosen} onClick={()=>remove(gift)}>✓ Выбрано</button> : <button className={styles.choose} onClick={()=>add(gift)}>Выбрать</button>}</div>
     </article>})}</section>
-    <aside className={styles.cart}><div><span>{person.sets > 1 ? `Участник ${activeSet + 1}: ` : ""}{selected.length ? `${selected.length} позиций` : "корзина пуста"}</span><b>{money(total)} из {money(budget)}</b></div><button disabled={!allReady} onClick={finishSelection}>{person.sets > 1 ? "Сформировать 2 набора" : "Сформировать набор"}</button></aside>
+    <aside className={styles.cart}><div><span>{person.sets > 1 ? `Участник ${activeSet + 1}: ` : ""}{selected.length ? `${selected.length} позиций` : "корзина пуста"}</span><b>{money(total)} из {money(budget)}</b></div><button disabled={!allReady || saving} onClick={finishSelection}>{saving ? "Сохраняем..." : person.sets > 1 ? `Сформировать ${person.sets} набора` : "Сформировать набор"}</button></aside>
   </main>;
 }
