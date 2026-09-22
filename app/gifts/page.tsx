@@ -224,7 +224,23 @@ export default function GiftsPage() {
       void trackActivity({ event:"opened", email:normalizedEmail, emailHash:key, tier:record.tier, sets:record.sets }).catch(() => undefined);
     }
     setVerifiedEmailHash(key);
-    setPerson(record); setCarts(Array.from({length: record.sets}, () => ({}))); setActiveSet(0);
+    setPerson(record);
+    setActiveSet(0);
+
+    // На том же устройстве повторный вход сразу открывает ранее сформированный набор.
+    try {
+      const saved = JSON.parse(window.localStorage.getItem("mj-gift-selection") || "null");
+      if (saved?.emailHash === key && Array.isArray(saved.carts) && saved.carts.length === record.sets) {
+        setCarts(saved.carts);
+        setFinished(true);
+        return;
+      }
+    } catch {
+      // Повреждённые локальные данные не должны мешать повторно собрать набор.
+    }
+
+    setCarts(Array.from({length: record.sets}, () => ({})));
+    setFinished(false);
   }
 
   function add(gift: Gift) {
@@ -275,7 +291,8 @@ export default function GiftsPage() {
     <div className={styles.receipt}>{carts.map((setCart, index)=><section className={styles.receiptGroup} key={index}><h2>Участник {index + 1}</h2>{GIFTS.filter(g=>setCart[g.id]).map(g=>{const contact=giftContact(g);return <div className={styles.receiptItem} key={g.id}><b>{g.title}</b><span>{g.partner} · {setCart[g.id]} шт. · {g.price ? money(g.price * setCart[g.id]) : "номинал уточняется"}</span><small>{g.format} · {g.term}</small>{contact ? <a className={styles.contactButton} href={contact.href} target="_blank" rel="noreferrer">{contact.label} →</a> : <p className={styles.contactPending}>Контакт партнёра уточняется. Этот подарок пока нельзя оформить автоматически.</p>}</div>})}<strong>Итого: {money(setTotal(setCart))}</strong></section>)}</div>
     <div className={styles.summary}><span>Всего по всем наборам</span><b>{money(allTotal)}</b></div>
     <button className={styles.saveButton} onClick={()=>window.print()}>Сохранить контакты в PDF / распечатать</button>
-    <p className={styles.savedNote}>Сделайте скриншот этого экрана, чтобы список подарков и активные контакты всегда были под рукой.</p>
+    <button className={styles.saveButton} onClick={()=>setFinished(false)}>Изменить выбор подарков</button>
+    <p className={styles.savedNote}>При повторном входе с этого устройства список и активные контакты откроются снова. Сохраните страницу в PDF или сделайте скриншот.</p>
   </section></main>;
 
   return <main className={styles.page}>
