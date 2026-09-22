@@ -220,12 +220,8 @@ export default function GiftsPage() {
     const record = testRecord || (access as Record<string, AccessRecord>)[key];
     if (!record) { setError("Эта почта не найдена среди билетов «Перезагрузка» и VIP. Проверьте адрес, указанный при покупке."); return; }
     if (!testRecord) {
-      try {
-        await trackActivity({ event:"opened", email:normalizedEmail, emailHash:key, tier:record.tier, sets:record.sets });
-      } catch {
-        setError("Не удалось сохранить вход. Обновите страницу и попробуйте ещё раз.");
-        return;
-      }
+      // Служебная статистика не должна блокировать доступ к уже оплаченным подаркам.
+      void trackActivity({ event:"opened", email:normalizedEmail, emailHash:key, tier:record.tier, sets:record.sets }).catch(() => undefined);
     }
     setVerifiedEmailHash(key);
     setPerson(record); setCarts(Array.from({length: record.sets}, () => ({}))); setActiveSet(0);
