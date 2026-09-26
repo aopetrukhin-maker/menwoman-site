@@ -261,17 +261,21 @@ export default function GiftsPage() {
   async function finishSelection() {
     if (!person || saving) return;
     setSaving(true); setError("");
-    try {
-      if (verifiedEmailHash) {
-        await trackActivity({ event:"submitted", email:normalizedEmail, emailHash:verifiedEmailHash, tier:person.tier, sets:person.sets, carts, total:allTotal });
-      }
-      window.localStorage.setItem("mj-gift-selection", JSON.stringify({ emailHash: verifiedEmailHash || "test", carts, total: allTotal, createdAt: new Date().toISOString() }));
-      setFinished(true);
-    } catch {
-      setError("Не удалось сохранить набор. Проверьте интернет и нажмите «Сформировать» ещё раз.");
-    } finally {
-      setSaving(false);
+
+    // Ошибка служебной статистики не должна блокировать уже оплаченные подарки.
+    if (verifiedEmailHash) {
+      void trackActivity({ event:"submitted", email:normalizedEmail, emailHash:verifiedEmailHash, tier:person.tier, sets:person.sets, carts, total:allTotal }).catch(() => undefined);
     }
+
+    // Сохраняем выбор на устройстве, но даже запрет localStorage не блокирует контакты.
+    try {
+      window.localStorage.setItem("mj-gift-selection", JSON.stringify({ emailHash: verifiedEmailHash || "test", carts, total: allTotal, createdAt: new Date().toISOString() }));
+    } catch {
+      // Контакты всё равно открываются на текущем экране.
+    }
+
+    setFinished(true);
+    setSaving(false);
   }
 
   if (!person) return <main className={styles.page}><section className={styles.login}>
