@@ -171,6 +171,10 @@ function giftContact(gift: Gift) {
   return { href: `https://${contact}`, label: `Открыть ${contact}` };
 }
 
+function ArchiveNotice() {
+  return <aside className={styles.archiveNotice}><strong>Каталог прошлой встречи МЖ</strong><p>Этот раздел сохранён для участников прошлого фестиваля. Его тарифы, подарки и сроки не являются предложениями на 3 декабря 2026 года. Условия новой встречи уточняются.</p></aside>;
+}
+
 export default function GiftsPage() {
   const [email, setEmail] = useState("");
   const [person, setPerson] = useState<AccessRecord | null>(null);
@@ -276,7 +280,7 @@ export default function GiftsPage() {
     setSaving(false);
   }
 
-  if (!person) return <main className={styles.page}><section className={styles.login}>
+  if (!person) return <main className={styles.page}><ArchiveNotice /><section className={styles.login}>
     <a className={styles.back} href="/">← Вернуться на сайт</a>
     <p className={styles.eyebrow}>ПОДАРОЧНЫЙ ФОНД ФЕСТИВАЛЯ</p>
     <h1>Соберите свой набор подарков</h1>
@@ -287,7 +291,7 @@ export default function GiftsPage() {
     <p className={styles.note}>Если билет был «для двоих», откроются два отдельных набора с полным лимитом для каждого участника. По вопросам доступа: <a href="https://t.me/redheadlitle">@redheadlitle</a>.</p>
   </section></main>;
 
-  if (finished) return <main className={styles.page}><section className={styles.finish}>
+  if (finished) return <main className={styles.page}><ArchiveNotice /><section className={styles.finish}>
     <p className={styles.eyebrow}>НАБОР СФОРМИРОВАН</p><h1>Подарки и контакты</h1>
     <p className={styles.lead}>Всё готово: ниже открыты прямые контакты выбранных экспертов и компаний. Нажмите кнопку нужного подарка и договоритесь о получении напрямую. При обращении назовите почту из заказа и сохраните скриншот этой страницы.</p>
     <div className={styles.receipt}>{carts.map((setCart, index)=><section className={styles.receiptGroup} key={index}><h2>Участник {index + 1}</h2>{GIFTS.filter(g=>setCart[g.id]).map(g=>{const contact=giftContact(g);return <div className={styles.receiptItem} key={g.id}><b>{g.title}</b><span>{g.partner} · {setCart[g.id]} шт. · {g.price ? money(g.price * setCart[g.id]) : "номинал уточняется"}</span><small>{g.format} · {g.term}</small>{contact ? <a className={styles.contactButton} href={contact.href} target="_blank" rel="noreferrer">{contact.label} →</a> : <p className={styles.contactPending}>Контакт партнёра уточняется. Этот подарок пока нельзя оформить автоматически.</p>}</div>})}<strong>Итого: {money(setTotal(setCart))}</strong></section>)}</div>
@@ -297,7 +301,7 @@ export default function GiftsPage() {
     <p className={styles.savedNote}>При повторном входе с этого устройства список и активные контакты откроются снова. Сохраните страницу в PDF или сделайте скриншот.</p>
   </section></main>;
 
-  return <main className={styles.page}>
+  return <main className={styles.page}><ArchiveNotice />
     <header className={styles.header}><div><p className={styles.eyebrow}>ВАШ ПОДАРОЧНЫЙ ФОНД</p><h1>Каталог подарков</h1><p>{person.tier === "vip" ? "Тариф VIP" : "Тариф «Перезагрузка»"}{person.sets > 1 ? ` · ${person.sets} набора` : ""}</p></div><a href="/">На главную</a></header>
     {person.sets > 1 && <div className={styles.setTabs}>{carts.map((setCart,index)=><button key={index} className={index === activeSet ? styles.setTabActive : styles.setTab} onClick={()=>{setActiveSet(index);setError("");}}><span>Участник {index + 1}</span><b>{money(setTotal(setCart))} из {money(budget)}</b></button>)}</div>}
     <div className={styles.budget}><div><span>Выбрано</span><b>{money(total)}</b></div><div><span>Доступно</span><b>{money(budget - total)}</b></div><div className={styles.bar}><i style={{width:`${Math.min(100,total/budget*100)}%`}}/></div></div>

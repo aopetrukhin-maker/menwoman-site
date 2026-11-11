@@ -2,30 +2,13 @@
 
 import { useEffect, useRef, useState } from "react";
 import HeroAnimation from "./HeroAnimation";
+import FestivalVenue from "./FestivalVenue";
+import { festivalEvent as event } from "./festival-event";
 import { ExpoSection, ConsultationsSection } from "./FestivalSections";
 import { speakers, type Speaker } from "./festival-content";
 
 type ConnectionCode = "dialogue" | "support" | "spark" | "space" | "depth";
 type ConnectionStatus = "search" | "relationship" | "complicated" | "self";
-type TicketTier = "start" | "reload" | "vip";
-type PurchaseMode = "single" | "pair";
-
-type SaleStage = {
-  id: string;
-  label: string;
-  deadline: string | null;
-  deadlineLabel: string;
-  remaining: number;
-  quota: number;
-  prices: Record<TicketTier, number>;
-  closed?: boolean;
-};
-
-type SaleSnapshot = {
-  stageIndex: number;
-  millisecondsLeft: number;
-};
-
 type ConnectionAnswer = {
   label: string;
   note: string;
@@ -38,97 +21,7 @@ type ConnectionQuestion = {
   answers: ConnectionAnswer[];
 };
 
-const ticketUrl = "https://qtickets.ru/event/246143?base_color=ea1e63";
 const telegramUrl = "https://t.me/redheadlitle";
-
-const saleStages: SaleStage[] = [
-  {
-    id: "early",
-    label: "Текущая цена",
-    deadline: "2026-08-16T23:59:59+03:00",
-    deadlineLabel: "16 августа в 23:59 МСК",
-    remaining: 34,
-    quota: 120,
-    prices: { start: 990, reload: 1990, vip: 3990 },
-  },
-  {
-    id: "regular",
-    label: "Основная цена",
-    deadline: "2026-08-21T23:59:59+03:00",
-    deadlineLabel: "21 августа в 23:59 МСК",
-    remaining: 58,
-    quota: 150,
-    prices: { start: 1490, reload: 2990, vip: 5990 },
-  },
-  {
-    id: "final",
-    label: "Продажа открыта",
-    deadline: "2026-08-22T20:00:00+03:00",
-    deadlineLabel: "22 августа в 20:00 МСК",
-    remaining: 40,
-    quota: 200,
-    prices: { start: 1490, reload: 2990, vip: 5900 },
-  },
-  {
-    id: "closed",
-    label: "Онлайн-продажа завершена",
-    deadline: null,
-    deadlineLabel: "Регистрация открыта на площадке",
-    remaining: 0,
-    quota: 0,
-    prices: { start: 1490, reload: 2990, vip: 5900 },
-    closed: true,
-  },
-];
-
-const formatPrice = (price: number) => `${new Intl.NumberFormat("ru-RU").format(price)} ₽`;
-
-const getPairTotalPrice = (tier: TicketTier, price: number) => tier === "vip" && price === 5900 ? 8380 : Math.floor((price * 1.4) / 10) * 10;
-
-const formatTicketCount = (count: number) => {
-  const lastTwoDigits = count % 100;
-  const lastDigit = count % 10;
-  const suffix = lastTwoDigits >= 11 && lastTwoDigits <= 14
-    ? "билетов"
-    : lastDigit === 1
-      ? "билет"
-      : lastDigit >= 2 && lastDigit <= 4
-        ? "билета"
-        : "билетов";
-  return `${count} ${suffix}`;
-};
-
-const formatPairCount = (count: number) => {
-  const lastTwoDigits = count % 100;
-  const lastDigit = count % 10;
-  const suffix = lastTwoDigits >= 11 && lastTwoDigits <= 14
-    ? "пар"
-    : lastDigit === 1
-      ? "пара"
-      : lastDigit >= 2 && lastDigit <= 4
-        ? "пары"
-        : "пар";
-  return `${count} ${suffix}`;
-};
-
-const getSaleStageIndex = (now: number) => {
-  const activeIndex = saleStages.findIndex((stage) => (
-    stage.deadline
-    && stage.remaining > 0
-    && now < new Date(stage.deadline).getTime()
-  ));
-  return activeIndex === -1 ? saleStages.length - 1 : activeIndex;
-};
-
-const getCountdownParts = (milliseconds: number) => {
-  const totalSeconds = Math.max(0, Math.floor(milliseconds / 1000));
-  return {
-    days: Math.floor(totalSeconds / 86400),
-    hours: Math.floor((totalSeconds % 86400) / 3600),
-    minutes: Math.floor((totalSeconds % 3600) / 60),
-    seconds: totalSeconds % 60,
-  };
-};
 
 const formats = [
   {
@@ -159,7 +52,7 @@ const formats = [
     number: "05",
     title: "Подарки",
     benefit: "Продолжить после",
-    text: "В старших тарифах - подарки и сертификаты партнёров на сумму до 100 000 ₽.",
+    text: "Состав подарков и специальные предложения партнёров на 3 декабря уточняются.",
   },
 ];
 
@@ -357,7 +250,6 @@ const partners = [
   { name: "Взлёт", image: "/partners/vzlet.webp" },
   { name: "Линчевская Юлиана", image: "/partners/linchevskaya.webp" },
   { name: "Только по делу", image: "/partners/tolko.jpg" },
-  { name: "Дворец Кваренги", image: "/partners/quarenghi.jpg" },
   { name: "Body Impulse", image: "/partners/bi.png" },
   { name: "Хвойный квас", image: "/partners/hvoyny-kvas.webp" },
   { name: "Журнал SOK - Стиль. Образ. Качество жизни", image: "/partners/sok-magazine.webp" },
@@ -389,106 +281,6 @@ const attendees = [
   { name: "Кристина", age: 25, reason: "Хочу пойти на фестиваль, прихожу за вдохновением и новыми знакомствами.", image: "/attendees/kristina-25.svg" },
 ];
 
-const tickets = [
-  {
-    name: "Старт",
-    tier: "start" as TicketTier,
-    price: "990 ₽",
-    note: "Количество билетов по этой цене ограничено",
-    visualLabel: "Входит в стоимость",
-    visualValue: "Полный день",
-    visualNote: "Весь фестивальный день и основные форматы",
-    mockupImage: "/visuals/tariff-start-v2.webp",
-    mockupAlt: "Билет на фестиваль и доступ ко всем основным форматам",
-    mockupItems: [
-      { title: "Билет", note: "Весь фестивальный день" },
-      { title: "Все форматы", note: "Выступления, практики и знакомства" },
-    ],
-    highlights: ["Вход на весь день", "Все выступления", "Все основные форматы"],
-    nextPrice: "1 490 ₽",
-    finalPrice: "1 990 ₽",
-    description: "Для тех, кто хочет познакомиться с фестивалем, послушать экспертов и провести насыщенный день.",
-    items: [
-      "Вход на фестиваль на весь день",
-      "Доступ ко всем выступлениям основной сцены",
-      "Участие в общих практиках и интерактивах",
-      "Доступ в экспертные и бренд-зоны",
-      "Знакомства и открытый нетворкинг",
-      "Электронная программа фестиваля",
-    ],
-  },
-  {
-    name: "Перезагрузка",
-    tier: "reload" as TicketTier,
-    price: "1 990 ₽",
-    note: "Самый выгодный тариф",
-    visualLabel: "Всё включено + бонусы",
-    visualValue: "до 50 000 ₽",
-    visualNote: "Приоритетный доступ и подарки партнёров",
-    mockupImage: "/visuals/tariff-reload-v2.webp",
-    mockupAlt: "Билет, приоритетный доступ и подарочные сертификаты",
-    mockupItems: [
-      { title: "Приоритет", note: "Зона перед сценой и быстрая регистрация" },
-      { title: "до 50 000 ₽", note: "Подарки и сертификаты" },
-    ],
-    highlights: ["Подарки до 50 000 ₽", "Мини-диагностики: формат уточняется", "Приоритетная зона"],
-    nextPrice: "2 990 ₽",
-    finalPrice: "3 990 ₽",
-    description: "Для тех, кто хочет активно включиться, поработать со своими запросами и получить максимум пользы.",
-    featured: true,
-    items: [
-      "Вход на фестиваль на весь день",
-      "Доступ ко всем выступлениям основной сцены",
-      "Участие в общих практиках и интерактивах",
-      "Доступ в экспертные и бренд-зоны",
-      "Знакомства и открытый нетворкинг",
-      "Электронная программа фестиваля",
-      "Места в приоритетной зоне перед сценой",
-      "Отдельная быстрая регистрация без общей очереди",
-      "Доступность и условия практик с ограниченным числом мест уточняются",
-      "Формат мини-диагностик и возможность предварительного выбора уточняются",
-      "Индивидуальная корзина подарков и сертификатов на сумму до 50 000 ₽",
-      "Доступ в закрытый Telegram-чат участников",
-      "Полезные материалы от спикеров после события",
-    ],
-  },
-  {
-    name: "VIP",
-    tier: "vip" as TicketTier,
-    price: "3 990 ₽",
-    note: "Количество мест строго ограничено",
-    visualLabel: "Максимум включено + бонусы",
-    visualValue: "до 100 000 ₽",
-    visualNote: "Расширенный набор подарков и VIP-привилегии",
-    mockupImage: "/visuals/tariff-vip-v2.webp",
-    mockupAlt: "VIP-билет, закрытый нетворкинг и расширенный набор подарков",
-    mockupItems: [
-      { title: "Закрытый нетворкинг", note: "Со спикерами и партнёрами" },
-      { title: "до 100 000 ₽", note: "Подарки и сертификаты" },
-      { title: "VIP-доступ", note: "Первые ряды и закрытый нетворкинг" },
-    ],
-    highlights: ["Подарки до 100 000 ₽", "Закрытый нетворкинг", "VIP-доступ и первые ряды"],
-    nextPrice: "5 990 ₽",
-    finalPrice: "7 990 ₽",
-    description: "Максимальный уровень участия, личного общения и комфорта на фестивале.",
-    items: [
-      "Вход на фестиваль на весь день и доступ ко всем выступлениям",
-      "Участие во всех общих практиках и интерактивах",
-      "Доступ в экспертные и бренд-зоны",
-      "Электронная программа фестиваля",
-      "Лучшие места в первых рядах",
-      "Отдельная VIP-регистрация",
-      "Закрытая встреча и нетворкинг со спикерами, партнёрами и организаторами",
-      "Условия и способ записи на экспертные разборы уточняются",
-      "Увеличенная корзина подарков и сертификатов на сумму до 100 000 ₽",
-      "Доступ в закрытый Telegram-чат участников",
-      "Полезные материалы от спикеров после события",
-      "Профессиональные фотографии с площадки",
-      "Приглашение на закрытые встречи проекта после фестиваля",
-    ],
-  },
-];
-
 function ArrowIcon() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -496,16 +288,6 @@ function ArrowIcon() {
     </svg>
   );
 }
-
-function HeartHandsIcon() {
-  return (
-    <svg viewBox="0 0 64 64" aria-hidden="true">
-      <path d="M32 51.5 12.8 33.8C5.2 26.7 7.1 14 17.3 11.2c6.2-1.7 11.2 1.5 14.7 6.2 3.5-4.7 8.5-7.9 14.7-6.2 10.2 2.8 12.1 15.5 4.5 22.6L32 51.5Z" />
-      <path d="M12.5 43.5c6.5 3.6 12.3 5.4 19.5 5.4M51.5 43.5c-6.5 3.6-12.3 5.4-19.5 5.4" />
-    </svg>
-  );
-}
-
 
 function ChevronIcon({ direction }: { direction: "left" | "right" }) {
   return (
@@ -518,28 +300,11 @@ function ChevronIcon({ direction }: { direction: "left" | "right" }) {
 function BonusSection() {
   return (
     <section className="section bonus-section" id="bonuses">
-      <div className="container">
-        <div className="bonus-hero">
-          <div className="bonus-copy">
-            <p className="section-label">Подарки партнёров</p>
-            <h2>Больше пользы <span>после фестиваля</span></h2>
-            <p className="bonus-lead">С тарифа «Перезагрузка» вы получаете подарки и сертификаты партнёров, которые можно выбрать под себя.</p>
-          </div>
-          <div className="bonus-tiers" aria-label="Подарки по тарифам">
-            <article><span>Перезагрузка</span><h3>Индивидуальный набор</h3><strong>до 50 000 ₽</strong><p>подарков и сертификатов</p></article>
-            <article className="bonus-tier-vip"><span>VIP</span><h3>Максимальный набор</h3><strong>до 100 000 ₽</strong><p>подарков и сертификатов</p></article>
-          </div>
-        </div>
-
-        <div className="bonus-grid bonus-grid-compact" aria-label="Категории подарков">
-          <article><span>01</span><h3>SPA</h3></article>
-          <article><span>02</span><h3>Здоровье</h3></article>
-          <article><span>03</span><h3>Рестораны</h3></article>
-          <article><span>04</span><h3>Консультации</h3></article>
-          <article><span>05</span><h3>Обучение</h3></article>
-          <article><span>06</span><h3>Товары брендов</h3></article>
-        </div>
-        <p className="bonus-footnote">Состав каталога зависит от подтверждённых предложений партнёров. Конкретные услуги, сроки действия и доступность выбора будут указаны в каталоге фестиваля.</p>
+      <div className="container pending-ticket-card">
+        <p className="section-label">Подарки партнёров</p>
+        <h2>Знакомство <span>может продолжиться</span></h2>
+        <p>Состав подарков и специальные предложения на 3 декабря уточняются. Подтверждённые условия опубликуем после согласования с партнёрами.</p>
+        <a className="gift-archive-link" href="/gifts/">Каталог подарков прошлой встречи →</a>
       </div>
     </section>
   );
@@ -550,7 +315,7 @@ function AttendeeSection() {
     <article className="attendee-card" key={`${attendee.name}-${attendee.age}-${attendee.image}`}>
       <img src={attendee.image} alt={`${attendee.name}, ${attendee.age}`} loading="lazy" />
       <div>
-        <span>Я иду на фестиваль</span>
+        <span>Гость прошлой встречи</span>
         <h3>{attendee.name}, {attendee.age}</h3>
         <p>{attendee.reason}</p>
       </div>
@@ -560,9 +325,9 @@ function AttendeeSection() {
   return (
     <section className="attendees-section" aria-labelledby="attendees-title">
       <div className="container attendees-heading">
-        <p className="section-label">Люди, которых вы встретите</p>
-        <h2 id="attendees-title">Я иду <span>на фестиваль</span></h2>
-        <p>У каждого своя причина. Но все придут за живыми эмоциями, новыми знаниями и настоящим общением.</p>
+        <p className="section-label">Сообщество МЖ</p>
+        <h2 id="attendees-title">Гости <span>прошлых встреч</span></h2>
+        <p>Гости прошлой встречи рассказывают, почему выбрали фестиваль. Здесь — их фотографии и слова о знакомстве с МЖ.</p>
       </div>
       <div className="attendees-marquee">
         <div className="attendees-track">
@@ -575,285 +340,14 @@ function AttendeeSection() {
 }
 
 function PricingSection() {
-  const [saleSnapshot, setSaleSnapshot] = useState<SaleSnapshot | null>(null);
-  const [calculatorTier, setCalculatorTier] = useState<TicketTier>("reload");
-  const [purchaseMode, setPurchaseMode] = useState<PurchaseMode>("single");
-  const [quantity, setQuantity] = useState(1);
-
-  useEffect(() => {
-    const updateSaleState = () => {
-      const now = Date.now();
-      const stageIndex = getSaleStageIndex(now);
-      const stage = saleStages[stageIndex];
-      setSaleSnapshot({
-        stageIndex,
-        millisecondsLeft: stage.deadline ? Math.max(0, new Date(stage.deadline).getTime() - now) : 0,
-      });
-    };
-
-    updateSaleState();
-    const timer = window.setInterval(updateSaleState, 1000);
-    return () => window.clearInterval(timer);
-  }, []);
-
-  const activeStageIndex = saleSnapshot?.stageIndex ?? 0;
-  const activeStage = saleStages[activeStageIndex];
-  const nextStage = saleStages[Math.min(activeStageIndex + 1, saleStages.length - 1)];
-  const countdown = getCountdownParts(saleSnapshot?.millisecondsLeft ?? 0);
-  const selectedTicket = tickets.find((ticket) => ticket.tier === calculatorTier) ?? tickets[1];
-  const currentSinglePrice = activeStage.prices[calculatorTier];
-  const nextSinglePrice = nextStage.prices[calculatorTier];
-  const currentPairPrice = getPairTotalPrice(calculatorTier, currentSinglePrice);
-  const nextPairPrice = getPairTotalPrice(calculatorTier, nextSinglePrice);
-  const currentUnitPrice = purchaseMode === "pair" ? currentPairPrice : currentSinglePrice;
-  const nextUnitPrice = purchaseMode === "pair" ? nextPairPrice : nextSinglePrice;
-  const currentTotal = currentUnitPrice * quantity;
-  const nextTotal = nextUnitPrice * quantity;
-  const stageSavings = Math.max(0, nextTotal - currentTotal);
-  const pairSavings = purchaseMode === "pair"
-    ? Math.max(0, (currentSinglePrice * 2 - currentUnitPrice) * quantity)
-    : 0;
-  const progress = activeStage.quota > 0
-    ? Math.max(0, Math.min(100, ((activeStage.quota - activeStage.remaining) / activeStage.quota) * 100))
-    : 100;
-  const purchaseUrl = activeStage.closed
-    ? `${telegramUrl}?text=${encodeURIComponent("Хочу уточнить наличие билетов на фестиваль МЖ")}`
-    : ticketUrl;
-  const cardPurchaseUrl = purchaseUrl;
-
-  const selectPairTicket = (tier: TicketTier) => {
-    setCalculatorTier(tier);
-    setPurchaseMode("pair");
-    setQuantity(1);
-    window.requestAnimationFrame(() => {
-      document.getElementById("ticket-calculator")?.scrollIntoView({ behavior: "smooth", block: "center" });
-    });
-  };
-
-  const selectPairPurchase = () => {
-    setPurchaseMode("pair");
-    setQuantity(1);
-    window.requestAnimationFrame(() => {
-      document.getElementById("ticket-calculator")?.scrollIntoView({ behavior: "smooth", block: "center" });
-    });
-  };
-
   return (
-    <section className="section pricing-section" id="pricing" data-release="ticket-fomo-live-2026-08-04">
-      <div className="container">
-        <div className="section-heading center-heading">
-          <p className="section-label">Билеты</p>
-          <h2>Выберите <span>формат участия</span></h2>
-          <p>Главная разница видна сразу. Полный состав можно открыть внутри карточки.</p>
-        </div>
-
-        <article className="charity-impact-card" id="charity-impact" aria-labelledby="charity-impact-title">
-          <div className="charity-impact-stat" aria-label="Пять процентов с каждого билета">
-            <strong>5%</strong>
-            <span>с каждого билета</span>
-          </div>
-          <div className="charity-impact-copy">
-            <p className="charity-impact-label">Благотворительный партнёр фестиваля</p>
-            <h3 id="charity-impact-title">Каждый билет - вклад в помощь детям</h3>
-            <p>
-              5% с продажи каждого билета на фестиваль «Мужчина и Женщина. Перезагрузка»
-              мы передадим благотворительному фонду «Энби». Фонд помогает детям с диагнозом
-              «нейробластома» и их семьям по всей России.
-            </p>
-            <p className="charity-impact-fact">Каждую неделю в среднем шесть российских семей узнают об этом диагнозе у своего ребёнка.</p>
-            <div className="charity-impact-links">
-              <a href="https://neuroblastoma.help/" target="_blank" rel="noreferrer">Подробнее о фонде <i className="button-icon"><ArrowIcon /></i></a>
-              <a href="https://www.instagram.com/neuroblastoma_family" target="_blank" rel="noreferrer">Instagram фонда</a>
-            </div>
-          </div>
-          <div className="charity-impact-logo">
-            <img src="/partners/enbi.png" alt="Благотворительный фонд Энби" loading="lazy" />
-            <span>Первое в России объединение родителей детей с нейробластомой</span>
-          </div>
-        </article>
-
-        <button className="pair-ticket-banner" type="button" onClick={selectPairPurchase} aria-controls="ticket-calculator">
-          <span>Новый формат</span>
-          <div>
-            <strong>Парные билеты -30%</strong>
-            <p>Два билета одного тарифа дешевле. Приходите с партнёром, другом, подругой, родственником или коллегой.</p>
-          </div>
-          <b>Выбрать парный билет <i className="button-icon"><ArrowIcon /></i></b>
-        </button>
-
-        <div className={`sale-fomo-panel${activeStage.closed ? " is-closed" : ""}`} key={activeStage.id}>
-          <div className="sale-fomo-status">
-            <div className="sale-stage-line">
-              <span>{activeStage.closed ? "Продажи" : `Этап ${activeStageIndex + 1} из 3`}</span>
-              <strong>{activeStage.label}</strong>
-            </div>
-            <div className="sale-countdown-title">
-              {!activeStage.closed && (
-                <span className="ticking-clock" role="img" aria-label="Часы идут">
-                  <i />
-                  <b />
-                </span>
-              )}
-              <h3>{activeStage.closed ? "Онлайн-продажа завершена" : "До повышения цены"}</h3>
-            </div>
-            <p>
-              {activeStage.closed
-                ? "Уточните наличие билетов у организатора или приобретите билет на регистрации."
-                : `${activeStage.deadlineLabel} или раньше, если закончится лимит этого этапа.`}
-            </p>
-
-            <div className="sale-countdown" aria-label="Обратный отсчёт до изменения цены" aria-live="polite">
-              {[
-                [countdown.days, "дней"],
-                [countdown.hours, "часов"],
-                [countdown.minutes, "минут"],
-                [countdown.seconds, "секунд"],
-              ].map(([value, label]) => (
-                <span key={label}>
-                  <b suppressHydrationWarning>{String(value).padStart(2, "0")}</b>
-                  <small>{label}</small>
-                </span>
-              ))}
-            </div>
-
-            {!activeStage.closed && (
-              <div className="sale-limit">
-                <div><span>Лимит этапа</span><strong>Осталось {formatTicketCount(activeStage.remaining)}</strong></div>
-                <div className="sale-limit-track"><i style={{ width: `${progress}%` }} /></div>
-                <p>Цена изменится автоматически по окончании таймера.</p>
-              </div>
-            )}
-          </div>
-
-          <div className={`price-calculator${purchaseMode === "pair" ? " is-pair" : ""}`} id="ticket-calculator" aria-label="Покупка билетов">
-            <div className="price-calculator-heading">
-              <span>Билеты</span>
-              <h3>{purchaseMode === "pair" ? "Купить парный билет" : "Купить билет"}</h3>
-            </div>
-
-            <div className="purchase-mode-switch" role="group" aria-label="Формат покупки">
-              <button
-                className={purchaseMode === "single" ? "is-active" : ""}
-                type="button"
-                aria-pressed={purchaseMode === "single"}
-                onClick={() => setPurchaseMode("single")}
-              >
-                Один билет
-              </button>
-              <button
-                className={purchaseMode === "pair" ? "is-active" : ""}
-                type="button"
-                aria-pressed={purchaseMode === "pair"}
-                onClick={() => setPurchaseMode("pair")}
-              >
-                Парный билет <b>-30%</b>
-              </button>
-            </div>
-
-            <div className="calculator-tiers" role="group" aria-label="Выберите тариф">
-              {tickets.map((ticket) => (
-                <button
-                  className={calculatorTier === ticket.tier ? "is-active" : ""}
-                  type="button"
-                  key={ticket.tier}
-                  onClick={() => setCalculatorTier(ticket.tier)}
-                >
-                  <span>{ticket.name}<small>{purchaseMode === "pair" ? "за двоих" : "за билет"}</small></span>
-                  <strong>
-                    {formatPrice(purchaseMode === "pair"
-                      ? getPairTotalPrice(ticket.tier, activeStage.prices[ticket.tier])
-                      : activeStage.prices[ticket.tier])}
-                  </strong>
-                </button>
-              ))}
-            </div>
-
-            <div className="calculator-quantity">
-              <span>{purchaseMode === "pair" ? "Количество пар" : "Количество билетов"}</span>
-              <div>
-                <button type="button" onClick={() => setQuantity((current) => Math.max(1, current - 1))} aria-label="Уменьшить количество">−</button>
-                <strong>{quantity}</strong>
-                <button type="button" onClick={() => setQuantity((current) => Math.min(10, current + 1))} aria-label="Увеличить количество">+</button>
-              </div>
-            </div>
-
-            {purchaseMode === "pair" ? (
-              <>
-                <div className="calculator-result pair-result">
-                  <div><span>{quantity === 1 ? "Итого за 2 билета" : `Итого за ${formatTicketCount(quantity * 2)}`}</span><strong>{formatPrice(currentTotal)}</strong></div>
-                  <div><span>Для сравнения - за человека</span><strong>{formatPrice(currentPairPrice / 2)}</strong></div>
-                </div>
-                <p className="calculator-saving pair-saving">Ваша выгода - {formatPrice(pairSavings)}</p>
-                {!activeStage.closed && activeStageIndex < saleStages.length - 2 && (
-                  <p className="calculator-next-price">После повышения - {formatPrice(nextTotal)} за {quantity === 1 ? "двоих" : formatPairCount(quantity)}</p>
-                )}
-              </>
-            ) : (
-              <>
-                <div className="calculator-result">
-                  <div><span>Сейчас к оплате</span><strong>{formatPrice(currentTotal)}</strong></div>
-                  {!activeStage.closed && activeStageIndex < saleStages.length - 2 && (
-                    <div><span>После повышения</span><strong>{formatPrice(nextTotal)}</strong></div>
-                  )}
-                </div>
-                {!activeStage.closed && stageSavings > 0 && (
-                  <p className="calculator-saving">Покупка сейчас экономит {formatPrice(stageSavings)}</p>
-                )}
-              </>
-            )}
-
-            <a href={purchaseUrl} target="_blank" rel="noreferrer">
-              {purchaseMode === "pair"
-                  ? `Купить ${formatTicketCount(quantity * 2)} за ${formatPrice(currentTotal)}`
-                  : `Выбрать «${selectedTicket.name}»`}
-              <i className="button-icon"><ArrowIcon /></i>
-            </a>
-          </div>
-        </div>
-
-        <div className="pricing-grid">
-          {tickets.map((ticket) => (
-            <article className={`price-card price-card-${ticket.tier} ${ticket.featured ? "featured" : ""}`} key={ticket.name}>
-              {ticket.featured && <div className="popular">Самый выгодный</div>}
-              <div className="price-head">
-                <h3>{ticket.name}</h3>
-                <strong className="dynamic-ticket-price" key={`${activeStage.id}-${ticket.tier}`}>{formatPrice(activeStage.prices[ticket.tier])}</strong>
-                <span>{activeStage.closed ? "Уточните наличие у организатора" : "Цена за 1 билет"}</span>
-              </div>
-              <div className={`ticket-product-scene ticket-product-scene-${ticket.tier}`}>
-                <div className="ticket-product-art" role="img" aria-label={ticket.mockupAlt}>
-                  <div className="ticket-product-pass">
-                    <span>МЖ · 22.08.2026</span>
-                    <strong>{ticket.name}</strong>
-                    <small>Дворец Кваренги</small>
-                  </div>
-                  <div className="ticket-product-benefits">
-                    {ticket.mockupItems.map((item) => (
-                      <span key={item.title}><b>{item.title}</b><small>{item.note}</small></span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-              <div className="ticket-highlight-list">
-                {ticket.highlights.map((highlight) => <span key={highlight}>{highlight}</span>)}
-              </div>
-              <details className="ticket-details">
-                <summary>Полный состав тарифа <b>+</b></summary>
-                <ul>{ticket.items.map((item) => <li className={item.includes("50 000") || item.includes("100 000") ? "gift-highlight" : ""} key={item}><b>✓</b>{item}</li>)}</ul>
-              </details>
-              <div className="price-timeline">
-                <span>{activeStage.closed || activeStageIndex >= saleStages.length - 2 ? "Текущая цена" : "После повышения"} <b>{formatPrice(activeStage.closed || activeStageIndex >= saleStages.length - 2 ? activeStage.prices[ticket.tier] : nextStage.prices[ticket.tier])}</b></span>
-                <span>Финальная цена <b>{ticket.finalPrice}</b></span>
-              </div>
-              {!activeStage.closed && (
-                <button className="pair-card-link" type="button" onClick={() => selectPairTicket(ticket.tier)}>
-                  2 билета - {formatPrice(getPairTotalPrice(ticket.tier, activeStage.prices[ticket.tier]))} за двоих
-                </button>
-              )}
-              <a href={cardPurchaseUrl} target="_blank" rel="noreferrer">{activeStage.closed ? "Уточнить наличие" : "Купить билет"} <i className="button-icon"><ArrowIcon /></i></a>
-            </article>
-          ))}
-        </div>
+    <section className="section pricing-section" id="pricing">
+      <div className="container pending-ticket-card">
+        <p className="section-label">Билеты и участие</p>
+        <h2>Встретимся <span>3 декабря</span></h2>
+        <p>{event.dateLabel} · {event.timeLabel}<br />«{event.venue}», {event.address}</p>
+        <p>Тарифы и ссылка на покупку билетов на 3 декабря уточняются. За подробностями можно обратиться к организатору.</p>
+        <a className="primary-button" href={`${telegramUrl}?text=${encodeURIComponent("Хочу уточнить билеты на фестиваль МЖ 3 декабря 2026 года")}`} target="_blank" rel="noreferrer"><span>Уточнить билеты</span><i className="button-icon"><ArrowIcon /></i></a>
       </div>
     </section>
   );
@@ -1039,7 +533,7 @@ export default function Home() {
       <nav className="floating-nav" aria-label="Навигация по странице">
         <a className="nav-brand" href="#">
           <strong>Мужчина и Женщина</strong>
-          <span>22 августа 2026</span>
+          <span>{event.dateLabel}</span>
         </a>
         <div className="nav-links">
           <a href="#connection-code"><span>●</span> Код связи</a>
@@ -1047,12 +541,12 @@ export default function Home() {
           <a href="#program"><span>●</span> Программа</a>
           <a href="#speakers"><span>●</span> Спикеры</a>
           <a href="#expo"><span>●</span> Экспозона</a>
-          <a href="#pricing"><span>●</span> Тарифы</a>
-          <a href="/gifts/"><span>●</span> Подарки</a>
+          <a href="#pricing"><span>●</span> Билеты</a>
+          <a href="/gifts/"><span>●</span> Архив подарков</a>
         </div>
-        <a className="nav-bonus-cta" href="/gifts/" aria-label="Забрать подарки">
-          <span className="nav-bonus-full">Забрать подарки</span>
-          <span className="nav-bonus-short">Подарки</span>
+        <a className="nav-bonus-cta" href="/gifts/" aria-label="Каталог подарков прошлой встречи">
+          <span className="nav-bonus-full">Архив подарков</span>
+          <span className="nav-bonus-short">Архив</span>
         </a>
         <details className="mobile-nav">
           <summary aria-label="Открыть меню">Меню</summary>
@@ -1064,8 +558,8 @@ export default function Home() {
             <a href="#expo">Экспозона</a>
             <a href="#consultations">Консультации и практики</a>
             <a href="#partnership">Партнерство</a>
-            <a href="#pricing">Тарифы</a>
-            <a href="/gifts/">Получить подарки</a>
+            <a href="#pricing">Билеты</a>
+            <a href="/gifts/">Подарки прошлой встречи</a>
           </div>
         </details>
       </nav>
@@ -1074,8 +568,8 @@ export default function Home() {
         <HeroAnimation />
         <div className="container hero-inner reveal" id="festival-introduction">
           <div className="eyebrow-row">
-            <div className="eyebrow-item"><strong>Где</strong><span>Санкт-Петербург<br />Дворец Кваренги, Казанская 7</span></div>
-            <div className="eyebrow-item"><strong>Когда</strong><span>22 августа 2026<br />Регистрация с 12:00<br />Программа с 13:00</span></div>
+            <div className="eyebrow-item"><strong>Где</strong><span>«{event.venue}»<br />{event.city}, {event.address}<br />Метро «{event.metro}»</span></div>
+            <div className="eyebrow-item"><strong>Когда</strong><span>{event.dateLabel}<br />{event.timeLabel}<br />До полуночи, в ночь на 4 декабря</span></div>
           </div>
           <div className="hero-grid">
             <div>
@@ -1083,32 +577,26 @@ export default function Home() {
               <h1>Мужчина и Женщина.<br /><em>Перезагрузка</em></h1>
               <p className="hero-lead">Для тех, кто хочет встретить своего человека, вернуть близость в паре или перестать повторять старые сценарии.</p>
               <div className="hero-actions">
-                <a className="primary-button hero-button" href="#pricing"><span>Выбрать билет от 990 ₽</span><i className="button-icon"><ArrowIcon /></i></a>
+                <a className="primary-button hero-button" href="#pricing"><span>Уточнить билеты</span><i className="button-icon"><ArrowIcon /></i></a>
                 <a className="hero-quiz-link" href="#connection-code"><b>90 секунд</b><span>Узнать свой код связи</span></a>
               </div>
-              <a className="hero-charity-badge" href="#pricing" aria-label="5 процентов с каждого билета передадим фонду Энби">
-                <span className="hero-charity-mark"><HeartHandsIcon /></span>
-                <span className="hero-charity-percent">5%</span>
-                <span className="hero-charity-copy"><b>билета - детям</b><small>вместе с фондом «Энби»</small></span>
-                <img src="/partners/enbi.png" alt="Энби" />
-              </a>
             </div>
             <div className="hero-facts-card" aria-label="Что будет на фестивале">
               <span>За один день</span>
               <ul>
                 <li><b>{speakers.length}</b> экспертов</li>
-                <li><b>2</b> зала</li>
+                <li><b>{event.timeLabel}</b></li>
                 <li>Практики и личные разборы</li>
                 <li>Живые знакомства</li>
-                <li>Подарки до <b>100 000 ₽</b></li>
+                <li>Люди, бренды и практики в экспозоне</li>
               </ul>
             </div>
           </div>
           <div className="stats-bar">
-            <div><strong>Второй</strong><span>фестиваль проекта</span></div>
+            <div><strong>3 декабря</strong><span>встречаемся в Петербурге</span></div>
             <div><strong>550</strong><span>гостей на прошлом событии</span></div>
             <div><strong>{speakers.length}</strong><span>спикеров</span></div>
-            <div><strong>2 зала</strong><span>одна программа</span></div>
+            <div><strong>Метро</strong><span>«{event.metro}»</span></div>
           </div>
         </div>
       </section>
@@ -1328,7 +816,8 @@ export default function Home() {
         <div className="container">
           <div className="section-heading center-heading">
             <p className="section-label">Сильные проекты рядом</p>
-            <h2>Партнеры</h2>
+            <h2>Проекты <span>прошлых встреч</span></h2>
+            <p>Проекты, с которыми знакомилось сообщество МЖ. Состав партнёров 3 декабря уточняется.</p>
           </div>
           <div className="partner-grid">
             {partners.map((partner) => (
@@ -1346,37 +835,21 @@ export default function Home() {
           <div className="partnership-copy">
             <p className="section-label">Для брендов и сообществ</p>
             <h2>Хотите стать <span>партнером фестиваля?</span></h2>
-            <p>Заявите о своем бренде аудитории 500+ гостей, повысьте доверие и получите медийный охват. Обсудим формат, который решит именно вашу задачу.</p>
+            <p>Познакомьте гостей фестиваля со своим брендом и подходом. Обсудим формат, который решит именно вашу задачу.</p>
             <a className="primary-button" href={`${telegramUrl}?text=${encodeURIComponent("Хочу стать партнером фестиваля МЖ")}`} target="_blank" rel="noreferrer"><span>Стать партнером</span><i className="button-icon"><ArrowIcon /></i></a>
           </div>
-          <div className="partnership-graphic"><span>500+</span><p>гостей фестиваля</p><b>Партнерство<br />с результатом</b></div>
+          <div className="partnership-graphic"><span>МЖ</span><p>люди, бренды и эксперты</p><b>Живое<br />знакомство</b></div>
         </div>
       </section>
 
-      <section className="section logistics-section" id="logistics">
-        <div className="container logistics-card">
-          <div className="logistics-main">
-            <p className="section-label">Сохраните этот экран</p>
-            <span className="logistics-date">22.08.2026</span>
-            <h2>Дворец <span>Кваренги</span></h2>
-            <p className="logistics-address">Санкт-Петербург<br />Казанская улица, 7</p>
-            <a className="primary-button" href="https://yandex.ru/maps/?text=%D0%94%D0%B2%D0%BE%D1%80%D0%B5%D1%86%20%D0%9A%D0%B2%D0%B0%D1%80%D0%B5%D0%BD%D0%B3%D0%B8%2C%20%D0%9A%D0%B0%D0%B7%D0%B0%D0%BD%D1%81%D0%BA%D0%B0%D1%8F%207" target="_blank" rel="noreferrer"><span>Открыть маршрут</span><i className="button-icon"><ArrowIcon /></i></a>
-          </div>
-          <div className="logistics-facts">
-            <article><span>12:00</span><p>Начало регистрации гостей</p></article>
-            <article><span>13:00</span><p>Старт основной программы</p></article>
-            <article><span>20:00</span><p>Завершение фестивального дня</p></article>
-            <div className="logistics-note"><strong>Возьмите с собой</strong><p>Билет в телефоне, документ, зарядное устройство и вопросы, которые давно откладывали.</p></div>
-          </div>
-        </div>
-      </section>
+      <FestivalVenue />
 
       <section className="section final-cta-section">
         <div className="container final-cta">
-          <p>22 августа · Санкт-Петербург</p>
+          <p>{event.dateLabel} · {event.timeLabel} · {event.city}</p>
           <h2>Можно снова отложить отношения.<br /><span>Или сделать первый реальный шаг.</span></h2>
           <div>
-            <a className="primary-button" href="#pricing"><span>Выбрать билет от 990 ₽</span><i className="button-icon"><ArrowIcon /></i></a>
+            <a className="primary-button" href="#pricing"><span>Уточнить билеты</span><i className="button-icon"><ArrowIcon /></i></a>
           </div>
         </div>
       </section>
@@ -1385,7 +858,7 @@ export default function Home() {
         <div className="container footer-grid">
           <div><strong>МЖ</strong><p>Мужчина и Женщина.<br />Перезагрузка</p></div>
           <div><span>Задать вопрос</span><a href="tel:+79625759813">8 962 575-98-13</a><a href={telegramUrl} target="_blank" rel="noreferrer">Telegram: @redheadlitle</a><a href="mailto:noname.eventspb@gmail.com">noname.eventspb@gmail.com</a></div>
-          <div><span>Адрес</span><p>Санкт-Петербург<br />Дворец Кваренги, Казанская 7</p></div>
+          <div><span>Адрес фестиваля МЖ</span><p>«{event.venue}»<br />{event.city}, {event.address}<br />Метро «{event.metro}»<br />{event.dateLabel} · {event.timeLabel}</p></div>
         </div>
         <div className="container footer-bottom"><span>© 2026 Фестиваль «Мужчина и Женщина»</span><a href="#">Вернуться к началу</a></div>
       </footer>

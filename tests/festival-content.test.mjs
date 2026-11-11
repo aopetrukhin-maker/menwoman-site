@@ -47,3 +47,29 @@ test("responsive intro assets and all rendered local images are available", asyn
   const paths = new Set([...html.matchAll(/(?:src|srcSet|srcset)="(\/[^"?]+)"/g)].map((match) => match[1]));
   for (const path of paths) await access(new URL(`../out${path}`, import.meta.url));
 });
+
+test("December event details replace the old venue and expired checkout", () => {
+  for (const value of ["3 декабря 2026", "16:00–00:00", "Антресоль и Перец", "ул. Марата, 1/71", "Маяковская", "В ночь на 4 декабря"]) assert.ok(html.includes(value), value);
+  for (const value of ["22 августа", "2026-08", "22.08.2026", "Кваренги", "Казанская", "qtickets.ru/event/246143", "Выбрать билет от 990", "Регистрация с 12:00", "Программа с 13:00"]) assert.ok(!html.includes(value), `Obsolete event data: ${value}`);
+  const logistics = section("logistics");
+  assert.equal((logistics.match(/<figure>/g) ?? []).length, 4);
+  const map = logistics.match(/href="(https:\/\/yandex.ru\/maps\/[^\"]+)"/);
+  assert.ok(map);
+  assert.ok(decodeURIComponent(map[1]).includes("Марата, 1/71"));
+  assert.ok(section("pricing").includes("Тарифы и ссылка на покупку билетов на 3 декабря уточняются"));
+});
+
+test("event metadata ends at midnight the next day and gifts remain explicitly archived", async () => {
+  const match = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
+  assert.ok(match);
+  const event = JSON.parse(match[1]);
+  assert.equal(event.startDate, "2026-12-03T16:00:00+03:00");
+  assert.equal(event.endDate, "2026-12-04T00:00:00+03:00");
+  assert.equal(Date.parse(event.endDate) - Date.parse(event.startDate), 8 * 60 * 60 * 1000);
+  assert.equal(event.location.name, "Антресоль и Перец");
+  assert.equal(event.location.address.streetAddress, "ул. Марата, 1/71");
+  assert.ok(!event.offers);
+  const gifts = await readFile(new URL("../out/gifts/index.html", import.meta.url), "utf8");
+  assert.ok(gifts.includes("Каталог прошлой встречи МЖ"));
+  assert.ok(gifts.includes("не являются предложениями на 3 декабря 2026 года"));
+});
