@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import HeroAnimation from "./HeroAnimation";
 import FestivalVenue from "./FestivalVenue";
+import FestivalAdmission from "./FestivalAdmission";
+import { tickets, ticketPrices, pairPrices, formatPrice } from "./ticket-tariffs";
 import { festivalEvent as event } from "./festival-event";
 import { ExpoSection, ConsultationsSection } from "./FestivalSections";
 import { speakers, type Speaker } from "./festival-content";
@@ -300,11 +302,28 @@ function ChevronIcon({ direction }: { direction: "left" | "right" }) {
 function BonusSection() {
   return (
     <section className="section bonus-section" id="bonuses">
-      <div className="container pending-ticket-card">
-        <p className="section-label">Подарки партнёров</p>
-        <h2>Знакомство <span>может продолжиться</span></h2>
-        <p>Состав подарков и специальные предложения на 3 декабря уточняются. Подтверждённые условия опубликуем после согласования с партнёрами.</p>
-        <a className="gift-archive-link" href="/gifts/">Каталог подарков прошлой встречи →</a>
+      <div className="container">
+        <div className="bonus-hero">
+          <div className="bonus-copy">
+            <p className="section-label">Подарки партнёров</p>
+            <h2>Больше пользы <span>после фестиваля</span></h2>
+            <p className="bonus-lead">С тарифа «Перезагрузка» вы получаете подарки и сертификаты партнёров, которые можно выбрать под себя.</p>
+          </div>
+          <div className="bonus-tiers" aria-label="Подарки по тарифам">
+            <article><span>Перезагрузка</span><h3>Индивидуальный набор</h3><strong>до 50 000 ₽</strong><p>подарков и сертификатов</p></article>
+            <article className="bonus-tier-vip"><span>VIP</span><h3>Максимальный набор</h3><strong>до 100 000 ₽</strong><p>подарков и сертификатов</p></article>
+          </div>
+        </div>
+
+        <div className="bonus-grid bonus-grid-compact" aria-label="Категории подарков">
+          <article><span>01</span><h3>SPA</h3></article>
+          <article><span>02</span><h3>Здоровье</h3></article>
+          <article><span>03</span><h3>Рестораны</h3></article>
+          <article><span>04</span><h3>Консультации</h3></article>
+          <article><span>05</span><h3>Обучение</h3></article>
+          <article><span>06</span><h3>Товары брендов</h3></article>
+        </div>
+        <p className="bonus-footnote">Состав каталога зависит от подтверждённых предложений партнёров. Конкретные услуги, сроки действия и доступность выбора будут указаны в каталоге фестиваля.</p>
       </div>
     </section>
   );
@@ -342,12 +361,36 @@ function AttendeeSection() {
 function PricingSection() {
   return (
     <section className="section pricing-section" id="pricing">
-      <div className="container pending-ticket-card">
-        <p className="section-label">Билеты и участие</p>
-        <h2>Встретимся <span>3 декабря</span></h2>
-        <p>{event.dateLabel} · {event.timeLabel}<br />«{event.venue}», {event.address}</p>
-        <p>Тарифы и ссылка на покупку билетов на 3 декабря уточняются. За подробностями можно обратиться к организатору.</p>
-        <a className="primary-button" href={`${telegramUrl}?text=${encodeURIComponent("Хочу уточнить билеты на фестиваль МЖ 3 декабря 2026 года")}`} target="_blank" rel="noreferrer"><span>Уточнить билеты</span><i className="button-icon"><ArrowIcon /></i></a>
+      <div className="container">
+        <div className="section-heading center-heading">
+          <p className="section-label">Билеты</p>
+          <h2>Выберите <span>формат участия</span></h2>
+          <p>Участие по заявке. После одобрения модератором вы получите персональный промокод для покупки билета.</p>
+        </div>
+        <div className="admission-actions">
+          <a className="primary-button" href="#application-form">Подать заявку</a>
+          <a className="secondary-button" href="#promo-code">У меня есть промокод</a>
+        </div>
+        <div className="pricing-grid">
+          {tickets.map((ticket) => (
+            <article className={`price-card price-card-${ticket.tier} ${ticket.featured ? "featured" : ""}`} key={ticket.name}>
+              {ticket.featured && <div className="popular">Самый выгодный</div>}
+              <div className="price-head"><h3>{ticket.name}</h3><strong>{formatPrice(ticketPrices[ticket.tier])}</strong><span>Цена за 1 билет</span></div>
+              <div className={`ticket-product-scene ticket-product-scene-${ticket.tier}`}>
+                <div className="ticket-product-art" role="img" aria-label={ticket.mockupAlt}>
+                  <div className="ticket-product-pass"><span>МЖ · {event.dateShort}</span><strong>{ticket.name}</strong><small>{event.venue}</small></div>
+                  <div className="ticket-product-benefits">{ticket.mockupItems.map((item) => <span key={item.title}><b>{item.title}</b><small>{item.note}</small></span>)}</div>
+                </div>
+              </div>
+              <div className="ticket-highlight-list">{ticket.highlights.map((highlight) => <span key={highlight}>{highlight}</span>)}</div>
+              <p>{ticket.description}</p>
+              <details className="ticket-details"><summary>Полный состав тарифа <b>+</b></summary><ul>{ticket.items.map((item) => <li key={item}><b>✓</b>{item}</li>)}</ul></details>
+              <p className="admission-pair-price">Парный билет — {formatPrice(pairPrices[ticket.tier])} за двоих</p>
+              <a href="#application-form">Подать заявку <i className="button-icon"><ArrowIcon /></i></a>
+              <a className="admission-promo-link" href="#promo-code">У меня есть промокод</a>
+            </article>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -544,9 +587,9 @@ export default function Home() {
           <a href="#pricing"><span>●</span> Билеты</a>
           <a href="/gifts/"><span>●</span> Архив подарков</a>
         </div>
-        <a className="nav-bonus-cta" href="/gifts/" aria-label="Каталог подарков прошлой встречи">
-          <span className="nav-bonus-full">Архив подарков</span>
-          <span className="nav-bonus-short">Архив</span>
+        <a className="nav-bonus-cta" href="/gifts/" aria-label="Забрать подарки">
+          <span className="nav-bonus-full">Забрать подарки</span>
+          <span className="nav-bonus-short">Подарки</span>
         </a>
         <details className="mobile-nav">
           <summary aria-label="Открыть меню">Меню</summary>
@@ -559,7 +602,9 @@ export default function Home() {
             <a href="#consultations">Консультации и практики</a>
             <a href="#partnership">Партнерство</a>
             <a href="#pricing">Билеты</a>
-            <a href="/gifts/">Подарки прошлой встречи</a>
+            <a href="#application-form">Подать заявку</a>
+            <a href="#promo-code">У меня есть промокод</a>
+            <a href="/gifts/">Получить подарки</a>
           </div>
         </details>
       </nav>
@@ -577,8 +622,8 @@ export default function Home() {
               <h1>Мужчина и Женщина.<br /><em>Перезагрузка</em></h1>
               <p className="hero-lead">Для тех, кто хочет встретить своего человека, вернуть близость в паре или перестать повторять старые сценарии.</p>
               <div className="hero-actions">
-                <a className="primary-button hero-button" href="#pricing"><span>Уточнить билеты</span><i className="button-icon"><ArrowIcon /></i></a>
-                <a className="hero-quiz-link" href="#connection-code"><b>90 секунд</b><span>Узнать свой код связи</span></a>
+                <a className="primary-button hero-button" href="#application-form"><span>Подать заявку</span><i className="button-icon"><ArrowIcon /></i></a>
+                <a className="secondary-button" href="#promo-code">У меня есть промокод</a>
               </div>
             </div>
             <div className="hero-facts-card" aria-label="Что будет на фестивале">
@@ -705,7 +750,7 @@ export default function Home() {
                 </div>
 
                 <div className="connection-result-actions">
-                  <a className="primary-button" href="#pricing"><span>Выбрать билет</span><i className="button-icon"><ArrowIcon /></i></a>
+                  <a className="primary-button" href="#application-form"><span>Подать заявку</span><i className="button-icon"><ArrowIcon /></i></a>
                   <button type="button" onClick={startConnectionQuiz}>Пройти ещё раз</button>
                 </div>
                 <small className="connection-disclaimer">Результат предназначен для саморефлексии и не является психологической диагностикой.</small>
@@ -776,7 +821,7 @@ export default function Home() {
             <h2>Сразу видно, <span>кто открыт к знакомству</span></h2>
             <p className="dating-lead">Выберите браслет на регистрации. Цвет покажет окружающим комфортный для вас формат общения - без неловких догадок.</p>
 
-            <a className="primary-button dating-button" href="#pricing"><span>Выбрать билет</span><i className="button-icon"><ArrowIcon /></i></a>
+            <a className="primary-button dating-button" href="#application-form"><span>Подать заявку</span><i className="button-icon"><ArrowIcon /></i></a>
           </div>
 
           <div className="bracelet-stage" aria-label="Значения браслетов фестиваля">
@@ -811,6 +856,7 @@ export default function Home() {
       <ConsultationsSection />
       <BonusSection />
       <PricingSection />
+      <FestivalAdmission />
 
       <section className="section partners-section">
         <div className="container">
@@ -849,7 +895,7 @@ export default function Home() {
           <p>{event.dateLabel} · {event.timeLabel} · {event.city}</p>
           <h2>Можно снова отложить отношения.<br /><span>Или сделать первый реальный шаг.</span></h2>
           <div>
-            <a className="primary-button" href="#pricing"><span>Уточнить билеты</span><i className="button-icon"><ArrowIcon /></i></a>
+            <a className="primary-button" href="#application-form"><span>Подать заявку</span><i className="button-icon"><ArrowIcon /></i></a>
           </div>
         </div>
       </section>

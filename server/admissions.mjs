@@ -1,0 +1,110 @@
+const consentVersion = 'mzh-2026-12-03-v1';
+const clean = (value) => typeof value === 'string' ? value.trim() : '';
+const digest = async (value) => [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(value)))].map((byte) => byte.toString(16).padStart(2, '0')).join('');
+const json = (body, status = 200) => Response.json(body, { status, headers: { 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' } });
+
+export function validateApplication(body) {
+  const data = {
+    name: clean(body.name), contact: clean(body.contact), email: clean(body.email).toLowerCase(),
+    format: body.format, reason: clean(body.reason), requestId: clean(body.requestId), consent: body.consent,
+  };
+  if (body.website) return { error: 'Не удалось принять заявку. Проверьте заполнение формы.' };
+  if (data.name.length < 1 || data.name.length > 100) return { error: 'Укажите имя длиной до 100 символов.' };
+  const telegram = /^@?[a-zA-Z][a-zA-Z0-9_]{4,31}$/.test(data.contact);
+  const phone = /^[+\d\s()\-]+$/.test(data.contact) && /^\d{10,15}$/.test(data.contact.replace(/\D/g, ''));
+  if (data.contact.length > 100 || (!telegram && !phone)) return { error: 'Укажите телефон с кодом страны или Telegram в формате @username.' };
+  if (data.email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) return { error: 'Проверьте e-mail.' };
+  if (!['single', 'pair'].includes(data.format)) return { error: 'Выберите формат участия: один или вдвоём.' };
+  if (!data.reason || data.reason.length > 2000) return { error: 'Ответьте, почему хотите прийти. Не более 2000 символов.' };
+  if (data.consent !== true) return { error: 'Для отправки нужно согласие на обработку персональных данных.' };
+  if (!/^[a-zA-Z0-9-]{16,80}$/.test(data.requestId)) return { error: 'Обновите страницу и повторите отправку заявки.' };
+  return { data };
+}
+
+function isAdmin(request, env) {
+  const allowed = (env.ADMISSIONS_ADMIN_EMAILS || '').toLowerCase().split(',').map((value) => value.trim()).filter(Boolean);
+  const email = (request.headers.get('oai-authenticated-user-email') || '').toLowerCase();
+  return Boolean(request.headers.get('oai-authenticated-user-id')) && allowed.includes(email);
+}
+
+async function rateLimit(request, env, category, limit) {
+  const bucket = Math.floor(Date.now() / 3600000);
+  const identity = request.headers.get('cf-connecting-ip') || request.headers.get('oai-authenticated-user-id') || 'anonymous';
+  const key = `${category}:${bucket}:${await digest(identity)}`;
+  const row = await env.DB.prepare('INSERT INTO admission_rate_limits (key, count, expires_at) VALUES (?, 1, ?) ON CONFLICT(key) DO UPDATE SET count=count+1 RETURNING count').bind(key, (bucket + 1) * 3600000).first();
+  return row.count <= limit;
+}
+
+async function handle(request, env, path) {
+  if (!env.DB) return json({ error: 'Приём заявок временно недоступен. Попробуйте позже.' }, 503);
+  const admin = path.startsWith('/api/admissions/admin/');
+  if (admin && !isAdmin(request, env)) return json({ error: 'Доступ только у модератора.' }, 403);
+  if (path === '/api/admissions/admin/applications' && request.method === 'GET') {
+    const rows = await env.DB.prepare('SELECT reference, name, contact, email, format, reason, status, created_at FROM festival_applications ORDER BY created_at DESC LIMIT 200').all();
+    return json({ ok: true, applications: rows.results });
+  }
+  if (request.method !== 'POST') return json({ error: 'Метод не поддерживается.' }, 405);
+  if (!request.headers.get('content-type')?.includes('application/json')) return json({ error: 'Ожидается JSON.' }, 415);
+  if (Number(request.headers.get('content-length') || 0) > 16000) return json({ error: 'Слишком большой запрос.' }, 413);
+  let body;
+  try { const raw = await request.text(); if (raw.length > 16000) return json({ error: 'Слишком большой запрос.' }, 413); body = JSON.parse(raw); }
+  catch { return json({ error: 'Не удалось прочитать данные формы.' }, 400); }
+  if (!body || Array.isArray(body) || typeof body !== 'object') return json({ error: 'Некорректные данные формы.' }, 400);
+
+  if (path === '/api/admissions/applications') {
+    const validation = validateApplication(body);
+    if (validation.error) return json({ error: validation.error }, 400);
+    if (!await rateLimit(request, env, 'application', 12)) return json({ error: 'Слишком много отправок. Повторите позже.' }, 429);
+    const data = validation.data;
+    const payloadHash = await digest(JSON.stringify(data));
+    const now = new Date().toISOString();
+    const id = crypto.randomUUID();
+    const reference = `MZH-${id.replaceAll('-', '').slice(0, 10).toUpperCase()}`;
+    await env.DB.prepare('INSERT INTO festival_applications (id, request_id, payload_hash, reference, name, contact, email, format, reason, status, consent_version, consent_at, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT(request_id) DO NOTHING').bind(id, data.requestId, payloadHash, reference, data.name, data.contact, data.email, data.format, data.reason, 'pending', consentVersion, now, now).run();
+    const stored = await env.DB.prepare('SELECT reference, payload_hash FROM festival_applications WHERE request_id=?').bind(data.requestId).first();
+    if (!stored || stored.payload_hash !== payloadHash) return json({ error: 'Эта отправка уже сохранена с другими данными. Обновите страницу для новой заявки.' }, 409);
+    // Acknowledgement confirms durable receipt only; moderation is a separate action.
+    return json({ ok: true, status: 'pending', reference: stored.reference }, 201);
+  }
+
+  if (path === '/api/admissions/promo') {
+    if (!await rateLimit(request, env, 'promo', 30)) return json({ error: 'Слишком много проверок. Повторите позже.' }, 429);
+    const code = clean(body.code).normalize('NFKC').toUpperCase();
+    if (!/^[\p{L}\p{N}_-]{4,100}$/u.test(code)) return json({ error: 'Проверьте промокод.' }, 400);
+    const promo = await env.DB.prepare('SELECT p.code_hash FROM admission_promos p JOIN festival_applications a ON a.id=p.application_id WHERE p.code_hash=? AND p.active=1 AND a.status=?').bind(await digest(code), 'approved').first();
+    if (!promo) return json({ error: 'Промокод не найден или больше не действует. Проверьте его или свяжитесь с модератором.' }, 400);
+    let checkoutUrl;
+    try { const target = new URL(env.ADMISSIONS_CHECKOUT_URL); if (target.protocol === 'https:') checkoutUrl = target.href; } catch { /* Checkout is not released until the organizer supplies its URL. */ }
+    return json({ ok: true, ...(checkoutUrl ? { checkoutUrl } : {}), message: checkoutUrl ? 'Промокод подтверждён. Теперь можно перейти к покупке билета.' : 'Промокод подтверждён. Ссылка на покупку пока уточняется. Модератор сообщит, когда она будет доступна.' });
+  }
+
+  if (path === '/api/admissions/admin/decision') {
+    if (!['approved', 'rejected'].includes(body.status)) return json({ error: 'Укажите решение.' }, 400);
+    const application = await env.DB.prepare('SELECT id FROM festival_applications WHERE reference=?').bind(clean(body.reference)).first();
+    if (!application) return json({ error: 'Заявка не найдена.' }, 404);
+    const now = new Date().toISOString();
+    const statements = [env.DB.prepare('UPDATE festival_applications SET status=?, reviewed_at=? WHERE id=?').bind(body.status, now, application.id), env.DB.prepare('UPDATE admission_promos SET active=0 WHERE application_id=?').bind(application.id)];
+    const code = body.status === 'approved' ? `MZH-${crypto.randomUUID().replaceAll('-', '').slice(0, 16).toUpperCase()}` : null;
+    if (code) statements.push(env.DB.prepare('INSERT INTO admission_promos (code_hash, application_id, active, created_at) VALUES (?, ?, 1, ?)').bind(await digest(code), application.id, now));
+    await env.DB.batch(statements);
+    return json({ ok: true, status: body.status, ...(code ? { code } : {}) });
+  }
+  return json({ error: 'Не найдено.' }, 404);
+}
+
+export async function admissions(request, env) {
+  const url = new URL(request.url);
+  const origin = request.headers.get('origin');
+  const allowed = !origin || origin === url.origin || origin === env.ADMISSIONS_ALLOWED_ORIGIN;
+  if (!allowed) return json({ error: 'Недопустимый источник запроса.' }, 403);
+  const cors = origin && origin !== url.origin ? { 'Access-Control-Allow-Origin': origin, 'Access-Control-Allow-Methods': 'GET, POST, OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type', 'Vary': 'Origin' } : {};
+  if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors });
+  let response;
+  try { response = await handle(request, env, url.pathname.replace(/\/$/, '')); }
+  catch { response = json({ error: 'Не удалось сохранить данные. Попробуйте ещё раз.' }, 503); }
+  const headers = new Headers(response.headers);
+  for (const [key, value] of Object.entries(cors)) headers.set(key, value);
+  return new Response(response.body, { status: response.status, headers });
+}
+
+export { isAdmin };

@@ -56,10 +56,14 @@ test("December event details replace the old venue and expired checkout", () => 
   const map = logistics.match(/href="(https:\/\/yandex.ru\/maps\/[^\"]+)"/);
   assert.ok(map);
   assert.ok(decodeURIComponent(map[1]).includes("Марата, 1/71"));
-  assert.ok(section("pricing").includes("Тарифы и ссылка на покупку билетов на 3 декабря уточняются"));
+  const pricing = section("pricing");
+  assert.equal((pricing.match(/class="price-head"/g) ?? []).length, 3);
+  for (const price of [1490, 2990, 5900]) assert.ok(pricing.includes(new Intl.NumberFormat("ru-RU").format(price)));
+  assert.ok(pricing.includes("Подать заявку"));
+  assert.ok(pricing.includes("У меня есть промокод"));
 });
 
-test("event metadata ends at midnight the next day and gifts remain explicitly archived", async () => {
+test("event metadata ends at midnight the next day and gift access keeps its original flow", async () => {
   const match = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
   assert.ok(match);
   const event = JSON.parse(match[1]);
@@ -70,6 +74,18 @@ test("event metadata ends at midnight the next day and gifts remain explicitly a
   assert.equal(event.location.address.streetAddress, "ул. Марата, 1/71");
   assert.ok(!event.offers);
   const gifts = await readFile(new URL("../out/gifts/index.html", import.meta.url), "utf8");
-  assert.ok(gifts.includes("Каталог прошлой встречи МЖ"));
-  assert.ok(gifts.includes("не являются предложениями на 3 декабря 2026 года"));
+  assert.ok(gifts.includes("Соберите свой набор подарков"));
+  assert.ok(gifts.includes("Каталог открыт владельцам билетов"));
+  assert.ok(!gifts.includes("Каталог прошлой встречи МЖ"));
+});
+
+
+test("admission form contains the requested fields and explains moderation without promising approval", () => {
+  const admission = section("admission");
+  for (const name of ["name", "contact", "email", "format", "reason", "consent"]) assert.ok(admission.includes(`name="${name}"`));
+  assert.ok(admission.includes("Почему хотите прийти?"));
+  assert.ok(admission.includes("модератор свяжется с вами и сообщит решение"));
+  assert.ok(admission.includes("Отправка заявки не гарантирует одобрение участия"));
+  assert.ok(admission.includes('id="promo-code"'));
+  assert.ok(!admission.includes("qtickets.ru"));
 });

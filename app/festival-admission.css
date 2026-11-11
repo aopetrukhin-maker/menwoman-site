@@ -1,0 +1,35 @@
+.admission-section { background: #f2eae3; }
+.admission-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin: 0 0 40px; }
+.admission-grid { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, .8fr); gap: 24px; align-items: start; }
+.admission-panel { min-width: 0; padding: clamp(24px, 4vw, 48px); border: 1px solid #ddcec5; border-radius: 24px; background: #fffaf4; scroll-margin-top: 110px; overflow-wrap: anywhere; }
+.admission-panel h3 { margin: 0 0 24px; font-size: clamp(26px, 3vw, 36px); line-height: 1.15; }
+.admission-panel p { line-height: 1.6; }
+.admission-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; }
+.admission-wide { grid-column: 1 / -1; }
+.admission-panel label, .admission-panel legend { display: block; font-size: 15px; font-weight: 700; line-height: 1.5; }
+.admission-panel input:not([type=radio]):not([type=checkbox]), .admission-panel textarea { display: block; width: 100%; min-width: 0; padding: 14px 16px; margin-top: 8px; border: 1px solid #b9a89c; border-radius: 10px; color: #211916; background: #fff; font: inherit; font-size: 16px; }
+.admission-panel textarea { resize: vertical; }
+.admission-panel fieldset { padding: 0; margin: 0; border: 0; }
+.admission-radio { display: flex; flex-wrap: wrap; gap: 16px; padding-top: 12px; }
+.admission-radio label { display: flex; gap: 10px; align-items: center; padding: 12px 18px; border: 1px solid #cbb9ad; border-radius: 10px; cursor: pointer; }
+.admission-panel input[type=radio], .admission-panel input[type=checkbox] { width: 20px; height: 20px; margin: 0; flex-shrink: 0; accent-color: #b52c41; }
+.admission-panel .admission-consent { display: flex; align-items: flex-start; gap: 12px; margin: 24px 0 10px; font-size: 14px; font-weight: 500; }
+.admission-consent-details { margin: 0 0 24px; font-size: 13px; }
+.admission-consent-details summary { cursor: pointer; color: #8d3340; }
+.admission-panel .primary-button, .admission-panel .secondary-button { justify-content: center; min-height: 50px; max-width: 100%; }
+.admission-panel button:disabled { opacity: .65; cursor: wait; }
+.admission-panel input:focus-visible, .admission-panel textarea:focus-visible, .admission-panel button:focus-visible { outline: 3px solid #9c3948; outline-offset: 3px; }
+.admission-promo form { display: grid; gap: 16px; margin-top: 24px; }
+.admission-panel .admission-error { padding: 12px 16px; background: #ffe8e5; border-left: 3px solid #ad2739; color: #821c2a; font-size: 14px; }
+.admission-panel .admission-small { margin-bottom: 0; font-size: 13px; color: #66584f; }
+.admission-promo-result { margin-top: 24px; padding-top: 16px; border-top: 1px solid #ddcec5; }
+.admission-trap { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.price-card .admission-promo-link { padding: 10px 0; margin-top: 12px; background: transparent; border: 0; box-shadow: none; color: #8d3340; font-size: 14px; text-decoration: underline; }
+.admission-pair-price { font-size: 14px; line-height: 1.5; font-weight: 700; }
+@media (max-width: 900px) { .admission-grid { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 540px) {
+ .admission-fields { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+ .admission-actions { flex-direction: column; align-items: stretch; }
+ .admission-panel { border-radius: 18px; padding: 24px 20px; }
+ .admission-panel .primary-button, .admission-panel .secondary-button { width: 100%; font-size: 15px; padding-inline: 16px; }
+}
