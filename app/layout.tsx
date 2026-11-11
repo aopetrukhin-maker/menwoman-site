@@ -14,7 +14,7 @@ import "./globals.css";
 import "./visual-overrides.css";
 
 export const metadata: Metadata = {
-  title: `Фестиваль МЖ | ${event.dateLabel}, ${event.city}`,
+  title: `МЖ — фестиваль живого общения и отношений | ${event.dateLabel}, ${event.city}`,
   description: `${event.name}: ${event.dateLabel}, ${event.timeLabel}. «${event.venue}», ${event.city}, ${event.address}. Метро «${event.metro}». Выступления, экспозона, консультации и практики.`,
   keywords: [
     "фестиваль отношений Санкт-Петербург",

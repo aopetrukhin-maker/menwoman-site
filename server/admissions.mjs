@@ -2,6 +2,29 @@ const consentVersion = 'mzh-2026-12-03-v1';
 const clean = (value) => typeof value === 'string' ? value.trim() : '';
 const digest = async (value) => [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(value)))].map((byte) => byte.toString(16).padStart(2, '0')).join('');
 const json = (body, status = 200) => Response.json(body, { status, headers: { 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' } });
+const funnelNames = new Set(['page_view', 'application_opened', 'application_success', 'promo_opened', 'promo_verified', 'purchase_clicked', 'tariffs_viewed', 'quiz_started', 'quiz_completed']);
+
+function cleanAttribution(value) {
+  const input = value && typeof value === 'object' && !Array.isArray(value) ? value : {};
+  const result = {};
+  for (const key of ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content']) {
+    const text = clean(input[key]);
+    result[key] = /^[\p{L}\p{N}._-]{1,80}$/u.test(text) ? text : null;
+  }
+  result.visitId = /^[a-f0-9-]{36}$/i.test(clean(input.visitId)) ? input.visitId : null;
+  return result;
+}
+
+async function funnelMetrics(env) {
+  const events = (await env.DB.prepare('SELECT event_name, COUNT(*) AS n FROM festival_funnel_events GROUP BY event_name').all()).results;
+  const applications = await env.DB.prepare("SELECT COUNT(*) AS received, SUM(CASE WHEN status='approved' THEN 1 ELSE 0 END) AS approved, SUM(CASE WHEN status='rejected' THEN 1 ELSE 0 END) AS rejected, ROUND(AVG(CASE WHEN reviewed_at IS NOT NULL THEN (julianday(reviewed_at)-julianday(created_at))*1440 END), 1) AS review_minutes FROM festival_applications WHERE visit_id IS NOT NULL").first();
+  const traffic = (await env.DB.prepare("SELECT COALESCE(utm_source, 'direct') AS source, COALESCE(utm_campaign, '') AS campaign, COUNT(*) AS views FROM festival_funnel_events WHERE event_name='page_view' GROUP BY source, campaign").all()).results;
+  const leads = (await env.DB.prepare("SELECT COALESCE(utm_source, 'direct') AS source, COALESCE(utm_campaign, '') AS campaign, COUNT(*) AS applications, SUM(CASE WHEN status='approved' THEN 1 ELSE 0 END) AS approved FROM festival_applications WHERE visit_id IS NOT NULL GROUP BY source, campaign").all()).results;
+  const sources = new Map();
+  for (const row of traffic) sources.set(JSON.stringify([row.source, row.campaign]), { ...row, applications: 0, approved: 0 });
+  for (const row of leads) { const key = JSON.stringify([row.source, row.campaign]); sources.set(key, { views: 0, ...sources.get(key), ...row }); }
+  return { events: Object.fromEntries(events.map((row) => [row.event_name, row.n])), applications, sources: [...sources.values()], paymentTracking: 'not_connected' };
+}
 
 export function validateApplication(body) {
   const data = {
@@ -40,9 +63,10 @@ async function handle(request, env, path) {
   const admin = path.startsWith('/api/admissions/admin/');
   if (admin && !isAdmin(request, env)) return json({ error: 'Доступ только у модератора.' }, 403);
   if (path === '/api/admissions/admin/applications' && request.method === 'GET') {
-    const rows = await env.DB.prepare('SELECT reference, name, contact, email, format, reason, status, created_at FROM festival_applications ORDER BY created_at DESC LIMIT 200').all();
+    const rows = await env.DB.prepare('SELECT reference, name, contact, email, format, reason, status, created_at, reviewed_at, utm_source, utm_campaign FROM festival_applications ORDER BY created_at DESC LIMIT 200').all();
     return json({ ok: true, applications: rows.results });
   }
+  if (path === '/api/admissions/admin/metrics' && request.method === 'GET') return json({ ok: true, ...await funnelMetrics(env) });
   if (request.method !== 'POST') return json({ error: 'Метод не поддерживается.' }, 405);
   if (!request.headers.get('content-type')?.includes('application/json')) return json({ error: 'Ожидается JSON.' }, 415);
   if (Number(request.headers.get('content-length') || 0) > 16000) return json({ error: 'Слишком большой запрос.' }, 413);
@@ -51,16 +75,26 @@ async function handle(request, env, path) {
   catch { return json({ error: 'Не удалось прочитать данные формы.' }, 400); }
   if (!body || Array.isArray(body) || typeof body !== 'object') return json({ error: 'Некорректные данные формы.' }, 400);
 
+  if (path === '/api/admissions/events') {
+    if (!funnelNames.has(body.event) || !/^[a-f0-9-]{36}$/i.test(clean(body.eventId))) return json({ error: 'Некорректное событие.' }, 400);
+    const source = cleanAttribution(body.attribution);
+    if (!source.visitId) return json({ error: 'Некорректный идентификатор просмотра.' }, 400);
+    if (!await rateLimit(request, env, 'events', 300)) return json({ error: 'Слишком много событий.' }, 429);
+    await env.DB.prepare('INSERT INTO festival_funnel_events (id, visit_id, event_name, utm_source, utm_medium, utm_campaign, utm_content, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT DO NOTHING').bind(body.eventId, source.visitId, body.event, source.utm_source, source.utm_medium, source.utm_campaign, source.utm_content, new Date().toISOString()).run();
+    return json({ ok: true });
+  }
+
   if (path === '/api/admissions/applications') {
     const validation = validateApplication(body);
     if (validation.error) return json({ error: validation.error }, 400);
     if (!await rateLimit(request, env, 'application', 12)) return json({ error: 'Слишком много отправок. Повторите позже.' }, 429);
     const data = validation.data;
+    const source = cleanAttribution(body.attribution);
     const payloadHash = await digest(JSON.stringify(data));
     const now = new Date().toISOString();
     const id = crypto.randomUUID();
     const reference = `MZH-${id.replaceAll('-', '').slice(0, 10).toUpperCase()}`;
-    await env.DB.prepare('INSERT INTO festival_applications (id, request_id, payload_hash, reference, name, contact, email, format, reason, status, consent_version, consent_at, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT(request_id) DO NOTHING').bind(id, data.requestId, payloadHash, reference, data.name, data.contact, data.email, data.format, data.reason, 'pending', consentVersion, now, now).run();
+    await env.DB.prepare('INSERT INTO festival_applications (id, request_id, payload_hash, reference, name, contact, email, format, reason, status, consent_version, consent_at, created_at, utm_source, utm_medium, utm_campaign, utm_content, visit_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT(request_id) DO NOTHING').bind(id, data.requestId, payloadHash, reference, data.name, data.contact, data.email, data.format, data.reason, 'pending', consentVersion, now, now, source.utm_source, source.utm_medium, source.utm_campaign, source.utm_content, source.visitId).run();
     const stored = await env.DB.prepare('SELECT reference, payload_hash FROM festival_applications WHERE request_id=?').bind(data.requestId).first();
     if (!stored || stored.payload_hash !== payloadHash) return json({ error: 'Эта отправка уже сохранена с другими данными. Обновите страницу для новой заявки.' }, 409);
     // Acknowledgement confirms durable receipt only; moderation is a separate action.
@@ -83,7 +117,7 @@ async function handle(request, env, path) {
     const application = await env.DB.prepare('SELECT id FROM festival_applications WHERE reference=?').bind(clean(body.reference)).first();
     if (!application) return json({ error: 'Заявка не найдена.' }, 404);
     const now = new Date().toISOString();
-    const statements = [env.DB.prepare('UPDATE festival_applications SET status=?, reviewed_at=? WHERE id=?').bind(body.status, now, application.id), env.DB.prepare('UPDATE admission_promos SET active=0 WHERE application_id=?').bind(application.id)];
+    const statements = [env.DB.prepare('UPDATE festival_applications SET status=?, reviewed_at=COALESCE(reviewed_at, ?) WHERE id=?').bind(body.status, now, application.id), env.DB.prepare('UPDATE admission_promos SET active=0 WHERE application_id=?').bind(application.id)];
     const code = body.status === 'approved' ? `MZH-${crypto.randomUUID().replaceAll('-', '').slice(0, 16).toUpperCase()}` : null;
     if (code) statements.push(env.DB.prepare('INSERT INTO admission_promos (code_hash, application_id, active, created_at) VALUES (?, ?, 1, ?)').bind(await digest(code), application.id, now));
     await env.DB.batch(statements);

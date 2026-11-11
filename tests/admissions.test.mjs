@@ -7,6 +7,7 @@ import { admissions } from '../server/admissions.mjs';
 function environment() {
   const sqlite = new DatabaseSync(':memory:');
   sqlite.exec(readFileSync(new URL('../drizzle/0000_festival_admissions.sql', import.meta.url), 'utf8'));
+  sqlite.exec(readFileSync(new URL('../drizzle/0001_festival_funnel.sql', import.meta.url), 'utf8'));
   const DB = {
     prepare(sql) {
       let values = [];
@@ -79,5 +80,42 @@ test('foreign origins and repeated code guessing are rejected', async () => {
   assert.equal((await admissions(request('applications', body(), { Origin: 'https://foreign.example.test' }), env)).status, 403);
   for (let i = 0; i < 30; i++) assert.equal((await admissions(request('promo', { code: 'INVALID' }), env)).status, 400);
   assert.equal((await admissions(request('promo', { code: 'INVALID' }), env)).status, 429);
+  env.sqlite.close();
+});
+
+test('funnel attribution persists once and metrics separate checkout clicks from payments', async () => {
+  const env = environment();
+  const visitId = crypto.randomUUID();
+  const attribution = { visitId, utm_source: 'anna', utm_medium: 'partner', utm_campaign: 'mzh_dec03', utm_content: 'topic' };
+  const event = { eventId: crypto.randomUUID(), event: 'page_view', attribution };
+  assert.equal((await admissions(request('events', event), env)).status, 200);
+  assert.equal((await admissions(request('events', { ...event, eventId: crypto.randomUUID() }), env)).status, 200);
+  const saved = await (await admissions(request('applications', body({ attribution })), env)).json();
+  const record = env.sqlite.prepare('SELECT * FROM festival_applications').get();
+  assert.equal(record.utm_source, 'anna');
+  assert.equal(record.visit_id, visitId);
+  await admissions(request('admin/decision', { reference: saved.reference, status: 'approved' }, admin), env);
+  await admissions(request('events', { eventId: crypto.randomUUID(), event: 'purchase_clicked', attribution }), env);
+  assert.equal((await admissions(request('admin/metrics'), env)).status, 403);
+  const metrics = await (await admissions(request('admin/metrics', null, admin), env)).json();
+  assert.equal(metrics.events.page_view, 1);
+  assert.equal(metrics.applications.received, 1);
+  assert.equal(metrics.applications.approved, 1);
+  assert.equal(metrics.events.purchase_clicked, 1);
+  assert.equal(metrics.paymentTracking, 'not_connected');
+  assert.equal(metrics.sources[0].source, 'anna');
+  assert.equal(metrics.sources[0].applications, 1);
+  assert.equal((await admissions(request('events', { ...event, event: 'payment_completed' }), env)).status, 400);
+  env.sqlite.close();
+});
+
+test('analytics discards unrestricted values and never stores form contents in the event table', async () => {
+  const env = environment();
+  await admissions(request('events', { eventId: crypto.randomUUID(), event: 'page_view', attribution: { visitId: crypto.randomUUID(), utm_source: 'guest@example.test', utm_campaign: 'https://private.example.test/details' }, email: 'guest@example.test', reason: 'private answer' }), env);
+  const record = env.sqlite.prepare('SELECT * FROM festival_funnel_events').get();
+  assert.equal(record.utm_source, null);
+  assert.equal(record.utm_campaign, null);
+  assert.ok(!JSON.stringify(record).includes('guest@example.test'));
+  assert.ok(!JSON.stringify(record).includes('private answer'));
   env.sqlite.close();
 });

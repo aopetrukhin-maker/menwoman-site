@@ -20,10 +20,10 @@ export function ExpoSection() {
         <h2>Экспозона <span>Люди, бренды и практики</span></h2>
         <p>Знакомство со специалистами, авторскими проектами и их подходами. Форматы, отмеченные в карточках, ещё уточняются.</p>
       </div>
-      {expoGroups.map((group, index) => <div className="festival-group" key={group.title}>
-        <div className="festival-group-heading"><span>{String(index + 1).padStart(2, "0")}</span><h3>{group.title}</h3></div>
+      {expoGroups.map((group) => <details className="festival-disclosure festival-group" key={group.title}>
+        <summary>{group.title}<small>{group.cards.length} участников</small><b aria-hidden="true">+</b></summary>
         <Cards cards={group.cards} />
-      </div>)}
+      </details>)}
     </div>
   </section>;
 }
@@ -36,10 +36,12 @@ export function ConsultationsSection() {
         <h2>Не только послушать. <span>Разобрать свою ситуацию с экспертом</span></h2>
         <p>В экспертных зонах фестиваля можно будет познакомиться со специалистами, задать личные вопросы, принять участие в практиках и получить рекомендации по своей ситуации. Формат и доступность каждой встречи уточняются.</p>
       </div>
-      <h3 className="festival-subheading">Индивидуальные встречи и разборы</h3>
+      <details className="festival-disclosure"><summary>Индивидуальные встречи и разборы<small>{consultations.length} экспертов</small><b aria-hidden="true">+</b></summary>
       <Cards cards={consultations} />
-      <h3 className="festival-subheading">Практики и мастер-классы</h3>
+      </details>
+      <details className="festival-disclosure"><summary>Практики и мастер-классы<small>{workshops.length} эксперта</small><b aria-hidden="true">+</b></summary>
       <Cards cards={workshops} />
+      </details>
       <p className="festival-schedule-note">Время, продолжительность, количество участников и способ записи для всех активностей ещё необходимо подтвердить. Бесплатный формат, подарки и сертификаты, упомянутые в анкетах, пока не являются подтверждёнными условиями участия.</p>
     </div>
   </section>;

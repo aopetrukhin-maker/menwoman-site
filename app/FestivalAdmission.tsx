@@ -1,6 +1,8 @@
 "use client";
 
 import { useRef, useState, type FormEvent } from "react";
+import { AdmissionSteps } from "./FestivalExperience";
+import { attribution, trackFunnelEvent } from "./funnel-tracking";
 import "./festival-admission.css";
 
 const apiBase = process.env.NEXT_PUBLIC_ADMISSIONS_API_URL?.replace(/\/$/, "") ?? "/api/admissions";
@@ -34,9 +36,11 @@ export default function FestivalAdmission() {
         name: data.name, contact: data.contact, email: data.email, format: data.format,
         reason: data.reason, consent: data.consent === "on", website: data.website,
         requestId: requestId.current,
+        attribution: attribution(),
       });
       if (result.status !== "pending" || typeof result.reference !== "string") throw new Error("Не удалось подтвердить получение заявки. Попробуйте ещё раз.");
       setReference(result.reference);
+      trackFunnelEvent("application_success");
     } catch (failure) {
       setError(failure instanceof Error ? failure.message : "Не удалось отправить заявку.");
     } finally { setSending(false); }
@@ -56,6 +60,7 @@ export default function FestivalAdmission() {
         checkoutUrl = target.href;
       }
       setPromoResult({ checkoutUrl, message: result.message || "Промокод подтверждён." });
+      trackFunnelEvent("promo_verified");
     } catch (failure) {
       setPromoError(failure instanceof Error ? failure.message : "Не удалось проверить промокод.");
     } finally { setChecking(false); }
@@ -68,6 +73,7 @@ export default function FestivalAdmission() {
         <h2>Сначала <span>познакомимся</span></h2>
         <p>Участие по заявке. Мы формируем состав гостей фестиваля. Оставьте заявку - модератор свяжется с вами и сообщит решение. После одобрения вы получите персональный промокод для покупки билета.</p>
       </div>
+      <AdmissionSteps />
       <div className="admission-grid">
         <div className="admission-panel" id="application-form">
           {reference ? <div className="admission-success" role="status" aria-live="polite">
@@ -80,9 +86,9 @@ export default function FestivalAdmission() {
             <div className="admission-fields">
               <label htmlFor="admission-name">Имя<input id="admission-name" name="name" autoComplete="name" required maxLength={100} /></label>
               <label htmlFor="admission-contact">Телефон или Telegram<input id="admission-contact" name="contact" autoComplete="tel" placeholder="+7… или @username" required maxLength={100} /></label>
-              <label className="admission-wide" htmlFor="admission-email">E-mail<input id="admission-email" name="email" type="email" autoComplete="email" required maxLength={254} /></label>
+              <label className="admission-wide" htmlFor="admission-email">E-mail<input id="admission-email" name="email" type="email" autoComplete="email" required maxLength={254} /><small className="admission-field-note">Контакт для информации о вашем участии.</small></label>
               <fieldset className="admission-wide"><legend>Формат участия</legend><div className="admission-radio"><label><input name="format" type="radio" value="single" defaultChecked required />Один</label><label><input name="format" type="radio" value="pair" required />Вдвоём</label></div></fieldset>
-              <label className="admission-wide" htmlFor="admission-reason">Почему хотите прийти?<textarea id="admission-reason" name="reason" required maxLength={2000} rows={5} /></label>
+              <label className="admission-wide" htmlFor="admission-reason">Почему хотите прийти?<textarea id="admission-reason" name="reason" required maxLength={2000} rows={3} placeholder="Что вам интересно: новые знакомства, время вдвоём, определённая тема или практика?" /><small className="admission-field-note">Достаточно 1–2 предложений.</small></label>
             </div>
             <div className="admission-trap" aria-hidden="true"><label>Ваш сайт<input name="website" tabIndex={-1} autoComplete="off" /></label></div>
             <label className="admission-consent"><input name="consent" type="checkbox" required /><span>Согласен на обработку персональных данных для рассмотрения заявки и связи со мной.</span></label>
@@ -96,14 +102,16 @@ export default function FestivalAdmission() {
           <p className="section-label">После одобрения</p>
           <h3>У меня есть промокод</h3>
           <p>Введите персональный промокод, который вы получили от модератора.</p>
+          <p className="admission-small">Код подтверждает одобрение заявки и открывает переход к покупке.</p>
           <form onSubmit={checkPromo} aria-busy={checking}>
             <label htmlFor="admission-code">Промокод<input id="admission-code" name="code" autoComplete="off" autoCapitalize="characters" spellCheck={false} required maxLength={100} /></label>
             {promoError && <p className="admission-error" role="alert">{promoError}</p>}
             <button className="secondary-button" type="submit" disabled={checking}>{checking ? "Проверяем…" : "Проверить промокод"}</button>
           </form>
-          {promoResult && <div className="admission-promo-result" role="status"><p>{promoResult.message}</p>{promoResult.checkoutUrl && <a className="primary-button" href={promoResult.checkoutUrl} target="_blank" rel="noreferrer">Перейти к покупке билета</a>}</div>}
+          {promoResult && <div className="admission-promo-result" role="status"><p>{promoResult.message}</p>{promoResult.checkoutUrl && <a className="primary-button" href={promoResult.checkoutUrl} target="_blank" rel="noreferrer" onClick={() => trackFunnelEvent("purchase_clicked")}>Перейти к покупке билета</a>}</div>}
         </div>
       </div>
+      <p className="admission-guidance">Решение сообщат по указанному телефону или в Telegram. Фиксированный срок рассмотрения пока не объявлен. Для заявки на двоих выберите соответствующий формат — детали модератор уточнит при общении.</p>
     </div>
   </section>;
 }
