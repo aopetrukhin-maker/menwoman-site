@@ -60,7 +60,7 @@ export default function HeroAnimation() {
         {["landing-flash", "light eco-light-left", "light eco-light-round", "light eco-light-middle", "light eco-light-front", "dust", "smoke"].map((effect) => <span className={`eco-${effect}`} key={effect} aria-hidden="true" />)}
       </div>
       {landing === "playing" && <button className="intro-control" type="button" onClick={() => setPaused((value) => !value)} aria-pressed={paused}>{paused ? "Продолжить анимацию" : "Остановить анимацию"}</button>}
-      <a className="intro-skip" href="#program" onClick={() => setLanding("complete")}>Посмотреть программу ↓</a>
+      <a className="intro-skip" href="#reflection" onClick={() => setLanding("complete")}>Исследовать фестиваль ↓</a>
     </div>
   );
 }

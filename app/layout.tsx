@@ -14,8 +14,8 @@ import "./globals.css";
 import "./visual-overrides.css";
 
 export const metadata: Metadata = {
-  title: `МЖ — вечер знакомств и разговоров об отношениях | ${event.dateLabel}, ${event.city}`,
-  description: `${event.name}: ${event.dateLabel}, ${event.timeLabel}. «${event.venue}», ${event.city}, ${event.address}. Метро «${event.metro}». Выступления, экспозона, консультации и практики.`,
+  title: `МЖ Сити. Тайная квартира — фестиваль отношений | ${event.dateLabel}, ${event.city}`,
+  description: `${event.name}: ${event.dateLabel}, ${event.timeLabel}. «${event.venue}», ${event.city}, ${event.address}. Метро «${event.metro}». Отношения с собой, с людьми и с жизнью. Спикеры, бесплатная консультационная зона, знакомства, выставка и афтепати.`,
   keywords: [
     "фестиваль отношений Санкт-Петербург",
     "МЖ Мужчина и Женщина",

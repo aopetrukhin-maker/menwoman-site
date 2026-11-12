@@ -1,29 +1,32 @@
+"use client";
+
+import { useState } from "react";
 import { consultations, expoGroups, workshops, type FestivalCard } from "./festival-content";
 import { participantProfiles, type FestivalParticipant } from "./festival-participants";
+import FestivalCarousel from "./FestivalCarousel";
+import ParticipantPortrait from "./ParticipantPortrait";
 import "./festival-sections.css";
 
-function Cards({ cards, onSelect }: { cards: FestivalCard[]; onSelect: (participant: FestivalParticipant) => void }) {
-  return <div className="festival-card-grid">{cards.map((card) => <article className="festival-info-card" key={card.name}>
-    <h4>{card.name}</h4><p>{card.text}</p>
-    {card.note && <p className="festival-pending">{card.note}</p>}
-    <button type="button" className="participant-link" onClick={() => onSelect(participantProfiles[card.name])}>Об участнике и его форматах ↗</button>
-    {card.link && <a href={card.link.href} target="_blank" rel="noreferrer">{card.link.label} ↗</a>}
-  </article>)}</div>;
+type Props = { onSelect: (participant: FestivalParticipant) => void };
+function ProfileAction({ card, onSelect }: { card: FestivalCard } & Props) {
+  return <button type="button" className="participant-link" onClick={() => onSelect(participantProfiles[card.name])}>Об участнике и его форматах ↗</button>;
 }
-
-export default function FestivalActivities({ onSelect }: { onSelect: (participant: FestivalParticipant) => void }) {
-  return <section className="section activities-section primary-section" id="expo"><div className="container">
-    <div className="section-heading split-heading"><div><p className="section-label">03 / За пределами сцены</p><h2>Познакомиться, <span>попробовать, выбрать</span></h2></div><p>Экспозона, консультации и практики собраны по интересам. Откройте направление, чтобы увидеть участников и условия.</p></div>
-    <h3 className="activity-heading">Экспозона — люди, бренды и практики</h3>
-    {expoGroups.map((group) => <details className="festival-disclosure festival-group" key={group.title}>
-      <summary>{group.title}<small>{group.cards.length} участников</small><b aria-hidden="true">+</b></summary><Cards cards={group.cards} onSelect={onSelect} />
-    </details>)}
-    <div className="activity-consultations" id="consultations">
-      <h3 className="activity-heading">Консультации и практики</h3>
-      <p className="activity-intro">Не только послушать. Разобрать свою ситуацию с экспертом. В экспертных зонах фестиваля можно будет познакомиться со специалистами, задать личные вопросы, принять участие в практиках и получить рекомендации по своей ситуации. Формат и доступность каждой встречи уточняются.</p>
-      <details className="festival-disclosure"><summary>Индивидуальные встречи и разборы<small>{consultations.length} экспертов</small><b aria-hidden="true">+</b></summary><Cards cards={consultations} onSelect={onSelect} /></details>
-      <details className="festival-disclosure"><summary>Практики и мастер-классы<small>{workshops.length} эксперта</small><b aria-hidden="true">+</b></summary><Cards cards={workshops} onSelect={onSelect} /></details>
-      <p className="festival-schedule-note">Время, продолжительность, количество участников и способ записи ещё необходимо подтвердить. Бесплатный формат, подарки и сертификаты, упомянутые в анкетах, пока не являются подтверждёнными условиями участия.</p>
-    </div>
+export function FestivalConsultations({ onSelect }: Props) {
+  return <section className="section city-consultations primary-section" id="consultations"><div className="container">
+    <div className="section-heading split-heading"><div><p className="section-label">05 / Улица диалога</p><h2>Ваш вопрос заслуживает<br /><span>личного разговора</span></h2><p className="consultation-badge">Бесплатные консультации для гостей фестиваля</p></div><div><p>Здесь можно познакомиться со специалистом, рассказать о своей ситуации, задать вопрос и получить рекомендации.</p><p>Отношения с собой и партнёром, близость, семейное общение, личные границы, эмоциональное состояние — начните с того, что волнует вас сейчас.</p></div></div>
+    <FestivalCarousel label="Специалисты и личные разборы" className="consultations-carousel">{consultations.map((card) => <article className="city-consultant festival-info-card" key={card.name}><ParticipantPortrait participant={participantProfiles[card.name]} /><h3>{card.name}</h3><p>{card.text}</p>{card.note && <p className="festival-pending">{card.note}</p>}<ProfileAction card={card} onSelect={onSelect} /></article>)}</FestivalCarousel>
+    <p className="festival-schedule-note">В зоне предусмотрены бесплатные консультации. Формат и доступность встречи с каждым специалистом, время, продолжительность, количество участников и способ записи уточняются. Отдельные подарочные диагностики, игры и сертификаты, упомянутые в анкетах, пока не являются подтверждёнными условиями участия.</p>
+    <details className="festival-disclosure city-workshops"><summary>Практики и мастер-классы<small>{workshops.length} направления</small><b aria-hidden="true">+</b></summary><div className="festival-card-grid">{workshops.map((card) => <article className="festival-info-card" key={card.name}><h4>{card.name}</h4><p>{card.text}</p><p className="festival-pending">Время, продолжительность, число участников и условия записи необходимо подтвердить.</p><ProfileAction card={card} onSelect={onSelect} /></article>)}</div></details>
+    <a className="primary-button consultation-apply" href="#application-form" data-cta-location="consultations">Подать заявку на фестиваль ↗</a>
+  </div></section>;
+}
+export default function FestivalExhibition({ onSelect }: Props) {
+  const [category, setCategory] = useState("Все участники");
+  const cards = expoGroups.filter((group) => category === "Все участники" || category === group.title).flatMap((group) => group.cards.map((card) => ({ ...card, category: group.title })));
+  return <section className="section city-exhibition primary-section" id="expo"><div className="container">
+    <div className="section-heading split-heading"><div><p className="section-label">06 / Выставка и экспозона</p><h2>Вещи, идеи и проекты,<br /><span>с которыми хочется познакомиться</span></h2></div><p>Украшения ручной работы, одежда с характером, индивидуальные ароматы, авторские предметы и проекты участников. Рассматривайте, выбирайте, спрашивайте об истории создания и знакомьтесь с авторами лично.</p></div>
+    <div className="expo-filters" role="group" aria-label="Направления экспозоны">{["Все участники", ...expoGroups.map((group) => group.title)].map((title) => <button key={title} type="button" aria-pressed={category === title} onClick={() => setCategory(title)}>{title}</button>)}</div>
+    <FestivalCarousel key={category} label="Участники экспозоны" className="expo-carousel">{cards.map((card) => <article className="city-exhibitor festival-info-card" key={card.name}><span className="exhibitor-category">{card.category}</span><h3>{card.name}</h3><p>{card.text}</p>{card.note && <p className="festival-pending">{card.note}</p>}<ProfileAction card={card} onSelect={onSelect} />{card.link && <a href={card.link.href} target="_blank" rel="noreferrer">{card.link.label} ↗</a>}</article>)}</FestivalCarousel>
+    <p className="city-fine-print">Мастер-классы, демонстрации и другие активности указываются в карточках после согласования условий.</p>
   </div></section>;
 }

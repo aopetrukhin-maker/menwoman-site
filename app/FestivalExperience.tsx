@@ -12,10 +12,10 @@ const questions = [
   { question: "Что даёт промокод?", answer: "Это персональный код от модератора после одобрения заявки. Введите его в блоке «У меня есть промокод», чтобы перейти к покупке. Код подтверждает одобрение; возможная скидка должна быть отдельно указана в условиях покупки." },
 ];
 export default function FestivalParticipation() {
-  return <section className="section festival-questions primary-section" id="participation"><div className="container">
-    <div className="section-heading split-heading"><div><p className="section-label">07 / Как попасть</p><h2>Заявка. Решение. <span>Персональный код.</span></h2></div><p>Участие по заявке. Мы формируем состав гостей фестиваля. Оставьте заявку - модератор свяжется с вами и сообщит решение. После одобрения вы получите персональный промокод для покупки билета.</p></div>
+  return <div className="city-participation" id="participation"><div className="container">
+    <div className="section-heading split-heading"><div><p className="section-label">Как попасть на фестиваль</p><h2>Заявка. Решение. <span>Персональный код.</span></h2></div><p>Участие по заявке. Мы формируем состав гостей фестиваля. Оставьте заявку - модератор свяжется с вами и сообщит решение. После одобрения вы получите персональный промокод для покупки билета.</p></div>
     <AdmissionSteps />
     <div className="festival-question-list" id="questions">{questions.map((item) => <details key={item.question}><summary>{item.question}<span aria-hidden="true">+</span></summary><p>{item.answer}</p></details>)}</div>
     <div className="organizer-contact"><div><h3>Есть свой вопрос?</h3><p>Команда фестиваля МЖ поможет уточнить формат и условия участия.</p></div><a className="secondary-button" href="https://t.me/redheadlitle" target="_blank" rel="noreferrer">Написать организатору ↗</a></div>
-  </div></section>;
+  </div></div>;
 }

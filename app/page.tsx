@@ -6,11 +6,14 @@ import FestivalVenue from "./FestivalVenue";
 import FestivalAdmission from "./FestivalAdmission";
 import FestivalParticipation from "./FestivalExperience";
 import FestivalProgramme from "./FestivalProgramme";
-import FestivalActivities from "./FestivalSections";
+import FestivalExhibition, { FestivalConsultations } from "./FestivalSections";
+import FestivalConcept, { FestivalReflection } from "./FestivalConcept";
+import { FestivalDating, FestivalBar, FestivalAfterparty, FestivalPartners } from "./FestivalAtmosphere";
 import { type FestivalParticipant } from "./festival-participants";
 import { startFunnelTracking, trackFunnelEvent } from "./funnel-tracking";
 import "./festival-conversion.css";
 import "./festival-structure.css";
+import "./festival-city.css";
 import { startAdmissionNavigation } from "./admission-context";
 import { tickets, ticketPrices, pairPrices, formatPrice } from "./ticket-tariffs";
 import { festivalEvent as event } from "./festival-event";
@@ -241,39 +244,17 @@ function ArrowIcon() {
 }
 
 function BonusSection() {
-  return (
-    <div className="tariff-bonus" id="bonuses">
-      <div>
-        <div className="bonus-hero">
-          <div className="bonus-copy">
-            <p className="section-label">Подарки партнёров</p>
-            <h3>Подарки <span>по тарифам</span></h3>
-            <p className="bonus-lead">В тарифах «Перезагрузка» и VIP предусмотрены лимиты выбора подарков и сертификатов. Состав и условия предложений на 3 декабря уточняются.</p>
-          </div>
-          <div className="bonus-tiers" aria-label="Подарки по тарифам">
-            <article><span>Перезагрузка</span><h3>Индивидуальный набор</h3><strong>до 50 000 ₽</strong><p>подарков и сертификатов</p></article>
-            <article className="bonus-tier-vip"><span>VIP</span><h3>Максимальный набор</h3><strong>до 100 000 ₽</strong><p>подарков и сертификатов</p></article>
-          </div>
-        </div>
-
-        <div className="bonus-grid bonus-grid-compact" aria-label="Категории подарков">
-          <article><span>01</span><h3>SPA</h3></article>
-          <article><span>02</span><h3>Здоровье</h3></article>
-          <article><span>03</span><h3>Рестораны</h3></article>
-          <article><span>04</span><h3>Консультации</h3></article>
-          <article><span>05</span><h3>Обучение</h3></article>
-          <article><span>06</span><h3>Товары брендов</h3></article>
-        </div>
-        <p className="bonus-footnote">Суммы обозначают лимит номинальной стоимости сертификатов, а не денежную выплату. У каждого предложения свои сроки и ограничения; отдельные расходы могут оплачиваться дополнительно. Доступ уже купивших билеты к действующему каталогу сохранён.</p>
-        <a className="gift-archive-link" href="/gifts/">Открыть подарки для купивших билеты ↗</a>
-      </div>
-    </div>
-  );
+  return <section className="section city-gifts primary-section" id="bonuses"><div className="container">
+    <div className="section-heading split-heading"><div><p className="section-label">08 / Подарки партнёров</p><h2>Подарки, которыми<br /><span>вечер не заканчивается</span></h2></div><p>Знакомство с проектами партнёров можно продолжить и после фестиваля: через услуги, впечатления и предложения из подарочного каталога. Выбирайте то, что интересно именно вам.</p></div>
+    <div className="city-gift-tiers"><article><span>Перезагрузка</span><p>Выбор подарков и сертификатов</p><strong><small>до</small> 50 000 <small>₽</small></strong><span>по номинальной стоимости предложений</span></article><article><span>VIP</span><p>Расширенный выбор подарков и сертификатов</p><strong><small>до</small> 100 000 <small>₽</small></strong><span>по номинальной стоимости предложений</span></article></div>
+    <p className="city-fine-print">Это лимит номинальной стоимости выбранных предложений, а не денежная выплата. Состав каталога на 3 декабря, сроки использования, ограничения и возможные дополнительные расходы уточняются.</p>
+    <a className="gift-archive-link" href="/gifts/">Открыть подарки для купивших билеты ↗</a>
+  </div></section>;
 }
 
 function AttendeeSection() {
   return <section className="section festival-history primary-section" id="community"><div className="container">
-    <div className="history-layout"><figure><img src="/history/festival-guests.jpg" alt="Гости и команда предыдущего фестиваля МЖ" width="2048" height="1365" loading="lazy" /><figcaption>Предыдущая встреча сообщества МЖ</figcaption></figure><div><p className="section-label">04 / Предыдущий фестиваль</p><h2>У МЖ уже <span>есть своя история</span></h2><div className="history-number"><strong>550</strong><span>гостей на прошлом событии</span></div><p>На фестиваль приходят за новым кругом общения, интересными разговорами и знакомством с подходами экспертов. 3 декабря встречаемся в «Антресоли и Перце».</p><a className="text-link" href="#application-form">Присоединиться к новой встрече ↗</a></div></div>
+    <div className="history-layout"><figure><img src="/history/festival-guests.jpg" alt="Гости и команда предыдущего фестиваля МЖ" width="2048" height="1365" loading="lazy" /><figcaption>Предыдущая встреча сообщества МЖ</figcaption></figure><div><p className="section-label">11 / Предыдущий фестиваль</p><h2>До этой встречи у МЖ<br /><span>уже была история</span></h2><p>Люди, разговоры, выступления и знакомства, из которых складывается атмосфера фестиваля. Посмотрите, как проходила предыдущая встреча.</p><a className="text-link" href="#application-form">Присоединиться к новой встрече ↗</a></div></div>
     <details className="history-guests"><summary>С какими запросами приходили гости прошлой встречи <span aria-hidden="true">+</span></summary><div className="history-guest-grid">{attendees.map((attendee) => <article key={attendee.image}><img src={attendee.image} alt="" width="64" height="64" loading="lazy" /><div><strong>{attendee.name}, {attendee.age}</strong><p>«{attendee.reason}»</p></div></article>)}</div><p className="history-note">Это слова гостей перед прошлой встречей, а не обещания результатов участия 3 декабря.</p></details>
   </div></section>;
 }
@@ -284,8 +265,8 @@ function PricingSection() {
     <section className="section pricing-section primary-section" id="pricing">
       <div className="container">
         <div className="section-heading center-heading">
-          <p className="section-label">06 / Билеты и состав тарифов</p>
-          <h2>Выберите <span>формат участия</span></h2>
+          <p className="section-label">14 / Билеты и состав тарифов</p>
+          <h2>Как вы хотите<br /><span>провести этот вечер?</span></h2>
           <p>Участие по заявке. После одобрения модератором вы получите персональный промокод для покупки билета.</p>
         </div>
         <div className="admission-actions">
@@ -306,7 +287,7 @@ function PricingSection() {
             </article>
           ))}
         </div>
-        <BonusSection />
+        <FestivalParticipation />
       </div>
     </section>
   );
@@ -408,17 +389,17 @@ export default function Home() {
   const connectionProgress = connectionResult ? 100 : Math.max(1, connectionStep + 1) / (connectionQuestions.length + 1) * 100;
 
   return (
-    <main className="page-restructured">
+    <main className="page-restructured city-edition">
       <nav className="floating-nav" aria-label="Навигация по странице">
         <a className="nav-brand" href="#">
-          <strong>Мужчина и Женщина</strong>
+          <strong>МЖ Сити</strong>
           <span>{event.dateLabel}</span>
         </a>
-        <div className="nav-links"><a href="#program">Программа</a><a href="#logistics">Площадка</a><a href="#pricing">Билеты</a><a href="#participation">Как попасть</a><a href="/gifts/">Подарки для купивших</a></div>
+        <div className="nav-links"><a href="#balance">Концепция</a><a href="#program">Спикеры</a><a href="#consultations">Консультации</a><a href="#dating">Знакомства</a><a href="#pricing">Билеты</a></div>
         <a className="nav-bonus-cta" href="#application-form" data-cta-location="header"><span className="nav-bonus-full">Подать заявку</span><span className="nav-bonus-short">Заявка</span></a>
         <details className="mobile-nav">
           <summary aria-label="Открыть меню">Меню</summary>
-          <div><a href="#program">Программа и спикеры</a><a href="#expo">Экспозона и практики</a><a href="#logistics">Площадка</a><a href="#pricing">Билеты</a><a href="#participation">Как попасть</a><a href="#application-form" data-cta-location="mobile-menu">Подать заявку</a><a href="#promo-code" data-cta-location="mobile-menu">У меня есть промокод</a><a href="/gifts/">Подарки для купивших</a></div>
+          <div><a href="#balance">Свой маршрут по фестивалю</a><a href="#program">Программа и спикеры</a><a href="#consultations">Консультации</a><a href="#dating">Знакомства</a><a href="#expo">Экспозона и практики</a><a href="#logistics">Площадка</a><a href="#pricing">Билеты</a><a href="#participation">Как попасть</a><a href="#application-form" data-cta-location="mobile-menu">Подать заявку</a><a href="#promo-code" data-cta-location="mobile-menu">У меня есть промокод</a><a href="/gifts/">Подарки для купивших</a></div>
         </details>
       </nav>
 
@@ -426,25 +407,32 @@ export default function Home() {
         <HeroAnimation />
         <div className="conversion-hero-shade" aria-hidden="true" />
         <div className="container conversion-hero-copy">
-          <p className="conversion-brand">МЖ · Мужчина и Женщина</p>
+          <p className="conversion-brand">Фестиваль отношений с собой, с людьми и с жизнью</p>
           <div className="conversion-date">3 декабря 2026 · четверг · {event.timeLabel}</div>
-          <h1>Вечер новых знакомств<br /><em>и разговоров об отношениях</em></h1>
-          <p className="conversion-lead">Познакомьтесь с людьми и экспертами, обсудите важное и проведите вечер в «Антресоли и Перце». Можно прийти одному или вдвоём.</p>
+          <h1>МЖ Сити.<br /><em>Тайная квартира</em></h1>
+          <p className="conversion-lead">Один вечер, чтобы выйти из привычного круга, услышать интересных людей, задать свой вопрос специалисту и познакомиться с теми, с кем хочется продолжить разговор.</p>
           <p className="conversion-place">«{event.venue}» · {event.city}<br />{event.address} · метро «{event.metro}»</p>
           <div className="hero-actions"><a className="primary-button" href="#application-form" data-cta-location="hero">Подать заявку <span aria-hidden="true">↗</span></a><a className="conversion-promo" href="#promo-code" data-cta-location="hero">У меня есть промокод</a></div>
           <p className="conversion-admission-note">Билеты от {formatPrice(ticketPrices.start)} · Покупка после одобрения заявки</p>
         </div>
       </section>
 
+      <FestivalReflection />
+      <FestivalConcept />
       <FestivalProgramme onSelect={setSelectedSpeaker} />
-      <FestivalActivities onSelect={setSelectedSpeaker} />
+      <FestivalConsultations onSelect={setSelectedSpeaker} />
+      <FestivalExhibition onSelect={setSelectedSpeaker} />
+      <FestivalDating />
+      <BonusSection />
+      <FestivalBar />
+      <FestivalAfterparty />
       <AttendeeSection />
+      <FestivalPartners archive={partners} />
       <FestivalVenue />
       <PricingSection />
-      <FestivalParticipation />
       <FestivalAdmission />
 
-      <aside className="festival-extras" aria-label="Дополнительные материалы"><details className="container"><summary>Дополнительно: тест, проекты и участие брендов <span aria-hidden="true">+</span></summary>
+      <aside className="festival-extras" aria-label="Дополнительные материалы"><details className="container"><summary>Дополнительно: узнайте свой код связи <span aria-hidden="true">+</span></summary>
       <section className="section connection-section" id="connection-code">
         <div className="container">
           <details className="connection-compact">
@@ -560,13 +548,12 @@ export default function Home() {
 
 
 
-      <section className="section secondary-projects" id="partnership"><div className="container"><details><summary>Проектам, брендам и экспертам <span aria-hidden="true">+</span></summary><div className="secondary-projects-copy"><div><h3>Стать частью фестиваля</h3><p>Обсудите с командой спикерство, экспозону или партнёрский формат. Состав и условия участия согласуются отдельно.</p><a className="secondary-button" href={`${telegramUrl}?text=${encodeURIComponent("Хочу обсудить участие в фестивале МЖ")}`} target="_blank" rel="noreferrer">Обсудить участие ↗</a></div><div><h3>Проекты прошлых встреч</h3><p>История сообщества. Состав партнёров 3 декабря уточняется.</p><div className="partner-grid">{partners.map((partner) => <div className="partner-card" key={partner.name}><img src={partner.image} alt={partner.name} loading="lazy" /><strong>{partner.name}</strong></div>)}</div></div></div></details></div></section>
 
       </details></aside>
 
       <footer>
         <div className="container footer-grid">
-          <div><strong>МЖ</strong><p>Мужчина и Женщина.<br />Фестиваль 3 декабря</p></div>
+          <div><strong>МЖ</strong><p>МЖ Сити. Тайная квартира.<br />Фестиваль 3 декабря</p></div>
           <div><span>Задать вопрос</span><a href="tel:+79625759813">8 962 575-98-13</a><a href={telegramUrl} target="_blank" rel="noreferrer">Telegram: @redheadlitle</a><a href="mailto:noname.eventspb@gmail.com">noname.eventspb@gmail.com</a></div>
           <div><span>Адрес фестиваля МЖ</span><p>«{event.venue}»<br />{event.city}, {event.address}<br />Метро «{event.metro}»<br />{event.dateLabel} · {event.timeLabel}</p></div>
         </div>

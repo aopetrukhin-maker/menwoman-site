@@ -4,7 +4,7 @@ const digest = async (value) => [...new Uint8Array(await crypto.subtle.digest('S
 const json = (body, status = 200) => Response.json(body, { status, headers: { 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' } });
 const funnelNames = new Set(['page_view', 'application_opened', 'application_clicked', 'application_viewed', 'application_success', 'application_error', 'promo_opened', 'promo_clicked', 'promo_viewed', 'promo_error', 'purchase_clicked', 'tariffs_viewed', 'quiz_started', 'quiz_completed']);
 const tiers = new Set(['start', 'reload', 'vip']);
-const placements = new Set(['header', 'hero', 'mobile', 'mobile-menu', 'community', 'pricing', 'participation', 'tariff-start', 'tariff-reload', 'tariff-vip', 'connection-code']);
+const placements = new Set(['header', 'hero', 'mobile', 'mobile-menu', 'community', 'pricing', 'participation', 'tariff-start', 'tariff-reload', 'tariff-vip', 'connection-code', 'consultations', 'balance', 'reflection', 'dating', 'bonuses', 'bar', 'afterparty']);
 const errorCodes = new Set(['name', 'contact', 'email', 'format', 'reason', 'consent', 'selectedTier', 'request', 'conflict', 'promo', 'browser_validation', 'network', 'server']);
 
 function cleanContext(input) {
