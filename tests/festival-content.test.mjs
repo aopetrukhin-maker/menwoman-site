@@ -12,8 +12,8 @@ const section = (id) => {
 test("only the supplied speakers and agreed topics are shown", () => {
   const speakers = section("program");
   assert.equal((speakers.match(/class="city-speaker topic-confirmed"/g) ?? []).length, 3);
-  assert.equal((speakers.match(/class="city-speaker topic-pending"/g) ?? []).length, 9);
-  assert.equal((speakers.match(/Тема требует согласования/g) ?? []).length, 9);
+  assert.equal((speakers.match(/class="city-speaker topic-pending"/g) ?? []).length, 8);
+  assert.equal((speakers.match(/Тема требует согласования/g) ?? []).length, 8);
   for (const name of ["Анна Рацун", "Елена Гусева", "Светлана Лапухина", "Мария Рубинская", "Евгения Цапина"]) assert.ok(speakers.includes(name));
   const program = section("program");
   assert.equal((program.match(/Секс, деньги и отношения/g) ?? []).length, 1);
@@ -28,16 +28,19 @@ test("withheld participants and obsolete topics are absent from both routes", as
     assert.ok(!html.includes(name), `Unexpected participant: ${name}`);
     assert.ok(!gifts.includes(name), `Unexpected gift provider: ${name}`);
   }
+  assert.ok(!html.includes("Елена Солнечная"), "Elena Solnechnaya must not appear in the current festival");
   for (const topic of ["Что мы на самом деле приносим в отношения", "Секс становится обязанностью", "Парадоксы взаимоотношений"]) assert.ok(!html.includes(topic));
 });
 
 test("expo and consultations retain pending conditions beside the offers", () => {
   const expo = section("expo");
-  assert.equal((expo.match(/class="city-exhibitor festival-info-card"/g) ?? []).length, 18);
+  assert.equal((expo.match(/class="city-exhibitor festival-info-card"/g) ?? []).length, 17);
+  for (const name of ["Яна Якушева", "Ольга Цвик", "Юлия Кропивницкая"]) assert.ok(expo.includes(name));
+  assert.ok(expo.includes("Выставка внутри фестиваля"));
   for (const category of ["Психология и отношения", "Игры, практики и личное развитие", "Товары, стиль и творчество", "Сообщества и проекты"]) assert.ok(expo.includes(category));
   assert.ok(expo.includes("Возможный показ мод требует отдельного согласования"));
   const consultations = section("consultations");
-  assert.equal((consultations.match(/class="[^"]*\bfestival-info-card\b[^"]*"/g) ?? []).length, 12);
+  assert.equal((consultations.match(/class="[^"]*\bfestival-info-card\b[^"]*"/g) ?? []).length, 11);
   assert.ok(consultations.includes("Бесплатные консультации для гостей фестиваля"));
   for (const phrase of ["Условия получения необходимо подтвердить", "Возможность индивидуального разбора уточняется", "пока не являются подтверждёнными условиями участия", "способ записи"]) assert.ok(consultations.includes(phrase));
 });
@@ -141,7 +144,10 @@ test("apartment doors, guest archive and cinematic offer remain discoverable", (
   assert.ok(html.includes("Голоса гостей прошлой встречи"));
   assert.ok(html.includes("Остановить ленту"));
   assert.ok(html.includes('data-phase="pending"'));
-  assert.ok(html.includes("К фестивалю"));
+  assert.ok(html.includes("Смотреть фестиваль"));
+  assert.ok(!html.includes("Приостановить анимацию"));
+  assert.ok(!html.includes("Пауза"));
+  assert.ok(!/[↗→↔]/.test(html));
   assert.ok(html.includes("<noscript>"));
   const ids = new Set([...html.matchAll(/\bid="([^"]+)"/g)].map((match) => match[1]));
   for (const match of html.matchAll(/href="#([^"]+)"/g)) assert.ok(ids.has(match[1]), `Missing anchor: ${match[1]}`);

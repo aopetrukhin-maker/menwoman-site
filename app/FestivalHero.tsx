@@ -10,8 +10,6 @@ type Phase = "pending" | "playing" | "hold" | "offer";
 
 export default function FestivalHero() {
   const [phase, setPhase] = useState<Phase>("pending");
-  const [paused, setPaused] = useState(false);
-  const remaining = useRef({ playing: 8400, hold: 800 });
   const offerHeading = useRef<HTMLHeadingElement>(null);
   const skipRequested = useRef(false);
 
@@ -30,14 +28,10 @@ export default function FestivalHero() {
   }, []);
 
   useEffect(() => {
-    if ((phase !== "playing" && phase !== "hold") || paused) return;
-    const started = performance.now();
-    const timer = window.setTimeout(() => setPhase(phase === "playing" ? "hold" : "offer"), remaining.current[phase]);
-    return () => {
-      window.clearTimeout(timer);
-      remaining.current[phase] = Math.max(0, remaining.current[phase] - (performance.now() - started));
-    };
-  }, [phase, paused]);
+    if (phase !== "playing" && phase !== "hold") return;
+    const timer = window.setTimeout(() => setPhase(phase === "playing" ? "hold" : "offer"), phase === "playing" ? 8400 : 800);
+    return () => window.clearTimeout(timer);
+  }, [phase]);
 
   useEffect(() => {
     if (phase === "offer" && skipRequested.current) {
@@ -55,28 +49,26 @@ export default function FestivalHero() {
   return (
     <section className={`${styles.hero} primary-section`} id="festival-introduction" data-festival-hero data-phase={phase} style={{ padding: 0 }} aria-labelledby="festival-title">
       <div className={styles.scene} data-hero-scene aria-hidden="true">
-        <HeroAnimation landing={phase === "pending" ? "pending" : phase === "playing" ? "playing" : "complete"} paused={paused} onReady={onReady} />
+        <HeroAnimation landing={phase === "pending" ? "pending" : phase === "playing" ? "playing" : "complete"} onReady={onReady} />
       </div>
       <div className={styles.shade} data-hero-shade aria-hidden="true" />
       <div className={styles.copy} data-hero-offer>
-        <p className={styles.eyebrow}>Фестиваль отношений с собой, с людьми и с жизнью</p>
+        <p className={styles.eyebrow}>Частный вечер в сердце Петербурга</p>
         <p className={styles.date}>3 декабря 2026 <span aria-hidden="true">/</span> {event.timeLabel}</p>
         <h1 id="festival-title" className={styles.title} ref={offerHeading} tabIndex={-1}>МЖ Сити.<br /><em>Тайная квартира</em></h1>
+        <p className={styles.subtitle}>Фестиваль отношений с собой, с людьми и с жизнью</p>
         <p className={styles.lead}>Один вечер, чтобы выйти из привычного круга, услышать интересных людей, задать свой вопрос специалисту и познакомиться с теми, с кем хочется продолжить разговор.</p>
         <p className={styles.place}>«{event.venue}» · {event.city}<br />{event.address} · метро «{event.metro}»</p>
         <div className={styles.actions}>
-          <a className={styles.primary} href="#application-form" data-cta-location="hero">Подать заявку <span aria-hidden="true">↗</span></a>
-          <a className={styles.secondary} href="#promo-code" data-cta-location="hero">У меня есть промокод <span aria-hidden="true">→</span></a>
+          <a className={styles.primary} href="#application-form" data-cta-location="hero">Подать заявку</a>
+          <a className={styles.secondary} href="#promo-code" data-cta-location="hero">У меня есть промокод</a>
         </div>
         <p className={styles.admission}>Билеты от {formatPrice(ticketPrices.start)} · Покупка после одобрения заявки</p>
       </div>
       {phase !== "offer" && (
         <div className={styles.controls} data-hero-controls>
           <span className={styles.openingLabel}>МЖ Сити <span aria-hidden="true">/</span> Двери открываются</span>
-          <div className={styles.controlActions}>
-            {(phase === "playing" || phase === "hold") && <button type="button" className={styles.control} onClick={() => setPaused((value) => !value)} aria-pressed={paused} aria-label={paused ? "Продолжить анимацию" : "Приостановить анимацию"}>{paused ? "Продолжить" : "Пауза"}</button>}
-            <button type="button" className={styles.control} onClick={showOffer}>К фестивалю <span aria-hidden="true">→</span></button>
-          </div>
+          <button type="button" className={styles.control} onClick={showOffer}>Смотреть фестиваль</button>
         </div>
       )}
       <noscript><style>{`

@@ -17,6 +17,21 @@
 .speaker-card-copy { overflow-wrap: anywhere; }
 .speaker-visual.has-photo { background: #e8dbde; }
 .festival-info-card a:focus-visible, .speaker-project-links a:focus-visible { outline: 3px solid #96353e; outline-offset: 5px; }
+.exhibition-feature { position: relative; isolation: isolate; display: grid; align-items: end; min-height: 590px; margin: 52px 0; overflow: hidden; border: 1px solid #a58258; border-radius: 5px; background: #161512; box-shadow: 0 24px 65px #0005; color: #f6e7d1; }
+.exhibition-feature-image { position: absolute; inset: 0; z-index: -2; background: url('/venue/venue-main.jpeg') center 45% / cover no-repeat; transform: scale(1.01); }
+.exhibition-feature::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, #0c0d0bea 0%, #15110fdf 46%, #17110c75 100%), linear-gradient(0deg, #0d0b08cc, transparent 60%); }
+.exhibition-feature-content { width: min(100%, 920px); padding: clamp(28px, 5vw, 70px); }
+.exhibition-feature-kicker { margin: 0 0 20px; color: #d9b67b; font-size: 11px; font-weight: 700; letter-spacing: .23em; text-transform: uppercase; }
+.exhibition-feature h3 { margin: 0; color: #fff1d9; font: 400 clamp(40px, 5vw, 72px)/.98 var(--font-display), Georgia, serif; letter-spacing: -.03em; }
+.exhibition-feature h3 em { color: #deb887; font-weight: 400; }
+.exhibition-feature-content > p:not(.exhibition-feature-kicker) { max-width: 620px; margin: 24px 0 36px; color: #e3d6c4; font-size: 16px; line-height: 1.7; }
+.exhibition-feature-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; background: #d5b78375; border: 1px solid #d5b78375; }
+.exhibition-feature-list button { display: flex; flex-direction: column; align-items: flex-start; gap: 9px; min-height: 128px; padding: 19px; border: 0; background: #171715ec; color: #f6e7d1; text-align: left; cursor: pointer; transition: background .25s ease; }
+.exhibition-feature-list button:hover, .exhibition-feature-list button:focus-visible { background: #533828; }
+.exhibition-feature-list button:focus-visible { outline: 2px solid #f6da9a; outline-offset: -4px; }
+.exhibition-feature-list small { color: #d5b783; font-size: 11px; letter-spacing: .15em; }
+.exhibition-feature-list strong { font: 500 24px/1 var(--font-display), Georgia, serif; }
+.exhibition-feature-list span { color: #c7b9a4; font-size: 12px; line-height: 1.4; }
 @media (max-width: 1000px) { .festival-card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 640px) {
   .festival-card-grid { grid-template-columns: minmax(0, 1fr); gap: 12px; }
@@ -24,4 +39,12 @@
   .festival-info-card { border-radius: 16px; }
   .festival-info-card h4 { font-size: 21px; }
   .festival-schedule-note { padding: 20px; font-size: 14px; }
+  .exhibition-feature { min-height: 0; margin: 32px 0; }
+  .exhibition-feature::after { background: linear-gradient(0deg, #0b0d0bf2 0%, #11120fda 73%, #11120f91 100%); }
+  .exhibition-feature-content { padding: 32px 22px; }
+  .exhibition-feature h3 { font-size: clamp(38px, 10vw, 50px); }
+  .exhibition-feature-content > p:not(.exhibition-feature-kicker) { font-size: 14px; line-height: 1.6; margin: 20px 0 28px; }
+  .exhibition-feature-list { grid-template-columns: minmax(0, 1fr); }
+  .exhibition-feature-list button { min-height: 0; padding: 14px 16px; gap: 5px; }
+  .exhibition-feature-list strong { font-size: 23px; }
 }

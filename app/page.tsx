@@ -55,13 +55,13 @@ function BonusSection() {
     <div className="section-heading split-heading"><div><p className="section-label">08 / Подарки партнёров</p><h2>Подарки, которыми<br /><span>вечер не заканчивается</span></h2></div><p>Знакомство с проектами партнёров можно продолжить и после фестиваля: через услуги, впечатления и предложения из подарочного каталога. Выбирайте то, что интересно именно вам.</p></div>
     <div className="city-gift-tiers"><article><span>Перезагрузка</span><p>Выбор подарков и сертификатов</p><strong><small>до</small> 50 000 <small>₽</small></strong><span>по номинальной стоимости предложений</span></article><article><span>VIP</span><p>Расширенный выбор подарков и сертификатов</p><strong><small>до</small> 100 000 <small>₽</small></strong><span>по номинальной стоимости предложений</span></article></div>
     <p className="city-fine-print">Это лимит номинальной стоимости выбранных предложений, а не денежная выплата. Состав каталога на 3 декабря, сроки использования, ограничения и возможные дополнительные расходы уточняются.</p>
-    <a className="gift-archive-link" href="/gifts/">Открыть подарки для купивших билеты ↗</a>
+    <a className="gift-archive-link" href="/gifts/">Открыть подарки для купивших билеты</a>
   </div></section>;
 }
 
 function AttendeeSection() {
   return <section className="section festival-history primary-section" id="community"><div className="container">
-    <div className="history-layout"><figure><img src="/history/festival-guests.jpg" alt="Гости и команда предыдущего фестиваля МЖ" width="2048" height="1365" loading="lazy" /><figcaption>Предыдущая встреча сообщества МЖ</figcaption></figure><div><p className="section-label">11 / Предыдущий фестиваль</p><h2>До этой встречи у МЖ<br /><span>уже была история</span></h2><p>Люди, разговоры, выступления и знакомства, из которых складывается атмосфера фестиваля. Посмотрите, как проходила предыдущая встреча.</p><a className="text-link" href="#application-form">Присоединиться к новой встрече ↗</a></div></div>
+    <div className="history-layout"><figure><img src="/history/festival-guests.jpg" alt="Гости и команда предыдущего фестиваля МЖ" width="2048" height="1365" loading="lazy" /><figcaption>Предыдущая встреча сообщества МЖ</figcaption></figure><div><p className="section-label">11 / Предыдущий фестиваль</p><h2>До этой встречи у МЖ<br /><span>уже была история</span></h2><p>Люди, разговоры, выступления и знакомства, из которых складывается атмосфера фестиваля. Посмотрите, как проходила предыдущая встреча.</p><a className="text-link" href="#application-form">Присоединиться к новой встрече</a></div></div>
     <FestivalGuestMarquee />
   </div></section>;
 }
@@ -206,7 +206,7 @@ export default function Home() {
               {selectedSpeaker.description && <p className="modal-description">{selectedSpeaker.description}</p>}
               {selectedSpeaker.facts.length > 0 && <ul>{selectedSpeaker.facts.map((fact) => <li key={fact}>{fact}</li>)}</ul>}
               <div className="participant-formats">{selectedSpeaker.appearances.map((appearance) => <article key={appearance.label}><h4>{appearance.label}</h4><p>{appearance.text}</p>{appearance.note && <p className="festival-pending">{appearance.note}</p>}</article>)}</div>
-              <div className="speaker-project-links">{selectedSpeaker.links?.map((link) => <a key={link.href} href={link.href} target="_blank" rel="noreferrer">{link.label} ↗</a>)}</div>
+              <div className="speaker-project-links">{selectedSpeaker.links?.map((link) => <a key={link.href} href={link.href} target="_blank" rel="noreferrer">{link.label}</a>)}</div>
             </div>
           </article>
         </div>

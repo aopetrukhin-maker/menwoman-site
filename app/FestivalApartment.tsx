@@ -22,7 +22,7 @@ function Door({ room, index }: { room: typeof rooms[number]; index: number }) {
       <button type="button" className={styles.door} aria-expanded={open} aria-controls={id} aria-label={`${open ? "Закрыть" : "Открыть"} дверь: ${room.label}`} onClick={() => setOpen(!open)}>
         <span className={styles.leftLeaf} aria-hidden="true"><i /><b /></span>
         <span className={styles.rightLeaf} aria-hidden="true"><i /><b /></span>
-        <span className={styles.plaque}><small>МЖ · {String(index + 1).padStart(2, "0")}</small><strong>{room.name}</strong><span>Открыть дверь <b aria-hidden="true">↗</b></span></span>
+        <span className={styles.plaque}><small>МЖ · Дверь {String(index + 1).padStart(2, "0")}</small><strong>{room.name}</strong><span className={styles.lock} aria-hidden="true"><i /><b /></span><span className={styles.invitation}>Прикоснитесь, чтобы открыть</span></span>
         <span className={styles.closeLabel}>Закрыть дверь <b aria-hidden="true">×</b></span>
       </button>
       <span className={styles.photoCaption} aria-hidden={!open}>«Антресоль и Перец»</span>
@@ -31,7 +31,7 @@ function Door({ room, index }: { room: typeof rooms[number]; index: number }) {
       <span className={styles.label}>{room.label}</span>
       <h4>{open ? room.title : room.name}</h4>
       <p>{room.text}</p>
-      <a href={room.href}>{room.action}<span aria-hidden="true">↗</span></a>
+      <a href={room.href}>{room.action}</a>
     </div>
   </article>;
 }

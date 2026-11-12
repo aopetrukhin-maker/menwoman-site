@@ -95,6 +95,6 @@ export default function FestivalCarousel({ label, children, className = "" }: { 
     >
       {children.map((child, index) => <div className={styles.slide} role="listitem" key={index}>{child}</div>)}
     </div>
-    <span className={styles.swipeHint} aria-hidden="true">Листайте карточки <span>↔</span></span>
+    <span className={styles.swipeHint} aria-hidden="true">Листайте карточки</span>
   </div>;
 }

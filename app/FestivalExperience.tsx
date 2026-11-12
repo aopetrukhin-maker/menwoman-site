@@ -16,6 +16,6 @@ export default function FestivalParticipation() {
     <div className="section-heading split-heading"><div><p className="section-label">Как попасть на фестиваль</p><h2>Как попасть<br /><span>на фестиваль</span></h2></div><p>Участие по заявке. Мы формируем состав гостей фестиваля. Оставьте заявку - модератор свяжется с вами и сообщит решение. После одобрения вы получите персональный промокод для покупки билета.</p></div>
     <AdmissionSteps />
     <div className="festival-question-list" id="questions">{questions.map((item) => <details key={item.question}><summary>{item.question}<span aria-hidden="true">+</span></summary><p>{item.answer}</p></details>)}</div>
-    <div className="organizer-contact"><div><h3>Есть свой вопрос?</h3><p>Команда фестиваля МЖ поможет уточнить формат и условия участия.</p></div><a className="secondary-button" href="https://t.me/redheadlitle" target="_blank" rel="noreferrer">Написать организатору ↗</a></div>
+    <div className="organizer-contact"><div><h3>Есть свой вопрос?</h3><p>Команда фестиваля МЖ поможет уточнить формат и условия участия.</p></div><a className="secondary-button" href="https://t.me/redheadlitle" target="_blank" rel="noreferrer">Написать организатору</a></div>
   </div></div>;
 }

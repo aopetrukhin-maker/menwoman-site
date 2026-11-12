@@ -33,14 +33,14 @@
   z-index: -1;
   pointer-events: none;
   opacity: 0;
-  background: radial-gradient(ellipse at 50% 35%, #160c0bba 0%, #100b0dd6 66%, #100b0df0 100%);
+  background: radial-gradient(ellipse at 50% 35%, #160c0ba8 0%, #100b0dd6 66%, #100b0df0 100%), linear-gradient(90deg, #050505a6, transparent 18%, transparent 82%, #050505a6);
   transition: opacity 1.2s ease;
 }
 
 .copy {
-  width: min(100% - 64px, 1000px);
+  width: min(100% - 64px, 1040px);
   margin: 0 auto;
-  padding: 140px 0 100px;
+  padding: 125px 0 95px;
   text-align: center;
   opacity: 0;
   visibility: hidden;
@@ -51,39 +51,41 @@
 .hero[data-phase="offer"] .scene { filter: blur(7px); transform: scale(1.035); }
 .hero[data-phase="offer"] .shade { opacity: 1; }
 .hero[data-phase="offer"] .copy { opacity: 1; visibility: visible; transform: translateY(0); transition: opacity 1.15s .3s ease, transform 1.15s .3s ease, visibility 0s; }
+.copy::before { content: ""; display: block; width: 1px; height: 38px; margin: 0 auto 24px; background: linear-gradient(#cba77b00, #d9b378); }
 
-.eyebrow { margin: 0 auto 26px; max-width: 580px; color: #e2c6a5; font-size: 11px; font-weight: 600; letter-spacing: .18em; line-height: 1.8; text-transform: uppercase; }
+.eyebrow { margin: 0 auto 20px; max-width: 580px; color: #e2c6a5; font-size: 11px; font-weight: 600; letter-spacing: .22em; line-height: 1.8; text-transform: uppercase; }
 .date { display: flex; align-items: center; justify-content: center; gap: 16px; margin: 0 0 18px; color: #f6e8d6; font-size: 13px; font-weight: 500; letter-spacing: .1em; }
 .date span { color: #b59265; }
-.title { margin: 0; color: #fff6e8; font-family: var(--font-display), Georgia, serif; font-size: clamp(62px, 7vw, 108px); font-weight: 500; line-height: .97; letter-spacing: -.045em; }
-.title em { display: inline-block; margin-top: 8px; color: #dcb580; font-family: inherit; font-weight: 400; font-style: italic; }
+.title { margin: 0; color: #fff6e8; font-family: var(--font-display), Georgia, serif; font-size: clamp(72px, 8vw, 124px); font-weight: 500; line-height: .88; letter-spacing: -.045em; text-shadow: 0 6px 40px #000; }
+.title em { display: inline-block; margin-top: 10px; color: #e7c58d; font-family: inherit; font-weight: 400; font-style: italic; }
 .title:focus { outline: none; }
-.lead { max-width: 670px; margin: 29px auto 21px; color: #f3e7da; font-size: 16px; line-height: 1.8; }
+.subtitle { display: inline-block; margin: 30px auto 0; padding: 10px 18px; border-top: 1px solid #d9b37880; border-bottom: 1px solid #d9b37880; color: #f5d5a5; font-size: 11px; font-weight: 700; line-height: 1.5; letter-spacing: .12em; text-transform: uppercase; }
+.lead { max-width: 670px; margin: 25px auto 21px; color: #f3e7da; font-size: 16px; line-height: 1.8; }
 .place { margin: 0; color: #d4c0ab; font-size: 13px; line-height: 1.8; }
 .actions { display: flex; justify-content: center; align-items: stretch; gap: 12px; margin: 30px 0 0; }
-.primary, .secondary { display: inline-flex; align-items: center; justify-content: center; gap: 26px; min-height: 58px; padding: 16px 25px; border: 1px solid #b38d63; border-radius: 4px; font-size: 14px; font-weight: 700; line-height: 1.5; text-decoration: none; transition: background .2s ease, border-color .2s ease; }
+.primary, .secondary { display: inline-flex; align-items: center; justify-content: center; min-height: 58px; padding: 16px 30px; border: 1px solid #b38d63; border-radius: 4px; font-size: 14px; font-weight: 700; line-height: 1.5; text-decoration: none; transition: background .2s ease, border-color .2s ease, transform .2s ease; }
 .primary { background: #dfbc89; border-color: #dfbc89; color: #21130c; }
-.primary:hover { background: #efd2a5; border-color: #efd2a5; }
+.primary:hover { background: #efd2a5; border-color: #efd2a5; transform: translateY(-2px); }
 .secondary { background: #150d0cbf; color: #f8e9d5; }
-.secondary:hover { background: #35221b; border-color: #e7c695; }
-.primary span, .secondary span { font-size: 21px; line-height: 1; }
+.secondary:hover { background: #35221b; border-color: #e7c695; transform: translateY(-2px); }
 .admission { margin: 16px 0 0; color: #c6b19b; font-size: 11px; line-height: 1.7; }
 .controls { position: absolute; left: 32px; right: 32px; bottom: 26px; display: flex; align-items: center; justify-content: space-between; gap: 16px; z-index: 2; }
 .openingLabel { color: #e2cfb7; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; text-shadow: 0 1px 10px #000; }
 .openingLabel span { margin: 0 10px; color: #bc956c; }
-.controlActions { display: flex; gap: 8px; flex-shrink: 0; }
 .control { display: inline-flex; align-items: center; justify-content: center; gap: 18px; min-height: 44px; padding: 10px 16px; border: 1px solid #bda27c80; border-radius: 4px; background: #150e0ee6; color: #f1dfc6; font-family: inherit; font-size: 12px; cursor: pointer; }
 .control:hover { background: #322019; border-color: #dcb580; }
 .primary:focus-visible, .secondary:focus-visible, .control:focus-visible { outline: 2px solid #fff3d4; outline-offset: 5px; }
 
 @media (max-width: 760px) {
   .hero { min-height: min(850px, 100svh); }
-  .copy { width: calc(100% - 40px); padding: 112px 0 72px; }
-  .eyebrow { max-width: 300px; margin-bottom: 21px; font-size: 9px; letter-spacing: .15em; }
+  .copy { width: calc(100% - 40px); padding: 94px 0 72px; }
+  .copy::before { height: 22px; margin-bottom: 17px; }
+  .eyebrow { max-width: 300px; margin-bottom: 17px; font-size: 9px; letter-spacing: .15em; }
   .date { gap: 12px; margin-bottom: 20px; font-size: 11px; letter-spacing: .07em; }
-  .title { font-size: clamp(48px, 11.5vw, 78px); line-height: 1; letter-spacing: -.035em; }
+  .title { font-size: clamp(52px, 12vw, 82px); line-height: .92; letter-spacing: -.035em; }
   .title em { margin-top: 6px; }
-  .lead { max-width: 450px; margin: 22px auto 17px; font-size: 14px; line-height: 1.75; }
+  .subtitle { margin-top: 21px; padding: 8px 10px; font-size: 9px; letter-spacing: .05em; }
+  .lead { max-width: 450px; margin: 20px auto 17px; font-size: 14px; line-height: 1.65; }
   .place { font-size: 11px; line-height: 1.8; }
   .actions { display: grid; grid-template-columns: 1fr; max-width: 360px; margin: 24px auto 0; gap: 9px; }
   .primary, .secondary { min-height: 50px; padding: 13px 18px; font-size: 13px; }
