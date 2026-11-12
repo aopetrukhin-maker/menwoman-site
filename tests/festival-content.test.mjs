@@ -49,6 +49,8 @@ test("responsive intro assets and all rendered local images are available", asyn
   assert.ok(html.includes('media="(max-width: 760px)"'));
   assert.ok(html.includes("secret-room-mobile-dark-room.webp"));
   assert.ok(html.includes("secret-room-mobile-stage-room.webp"));
+  assert.ok(html.includes("/speakers/mechislav-zhiltsov.webp"));
+  assert.ok(html.includes("/speakers/ekaterina-tistol.webp"));
   const paths = new Set([...html.matchAll(/(?:src|srcSet|srcset)="(\/[^"?]+)"/g)].map((match) => match[1]));
   for (const path of paths) await access(new URL(`../out${path}`, import.meta.url));
 });

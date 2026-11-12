@@ -62,6 +62,7 @@ export const speakers: Speaker[] = [
   {
     name: "Екатерина Тистол", role: "Путешествия, travel-компания",
     note: "Название компании и биография уточняются.", facts: [], initials: "ЕТ", tone: "plum",
+    image: "/speakers/ekaterina-tistol.webp", imagePosition: "center 16%",
     links: [{ label: "Telegram: @Katrin_Tis", href: "https://t.me/Katrin_Tis" }],
   },
   {
