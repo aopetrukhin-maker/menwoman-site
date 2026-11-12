@@ -26,6 +26,7 @@ export const speakers: Speaker[] = [
     topic: "Когда «не слышит» — это не про любовь: от кризиса отношений к безопасному выходу",
     note: "Биография и регалии для новой программы уточняются.",
     facts: [], initials: "ЕГ", tone: "rose",
+    image: "/speakers/elena-guseva.webp", imagePosition: "center 20%",
   },
   {
     name: "Светлана Лапухина", role: "Коуч-стратег, фасилитатор",

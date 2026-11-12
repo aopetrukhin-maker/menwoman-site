@@ -14,6 +14,7 @@ const suppliedRoles: Record<string, string> = {
 const suppliedImages: Record<string, string> = {
   "Мечислав Жильцов": "/speakers/mechislav-zhiltsov.webp",
   "Татьяна Пронина": "/speakers/tatyana-pronina.webp",
+  "Ольга Цвик": "/speakers/olga-tsvik.webp",
 };
 
 function add(cards: FestivalCard[], label: string) {
