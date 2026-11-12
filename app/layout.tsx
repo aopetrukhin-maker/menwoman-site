@@ -14,11 +14,11 @@ import "./globals.css";
 import "./visual-overrides.css";
 
 export const metadata: Metadata = {
-  title: `МЖ — фестиваль живого общения и отношений | ${event.dateLabel}, ${event.city}`,
+  title: `МЖ — вечер знакомств и разговоров об отношениях | ${event.dateLabel}, ${event.city}`,
   description: `${event.name}: ${event.dateLabel}, ${event.timeLabel}. «${event.venue}», ${event.city}, ${event.address}. Метро «${event.metro}». Выступления, экспозона, консультации и практики.`,
   keywords: [
     "фестиваль отношений Санкт-Петербург",
-    "Мужчина и Женщина Перезагрузка",
+    "МЖ Мужчина и Женщина",
     "фестиваль 3 декабря 2026",
     "психология отношений",
   ],

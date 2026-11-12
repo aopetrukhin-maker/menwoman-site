@@ -1,6 +1,7 @@
 "use client";
 
-type FunnelEvent = "page_view" | "application_opened" | "application_success" | "promo_opened" | "promo_verified" | "purchase_clicked" | "tariffs_viewed" | "quiz_started" | "quiz_completed";
+type FunnelEvent = "page_view" | "application_clicked" | "application_viewed" | "application_success" | "application_error" | "promo_clicked" | "promo_viewed" | "promo_error" | "purchase_clicked" | "tariffs_viewed" | "quiz_started" | "quiz_completed";
+type FunnelContext = { placement?: string; tier?: string; format?: string; errorCode?: string; applicationReference?: string };
 const apiBase = process.env.NEXT_PUBLIC_ADMISSIONS_API_URL?.replace(/\/$/, "") ?? "/api/admissions";
 let visitId: string | undefined;
 const recorded = new Set<string>();
@@ -17,10 +18,10 @@ export function attribution() {
   return result;
 }
 
-export function trackFunnelEvent(event: FunnelEvent) {
+export function trackFunnelEvent(event: FunnelEvent, context: FunnelContext = {}) {
   if (typeof window === "undefined" || recorded.has(event)) return;
   recorded.add(event);
-  const data = { event, attribution: attribution(), eventId: crypto.randomUUID() };
+  const data = { event, context, attribution: attribution(), eventId: crypto.randomUUID() };
   // Analytics never blocks the application, navigation or checkout.
   void fetch(`${apiBase}/events`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data), keepalive: true }).catch(() => {});
 }
@@ -32,11 +33,12 @@ export function startFunnelTracking() {
     if (!(link instanceof HTMLAnchorElement)) return;
     const target = new URL(link.href);
     if (target.origin !== window.location.origin) return;
-    if (target.hash === "#application-form") trackFunnelEvent("application_opened");
-    if (target.hash === "#promo-code") trackFunnelEvent("promo_opened");
+    const context = { placement: link.dataset.ctaLocation || link.closest("section")?.id || "header", tier: link.dataset.tier, format: link.dataset.format };
+    if (target.hash === "#application-form") trackFunnelEvent("application_clicked", context);
+    if (target.hash === "#promo-code") trackFunnelEvent("promo_clicked", context);
   };
   document.addEventListener("click", click);
-  const names: Record<string, FunnelEvent> = { pricing: "tariffs_viewed", "application-form": "application_opened", "promo-code": "promo_opened" };
+  const names: Record<string, FunnelEvent> = { pricing: "tariffs_viewed", "application-form": "application_viewed", "promo-code": "promo_viewed" };
   const observer = typeof IntersectionObserver !== "undefined" ? new IntersectionObserver((entries) => {
     for (const entry of entries) if (entry.isIntersecting) {
       trackFunnelEvent(names[entry.target.id]); observer?.unobserve(entry.target);

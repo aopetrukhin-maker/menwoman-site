@@ -2,12 +2,13 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { DatabaseSync } from 'node:sqlite';
 import { readFileSync } from 'node:fs';
-import { admissions } from '../server/admissions.mjs';
+import { admissions, validateApplication } from '../server/admissions.mjs';
 
 function environment() {
   const sqlite = new DatabaseSync(':memory:');
   sqlite.exec(readFileSync(new URL('../drizzle/0000_festival_admissions.sql', import.meta.url), 'utf8'));
   sqlite.exec(readFileSync(new URL('../drizzle/0001_festival_funnel.sql', import.meta.url), 'utf8'));
+  sqlite.exec(readFileSync(new URL('../drizzle/0002_admission_context.sql', import.meta.url), 'utf8'));
   const DB = {
     prepare(sql) {
       let values = [];
@@ -117,5 +118,61 @@ test('analytics discards unrestricted values and never stores form contents in t
   assert.equal(record.utm_campaign, null);
   assert.ok(!JSON.stringify(record).includes('guest@example.test'));
   assert.ok(!JSON.stringify(record).includes('private answer'));
+  env.sqlite.close();
+});
+
+test('Telegram links and telephone formatting normalize, tariff and pair selection survive storage', async () => {
+  const env = environment();
+  for (const [contact, normalized] of [['https://t.me/guest_test/', '@guest_test'], ['t.me/guest_test', '@guest_test'], ['@guest_test', '@guest_test'], ['+7 (999) 123-45-67', '+79991234567']]) {
+    const response = await admissions(request('applications', body({ contact, selectedTier: 'vip' })), env);
+    assert.equal(response.status, 201);
+    const saved = await response.json();
+    const record = env.sqlite.prepare('SELECT contact, selected_tier, format FROM festival_applications WHERE reference=?').get(saved.reference);
+    assert.deepEqual({ ...record }, { contact: normalized, selected_tier: 'vip', format: 'pair' });
+  }
+  for (const [field, value] of [['contact', 'https://evil.test/guest_test'], ['email', 'broken'], ['selectedTier', 'invented'], ['consent', false]]) {
+    const validation = validateApplication(body({ [field]: value }));
+    assert.equal(validation.field, field);
+    assert.equal(validation.code, field);
+  }
+  env.sqlite.close();
+});
+
+test('returning code holders retain the application source through verification and checkout click', async () => {
+  const env = environment();
+  const original = { visitId: crypto.randomUUID(), utm_source: 'expert_anna', utm_campaign: 'december' };
+  const saved = await (await admissions(request('applications', body({ attribution: original })), env)).json();
+  const decision = await (await admissions(request('admin/decision', { reference: saved.reference, status: 'approved' }, admin), env)).json();
+  const returnVisit = { visitId: crypto.randomUUID() };
+  const result = await (await admissions(request('promo', { code: decision.code, attribution: returnVisit }), env)).json();
+  assert.equal(result.reference, saved.reference);
+  await admissions(request('events', { eventId: crypto.randomUUID(), event: 'purchase_clicked', attribution: returnVisit, context: { applicationReference: result.reference } }), env);
+  const events = env.sqlite.prepare("SELECT event_name, utm_source, application_reference FROM festival_funnel_events ORDER BY event_name").all();
+  assert.equal(events.length, 2);
+  for (const event of events) { assert.equal(event.utm_source, 'expert_anna'); assert.equal(event.application_reference, saved.reference); }
+  const metrics = await (await admissions(request('admin/metrics', null, admin), env)).json();
+  const source = metrics.sources.find((row) => row.source === 'expert_anna');
+  assert.equal(source.verified, 1);
+  assert.equal(source.checkout, 1);
+  assert.equal(metrics.paymentTracking, 'not_connected');
+  env.sqlite.close();
+});
+
+test('form views, CTA clicks and bounded context remain separate without storing arbitrary text', async () => {
+  const env = environment();
+  const attribution = { visitId: crypto.randomUUID() };
+  for (const [event, context] of [['application_clicked', { placement: 'tariff-vip', tier: 'vip', format: 'pair' }], ['application_viewed', {}], ['application_error', { errorCode: 'contact', placement: 'guest@example.test', tier: 'private answer', applicationReference: 'not-a-reference' }]]) {
+    assert.equal((await admissions(request('events', { eventId: crypto.randomUUID(), event, attribution, context }), env)).status, 200);
+  }
+  const clicked = env.sqlite.prepare("SELECT * FROM festival_funnel_events WHERE event_name='application_clicked'").get();
+  assert.equal(clicked.placement, 'tariff-vip');
+  assert.equal(clicked.selected_tier, 'vip');
+  assert.equal(clicked.participation_format, 'pair');
+  const error = env.sqlite.prepare("SELECT * FROM festival_funnel_events WHERE event_name='application_error'").get();
+  assert.equal(error.error_code, 'contact');
+  assert.equal(error.placement, null);
+  assert.equal(error.selected_tier, null);
+  assert.equal(error.application_reference, null);
+  assert.equal(env.sqlite.prepare('SELECT count(*) AS n FROM festival_funnel_events').get().n, 3);
   env.sqlite.close();
 });

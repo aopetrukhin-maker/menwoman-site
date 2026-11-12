@@ -10,13 +10,13 @@ const section = (id) => {
 };
 
 test("only the supplied speakers and agreed topics are shown", () => {
-  const speakers = section("speakers");
-  assert.equal((speakers.match(/class="speaker-card"/g) ?? []).length, 3);
+  const speakers = section("program");
+  assert.equal((speakers.match(/class="programme-feature"/g) ?? []).length, 3);
   assert.equal((speakers.match(/class="speaker-card-compact"/g) ?? []).length, 9);
   assert.equal((speakers.match(/Тема требует согласования/g) ?? []).length, 9);
   for (const name of ["Анна Рацун", "Елена Гусева", "Светлана Лапухина", "Мария Рубинская", "Евгения Цапина"]) assert.ok(speakers.includes(name));
   const program = section("program");
-  assert.equal((program.match(/class="program-confirmed-talk"/g) ?? []).length, 3);
+  assert.equal((program.match(/Секс, деньги и отношения/g) ?? []).length, 1);
   assert.ok(program.includes("Секс, деньги и отношения"));
   assert.ok(program.includes("Сначала Я. Потом МЫ. Любовь и отношения после 40"));
   assert.ok(program.includes("к безопасному выходу"));
@@ -33,10 +33,11 @@ test("withheld participants and obsolete topics are absent from both routes", as
 
 test("expo and consultations retain pending conditions beside the offers", () => {
   const expo = section("expo");
-  assert.equal((expo.match(/class="festival-info-card"/g) ?? []).length, 18);
+  const expoOnly = expo.split('id="consultations"')[0];
+  assert.equal((expoOnly.match(/class="festival-info-card"/g) ?? []).length, 18);
   assert.equal((expo.match(/class="festival-disclosure festival-group"/g) ?? []).length, 4);
   assert.ok(expo.includes("Возможный показ мод требует отдельного согласования"));
-  const consultations = section("consultations");
+  const consultations = expo.split('id="consultations"')[1];
   assert.equal((consultations.match(/class="festival-info-card"/g) ?? []).length, 12);
   for (const phrase of ["Условия получения необходимо подтвердить", "Возможность индивидуального разбора уточняется", "пока не являются подтверждёнными условиями участия", "способ записи"]) assert.ok(consultations.includes(phrase));
 });
@@ -85,20 +86,25 @@ test("admission form contains the requested fields and explains moderation witho
   const admission = section("admission");
   for (const name of ["name", "contact", "email", "format", "reason", "consent"]) assert.ok(admission.includes(`name="${name}"`));
   assert.ok(admission.includes("Почему хотите прийти?"));
-  assert.ok(admission.includes("модератор свяжется с вами и сообщит решение"));
+  assert.ok(section("participation").includes("модератор свяжется с вами и сообщит решение"));
+  assert.ok(admission.includes('name="selectedTier"'));
+  assert.ok(admission.includes('method="post"'));
   assert.ok(admission.includes("Отправка заявки не гарантирует одобрение участия"));
   assert.ok(admission.includes('id="promo-code"'));
   assert.ok(!admission.includes("qtickets.ru"));
 });
 
-test("the opening screen explains the event and guest routes precede optional activities", () => {
+test("eight primary sections follow one path to the form before optional activities", () => {
   const opening = section("festival-introduction");
-  for (const value of ["Фестиваль живого общения", "и отношений", "3 декабря 2026", "Марата, 1/71", "Подать заявку", "У меня есть промокод"]) assert.ok(opening.includes(value));
-  assert.ok(html.indexOf('id="evening"') < html.indexOf('id="program"'));
+  for (const value of ["Вечер новых знакомств", "и разговоров об отношениях", "3 декабря 2026", "Марата, 1/71", "Подать заявку", "У меня есть промокод"]) assert.ok(opening.includes(value));
+  const order = [...html.matchAll(/<section class="[^"]*primary-section[^"]*" id="([^"]+)"/g)].map((match) => match[1]);
+  assert.deepEqual(order, ["festival-introduction", "program", "expo", "community", "logistics", "pricing", "participation", "admission"]);
   assert.ok(html.indexOf('id="admission"') < html.indexOf('id="connection-code"'));
   assert.ok(html.includes('id="questions"'));
   assert.ok(html.includes("Возможность позднего входа"));
   assert.ok(html.includes("Фиксированный срок рассмотрения пока не объявлен"));
   assert.ok(!html.includes("Можно снова отложить отношения"));
   assert.ok(!html.includes("Архив подарков"));
+  for (const tier of ["start", "reload", "vip"]) assert.ok(section("pricing").includes(`data-tier="${tier}" data-format="single"`));
+  assert.ok(!html.includes('class="ticket-product-scene'));
 });

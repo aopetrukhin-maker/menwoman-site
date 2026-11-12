@@ -4,13 +4,16 @@ import { useEffect, useRef, useState } from "react";
 import HeroAnimation from "./HeroAnimation";
 import FestivalVenue from "./FestivalVenue";
 import FestivalAdmission from "./FestivalAdmission";
-import { EveningJourney, FestivalQuestions } from "./FestivalExperience";
+import FestivalParticipation from "./FestivalExperience";
+import FestivalProgramme from "./FestivalProgramme";
+import FestivalActivities from "./FestivalSections";
+import { type FestivalParticipant } from "./festival-participants";
 import { startFunnelTracking, trackFunnelEvent } from "./funnel-tracking";
 import "./festival-conversion.css";
+import "./festival-structure.css";
+import { startAdmissionNavigation } from "./admission-context";
 import { tickets, ticketPrices, pairPrices, formatPrice } from "./ticket-tariffs";
 import { festivalEvent as event } from "./festival-event";
-import { ExpoSection, ConsultationsSection } from "./FestivalSections";
-import { speakers, type Speaker } from "./festival-content";
 
 type ConnectionCode = "dialogue" | "support" | "spark" | "space" | "depth";
 type ConnectionStatus = "search" | "relationship" | "complicated" | "self";
@@ -239,13 +242,13 @@ function ArrowIcon() {
 
 function BonusSection() {
   return (
-    <section className="section bonus-section" id="bonuses">
-      <div className="container">
+    <div className="tariff-bonus" id="bonuses">
+      <div>
         <div className="bonus-hero">
           <div className="bonus-copy">
             <p className="section-label">Подарки партнёров</p>
-            <h2>Больше пользы <span>после фестиваля</span></h2>
-            <p className="bonus-lead">С тарифа «Перезагрузка» вы получаете подарки и сертификаты партнёров, которые можно выбрать под себя.</p>
+            <h3>Подарки <span>по тарифам</span></h3>
+            <p className="bonus-lead">В тарифах «Перезагрузка» и VIP предусмотрены лимиты выбора подарков и сертификатов. Состав и условия предложений на 3 декабря уточняются.</p>
           </div>
           <div className="bonus-tiers" aria-label="Подарки по тарифам">
             <article><span>Перезагрузка</span><h3>Индивидуальный набор</h3><strong>до 50 000 ₽</strong><p>подарков и сертификатов</p></article>
@@ -261,25 +264,27 @@ function BonusSection() {
           <article><span>05</span><h3>Обучение</h3></article>
           <article><span>06</span><h3>Товары брендов</h3></article>
         </div>
-        <p className="bonus-footnote">Состав каталога зависит от подтверждённых предложений партнёров. Конкретные услуги, сроки действия и доступность выбора будут указаны в каталоге фестиваля.</p>
+        <p className="bonus-footnote">Суммы обозначают лимит номинальной стоимости сертификатов, а не денежную выплату. У каждого предложения свои сроки и ограничения; отдельные расходы могут оплачиваться дополнительно. Доступ уже купивших билеты к действующему каталогу сохранён.</p>
+        <a className="gift-archive-link" href="/gifts/">Открыть подарки для купивших билеты ↗</a>
       </div>
-    </section>
+    </div>
   );
 }
 
 function AttendeeSection() {
-  return <section className="section festival-history" id="community"><div className="container">
-    <div className="history-layout"><figure><img src="/history/festival-guests.jpg" alt="Гости и команда предыдущего фестиваля МЖ" width="2048" height="1365" loading="lazy" /><figcaption>Предыдущая встреча сообщества МЖ</figcaption></figure><div><p className="section-label">Люди, с которых всё началось</p><h2>У МЖ уже <span>есть своя история</span></h2><div className="history-number"><strong>550</strong><span>гостей на прошлом событии</span></div><p>На фестиваль приходят за новым кругом общения, интересными разговорами и знакомством с подходами экспертов. 3 декабря встречаемся в «Антресоли и Перце».</p><a className="text-link" href="#application-form">Присоединиться к новой встрече ↗</a></div></div>
+  return <section className="section festival-history primary-section" id="community"><div className="container">
+    <div className="history-layout"><figure><img src="/history/festival-guests.jpg" alt="Гости и команда предыдущего фестиваля МЖ" width="2048" height="1365" loading="lazy" /><figcaption>Предыдущая встреча сообщества МЖ</figcaption></figure><div><p className="section-label">04 / Предыдущий фестиваль</p><h2>У МЖ уже <span>есть своя история</span></h2><div className="history-number"><strong>550</strong><span>гостей на прошлом событии</span></div><p>На фестиваль приходят за новым кругом общения, интересными разговорами и знакомством с подходами экспертов. 3 декабря встречаемся в «Антресоли и Перце».</p><a className="text-link" href="#application-form">Присоединиться к новой встрече ↗</a></div></div>
     <details className="history-guests"><summary>С какими запросами приходили гости прошлой встречи <span aria-hidden="true">+</span></summary><div className="history-guest-grid">{attendees.map((attendee) => <article key={attendee.image}><img src={attendee.image} alt="" width="64" height="64" loading="lazy" /><div><strong>{attendee.name}, {attendee.age}</strong><p>«{attendee.reason}»</p></div></article>)}</div><p className="history-note">Это слова гостей перед прошлой встречей, а не обещания результатов участия 3 декабря.</p></details>
   </div></section>;
 }
 
 function PricingSection() {
+  const [purchaseFormat, setPurchaseFormat] = useState<"single" | "pair">("single");
   return (
-    <section className="section pricing-section" id="pricing">
+    <section className="section pricing-section primary-section" id="pricing">
       <div className="container">
         <div className="section-heading center-heading">
-          <p className="section-label">Билеты</p>
+          <p className="section-label">06 / Билеты и состав тарифов</p>
           <h2>Выберите <span>формат участия</span></h2>
           <p>Участие по заявке. После одобрения модератором вы получите персональный промокод для покупки билета.</p>
         </div>
@@ -287,71 +292,28 @@ function PricingSection() {
           <a className="primary-button" href="#application-form">Подать заявку</a>
           <a className="secondary-button" href="#promo-code">У меня есть промокод</a>
         </div>
-        <div className="tariff-guide" aria-label="Как выбрать тариф"><article><strong>Старт</strong><p>Знакомство с фестивалем: выступления, общие форматы и живое общение.</p></article><article><strong>Перезагрузка</strong><p>Приоритетная зона, дополнительные возможности и выбор подарков в каталоге.</p></article><article><strong>VIP</strong><p>Первые ряды, закрытый нетворкинг и расширенный лимит подарков.</p></article></div>
+        <div className="ticket-format-choice" role="group" aria-label="Количество участников в билете"><button type="button" aria-pressed={purchaseFormat === "single"} onClick={() => setPurchaseFormat("single")}>Один</button><button type="button" aria-pressed={purchaseFormat === "pair"} onClick={() => setPurchaseFormat("pair")}>Вдвоём</button></div>
         <div className="pricing-grid">
           {tickets.map((ticket) => (
             <article className={`price-card price-card-${ticket.tier} ${ticket.featured ? "featured" : ""}`} key={ticket.name}>
-              {ticket.featured && <div className="popular">Самый выгодный</div>}
-              <div className="price-head"><h3>{ticket.name}</h3><strong>{formatPrice(ticketPrices[ticket.tier])}</strong><span>Цена за 1 билет</span></div>
-              <div className={`ticket-product-scene ticket-product-scene-${ticket.tier}`}>
-                <div className="ticket-product-art" role="img" aria-label={ticket.mockupAlt}>
-                  <div className="ticket-product-pass"><span>МЖ · {event.dateShort}</span><strong>{ticket.name}</strong><small>{event.venue}</small></div>
-                  <div className="ticket-product-benefits">{ticket.mockupItems.map((item) => <span key={item.title}><b>{item.title}</b><small>{item.note}</small></span>)}</div>
-                </div>
-              </div>
+              {ticket.featured && <div className="popular">Больше возможностей</div>}
+              <div className="price-head"><h3>{ticket.name}</h3><strong>{formatPrice((purchaseFormat === "pair" ? pairPrices : ticketPrices)[ticket.tier])}</strong><span>{purchaseFormat === "pair" ? "Цена за двоих" : "Цена за 1 билет"}</span></div>
               <div className="ticket-highlight-list">{ticket.highlights.map((highlight) => <span key={highlight}>{highlight}</span>)}</div>
               <p>{ticket.description}</p>
               <details className="ticket-details"><summary>Полный состав тарифа <b>+</b></summary><ul>{ticket.items.map((item) => <li key={item}><b>✓</b>{item}</li>)}</ul></details>
-              <p className="admission-pair-price">Парный билет — {formatPrice(pairPrices[ticket.tier])} за двоих</p>
-              <a href="#application-form">Подать заявку <i className="button-icon"><ArrowIcon /></i></a>
-              <a className="admission-promo-link" href="#promo-code">У меня есть промокод</a>
+              <a href="#application-form" data-tier={ticket.tier} data-format={purchaseFormat} data-cta-location={`tariff-${ticket.tier}`}>Подать заявку <i className="button-icon"><ArrowIcon /></i></a>
+              <a className="admission-promo-link" href="#promo-code" data-cta-location={`tariff-${ticket.tier}`}>У меня есть промокод</a>
             </article>
           ))}
         </div>
+        <BonusSection />
       </div>
     </section>
   );
-}
-
-function ProgramSection() {
-  return (
-    <section className="section program-section" id="program">
-      <div className="container">
-        <div className="section-heading split-heading">
-          <div><p className="section-label">Программа фестиваля</p><h2>Темы <span>выступлений</span></h2></div>
-          <p>Публикуем согласованные темы. Остальные темы и расписание уточняются.</p>
-        </div>
-        <div className="program-list">
-          {speakers.filter((speaker) => speaker.topic).map((speaker, index) => (
-            <article className="program-card" key={speaker.name}>
-              <div className="program-confirmed-talk">
-                <span className="program-number">{String(index + 1).padStart(2, "0")}</span>
-                <div><h3>{speaker.topic}</h3><p>{speaker.name}</p></div>
-              </div>
-            </article>
-          ))}
-        </div>
-        <p className="program-note">Время выступлений и темы остальных спикеров будут опубликованы после согласования.</p>
-      </div>
-    </section>
-  );
-}
-
-function SpeakersSection({ onSelect }: { onSelect: (speaker: Speaker) => void }) {
-  const confirmed = speakers.filter((speaker) => speaker.topic);
-  const additional = speakers.filter((speaker) => !speaker.topic);
-  return <section className="section speakers-section" id="speakers"><div className="container">
-    <div className="section-heading center-heading"><p className="section-label">Личное знакомство с экспертами</p><h2>Кто будет <span>говорить об отношениях</span></h2><p>Три согласованные темы — в центре программы. Откройте карточку, чтобы узнать об эксперте.</p></div>
-    <div className="featured-speakers">{confirmed.map((speaker) => <button className="speaker-card" key={speaker.name} type="button" onClick={() => onSelect(speaker)}>
-      <div className={`speaker-visual ${speaker.tone}${speaker.image ? " has-photo" : ""}`}>{speaker.image ? <img src={speaker.image} alt="" loading="lazy" style={{ objectPosition: speaker.imagePosition }} /> : <strong>{speaker.initials}</strong>}<span className="speaker-action">Об эксперте ↗</span></div>
-      <div className="speaker-card-copy"><h3>{speaker.name}</h3><p>{speaker.role}</p><span className="speaker-topic">{speaker.topic}</span></div>
-    </button>)}</div>
-    <details className="additional-speakers"><summary>Ещё {additional.length} экспертов фестиваля <span>Темы согласуются</span><b aria-hidden="true">+</b></summary><div className="compact-speaker-grid">{additional.map((speaker) => <button className="speaker-card-compact" key={speaker.name} type="button" onClick={() => onSelect(speaker)}><span className="compact-speaker-avatar">{speaker.image ? <img src={speaker.image} alt="" loading="lazy" /> : speaker.initials}</span><span><strong>{speaker.name}</strong><small>{speaker.role}</small><em>Тема требует согласования</em></span><b aria-hidden="true">↗</b></button>)}</div></details>
-  </div></section>;
 }
 
 export default function Home() {
-  const [selectedSpeaker, setSelectedSpeaker] = useState<Speaker | null>(null);
+  const [selectedSpeaker, setSelectedSpeaker] = useState<FestivalParticipant | null>(null);
   const [cookieVisible, setCookieVisible] = useState(false);
   const [connectionStep, setConnectionStep] = useState(0);
   const [connectionStatus, setConnectionStatus] = useState<ConnectionStatus | null>(null);
@@ -366,6 +328,7 @@ export default function Home() {
   const connectionQuizRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => startFunnelTracking(), []);
+  useEffect(() => startAdmissionNavigation(), []);
 
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => {
@@ -445,99 +408,43 @@ export default function Home() {
   const connectionProgress = connectionResult ? 100 : Math.max(1, connectionStep + 1) / (connectionQuestions.length + 1) * 100;
 
   return (
-    <main>
+    <main className="page-restructured">
       <nav className="floating-nav" aria-label="Навигация по странице">
         <a className="nav-brand" href="#">
           <strong>Мужчина и Женщина</strong>
           <span>{event.dateLabel}</span>
         </a>
-        <div className="nav-links">
-          <a href="#evening">Как пройдёт вечер</a>
-          <a href="#dating">Знакомства</a>
-          <a href="#program"><span>●</span> Программа</a>
-          <a href="#speakers"><span>●</span> Спикеры</a>
-          <a href="#expo"><span>●</span> Экспозона</a>
-          <a href="#pricing"><span>●</span> Билеты</a>
-          <a href="/gifts/">Подарки</a>
-        </div>
-        <a className="nav-bonus-cta" href="#application-form"><span className="nav-bonus-full">Подать заявку</span><span className="nav-bonus-short">Заявка</span></a>
+        <div className="nav-links"><a href="#program">Программа</a><a href="#logistics">Площадка</a><a href="#pricing">Билеты</a><a href="#participation">Как попасть</a><a href="/gifts/">Подарки для купивших</a></div>
+        <a className="nav-bonus-cta" href="#application-form" data-cta-location="header"><span className="nav-bonus-full">Подать заявку</span><span className="nav-bonus-short">Заявка</span></a>
         <details className="mobile-nav">
           <summary aria-label="Открыть меню">Меню</summary>
-          <div>
-            <a href="#evening">Как пройдёт вечер</a>
-            <a href="#dating">Дейтинг и браслеты</a>
-            <a href="#program">Программа</a>
-            <a href="#speakers">Спикеры</a>
-            <a href="#expo">Экспозона</a>
-            <a href="#consultations">Консультации и практики</a>
-            <a href="#questions">Ответы на вопросы</a>
-            <a href="#pricing">Билеты</a>
-            <a href="#application-form">Подать заявку</a>
-            <a href="#promo-code">У меня есть промокод</a>
-            <a href="/gifts/">Получить подарки</a>
-          </div>
+          <div><a href="#program">Программа и спикеры</a><a href="#expo">Экспозона и практики</a><a href="#logistics">Площадка</a><a href="#pricing">Билеты</a><a href="#participation">Как попасть</a><a href="#application-form" data-cta-location="mobile-menu">Подать заявку</a><a href="#promo-code" data-cta-location="mobile-menu">У меня есть промокод</a><a href="/gifts/">Подарки для купивших</a></div>
         </details>
       </nav>
 
-      <section className="hero has-intro conversion-hero" id="festival-introduction">
+      <section className="hero has-intro conversion-hero primary-section" id="festival-introduction">
         <HeroAnimation />
         <div className="conversion-hero-shade" aria-hidden="true" />
         <div className="container conversion-hero-copy">
           <p className="conversion-brand">МЖ · Мужчина и Женщина</p>
           <div className="conversion-date">3 декабря 2026 · четверг · {event.timeLabel}</div>
-          <h1>Фестиваль живого общения<br /><em>и отношений</em></h1>
-          <p className="conversion-lead">Вечер для новых знакомств, разговоров с экспертами и интересных встреч. Приходите одному или вдвоём — найдите то, что близко именно вам.</p>
+          <h1>Вечер новых знакомств<br /><em>и разговоров об отношениях</em></h1>
+          <p className="conversion-lead">Познакомьтесь с людьми и экспертами, обсудите важное и проведите вечер в «Антресоли и Перце». Можно прийти одному или вдвоём.</p>
           <p className="conversion-place">«{event.venue}» · {event.city}<br />{event.address} · метро «{event.metro}»</p>
-          <div className="hero-actions"><a className="primary-button" href="#application-form">Подать заявку <span aria-hidden="true">↗</span></a><a className="conversion-promo" href="#promo-code">У меня есть промокод</a></div>
+          <div className="hero-actions"><a className="primary-button" href="#application-form" data-cta-location="hero">Подать заявку <span aria-hidden="true">↗</span></a><a className="conversion-promo" href="#promo-code" data-cta-location="hero">У меня есть промокод</a></div>
           <p className="conversion-admission-note">Билеты от {formatPrice(ticketPrices.start)} · Покупка после одобрения заявки</p>
         </div>
       </section>
 
-      <EveningJourney />
+      <FestivalProgramme onSelect={setSelectedSpeaker} />
+      <FestivalActivities onSelect={setSelectedSpeaker} />
       <AttendeeSection />
-
-      <section className="section dating-section" id="dating">
-        <div className="container dating-shell">
-          <div className="dating-copy">
-            <p className="section-label">Дейтинг и браслеты</p>
-            <h2>Сразу видно, <span>кто открыт к знакомству</span></h2>
-            <p className="dating-lead">Выберите браслет на регистрации. Цвет покажет окружающим комфортный для вас формат общения - без неловких догадок.</p>
-
-            <a className="primary-button dating-button" href="#application-form"><span>Подать заявку</span><i className="button-icon"><ArrowIcon /></i></a>
-          </div>
-
-          <div className="bracelet-stage" aria-label="Значения браслетов фестиваля">
-            <div className="bracelet-product" role="img" aria-label="Зелёный и красный браслеты фестиваля">
-              <div className="bracelet-product-caption">
-                <span>Вы получаете браслет на входе</span>
-                <strong>Цвет говорит за вас</strong>
-              </div>
-            </div>
-            <div className="bracelet-legend">
-              <article className="bracelet-legend-green">
-                <b aria-hidden="true" />
-                <div><span>Зелёный</span><strong>Открыт к знакомствам</strong><p>Хочу встретить своего человека.</p></div>
-              </article>
-              <article className="bracelet-legend-red">
-                <b aria-hidden="true" />
-                <div><span>Красный</span><strong>Не знакомлюсь</strong><p>Пришёл в паре или только за программой.</p></div>
-              </article>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <ProgramSection />
-      <SpeakersSection onSelect={setSelectedSpeaker} />
-
-      <ExpoSection />
-      <ConsultationsSection />
       <FestivalVenue />
       <PricingSection />
-      <BonusSection />
+      <FestivalParticipation />
       <FestivalAdmission />
-      <FestivalQuestions />
 
+      <aside className="festival-extras" aria-label="Дополнительные материалы"><details className="container"><summary>Дополнительно: тест, проекты и участие брендов <span aria-hidden="true">+</span></summary>
       <section className="section connection-section" id="connection-code">
         <div className="container">
           <details className="connection-compact">
@@ -655,20 +562,11 @@ export default function Home() {
 
       <section className="section secondary-projects" id="partnership"><div className="container"><details><summary>Проектам, брендам и экспертам <span aria-hidden="true">+</span></summary><div className="secondary-projects-copy"><div><h3>Стать частью фестиваля</h3><p>Обсудите с командой спикерство, экспозону или партнёрский формат. Состав и условия участия согласуются отдельно.</p><a className="secondary-button" href={`${telegramUrl}?text=${encodeURIComponent("Хочу обсудить участие в фестивале МЖ")}`} target="_blank" rel="noreferrer">Обсудить участие ↗</a></div><div><h3>Проекты прошлых встреч</h3><p>История сообщества. Состав партнёров 3 декабря уточняется.</p><div className="partner-grid">{partners.map((partner) => <div className="partner-card" key={partner.name}><img src={partner.image} alt={partner.name} loading="lazy" /><strong>{partner.name}</strong></div>)}</div></div></div></details></div></section>
 
-      <section className="section final-cta-section">
-        <div className="container final-cta">
-          <p>{event.dateLabel} · {event.timeLabel} · {event.city}</p>
-          <h2>Выделите вечер <span>для живого общения.</span></h2>
-          <p>Расскажите немного о себе — начнём знакомство с заявки.</p>
-          <div>
-            <a className="primary-button" href="#application-form"><span>Подать заявку</span><i className="button-icon"><ArrowIcon /></i></a>
-          </div>
-        </div>
-      </section>
+      </details></aside>
 
       <footer>
         <div className="container footer-grid">
-          <div><strong>МЖ</strong><p>Мужчина и Женщина.<br />Перезагрузка</p></div>
+          <div><strong>МЖ</strong><p>Мужчина и Женщина.<br />Фестиваль 3 декабря</p></div>
           <div><span>Задать вопрос</span><a href="tel:+79625759813">8 962 575-98-13</a><a href={telegramUrl} target="_blank" rel="noreferrer">Telegram: @redheadlitle</a><a href="mailto:noname.eventspb@gmail.com">noname.eventspb@gmail.com</a></div>
           <div><span>Адрес фестиваля МЖ</span><p>«{event.venue}»<br />{event.city}, {event.address}<br />Метро «{event.metro}»<br />{event.dateLabel} · {event.timeLabel}</p></div>
         </div>
@@ -687,13 +585,14 @@ export default function Home() {
               )}
             </div>
             <div className="modal-copy">
-              <p className="section-label">Спикер фестиваля</p>
+              <p className="section-label">Участник фестиваля</p>
               <h2 id="speaker-modal-title">{selectedSpeaker.name}</h2>
               <p className="modal-role">{selectedSpeaker.role}</p>
-              <div className="modal-topic"><span>Тема выступления</span><strong>{selectedSpeaker.topic ?? "Тема требует согласования"}</strong></div>
+              {selectedSpeaker.stage && <div className="modal-topic"><span>Тема выступления</span><strong>{selectedSpeaker.topic ?? "Тема требует согласования"}</strong></div>}
               {selectedSpeaker.note && <p className="festival-pending">{selectedSpeaker.note}</p>}
               {selectedSpeaker.description && <p className="modal-description">{selectedSpeaker.description}</p>}
               {selectedSpeaker.facts.length > 0 && <ul>{selectedSpeaker.facts.map((fact) => <li key={fact}>{fact}</li>)}</ul>}
+              <div className="participant-formats">{selectedSpeaker.appearances.map((appearance) => <article key={appearance.label}><h4>{appearance.label}</h4><p>{appearance.text}</p>{appearance.note && <p className="festival-pending">{appearance.note}</p>}</article>)}</div>
               <div className="speaker-project-links">{selectedSpeaker.links?.map((link) => <a key={link.href} href={link.href} target="_blank" rel="noreferrer">{link.label} ↗</a>)}</div>
             </div>
           </article>

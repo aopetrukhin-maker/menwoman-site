@@ -2,7 +2,19 @@ const consentVersion = 'mzh-2026-12-03-v1';
 const clean = (value) => typeof value === 'string' ? value.trim() : '';
 const digest = async (value) => [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(value)))].map((byte) => byte.toString(16).padStart(2, '0')).join('');
 const json = (body, status = 200) => Response.json(body, { status, headers: { 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' } });
-const funnelNames = new Set(['page_view', 'application_opened', 'application_success', 'promo_opened', 'promo_verified', 'purchase_clicked', 'tariffs_viewed', 'quiz_started', 'quiz_completed']);
+const funnelNames = new Set(['page_view', 'application_opened', 'application_clicked', 'application_viewed', 'application_success', 'application_error', 'promo_opened', 'promo_clicked', 'promo_viewed', 'promo_error', 'purchase_clicked', 'tariffs_viewed', 'quiz_started', 'quiz_completed']);
+const tiers = new Set(['start', 'reload', 'vip']);
+const placements = new Set(['header', 'hero', 'mobile', 'mobile-menu', 'community', 'pricing', 'participation', 'tariff-start', 'tariff-reload', 'tariff-vip', 'connection-code']);
+const errorCodes = new Set(['name', 'contact', 'email', 'format', 'reason', 'consent', 'selectedTier', 'request', 'conflict', 'promo', 'browser_validation', 'network', 'server']);
+
+function cleanContext(input) {
+  const value = input && typeof input === 'object' && !Array.isArray(input) ? input : {};
+  return { placement: placements.has(value.placement) ? value.placement : null, tier: tiers.has(value.tier) ? value.tier : null, format: ['single', 'pair'].includes(value.format) ? value.format : null, errorCode: errorCodes.has(value.errorCode) ? value.errorCode : null };
+}
+async function recordEvent(env, id, name, source, context = {}, reference = null) {
+  if (!source.visitId) return;
+  await env.DB.prepare('INSERT INTO festival_funnel_events (id, visit_id, event_name, utm_source, utm_medium, utm_campaign, utm_content, created_at, placement, selected_tier, participation_format, error_code, application_reference) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT DO NOTHING').bind(id, source.visitId, name, source.utm_source, source.utm_medium, source.utm_campaign, source.utm_content, new Date().toISOString(), context.placement ?? null, context.tier ?? null, context.format ?? null, context.errorCode ?? null, reference).run();
+}
 
 function cleanAttribution(value) {
   const input = value && typeof value === 'object' && !Array.isArray(value) ? value : {};
@@ -21,9 +33,13 @@ async function funnelMetrics(env) {
   const traffic = (await env.DB.prepare("SELECT COALESCE(utm_source, 'direct') AS source, COALESCE(utm_campaign, '') AS campaign, COUNT(*) AS views FROM festival_funnel_events WHERE event_name='page_view' GROUP BY source, campaign").all()).results;
   const leads = (await env.DB.prepare("SELECT COALESCE(utm_source, 'direct') AS source, COALESCE(utm_campaign, '') AS campaign, COUNT(*) AS applications, SUM(CASE WHEN status='approved' THEN 1 ELSE 0 END) AS approved FROM festival_applications WHERE visit_id IS NOT NULL GROUP BY source, campaign").all()).results;
   const sources = new Map();
-  for (const row of traffic) sources.set(JSON.stringify([row.source, row.campaign]), { ...row, applications: 0, approved: 0 });
-  for (const row of leads) { const key = JSON.stringify([row.source, row.campaign]); sources.set(key, { views: 0, ...sources.get(key), ...row }); }
-  return { events: Object.fromEntries(events.map((row) => [row.event_name, row.n])), applications, sources: [...sources.values()], paymentTracking: 'not_connected' };
+  const empty = { views: 0, applications: 0, approved: 0, verified: 0, checkout: 0 };
+  for (const row of traffic) sources.set(JSON.stringify([row.source, row.campaign]), { ...empty, ...row });
+  for (const row of leads) { const key = JSON.stringify([row.source, row.campaign]); sources.set(key, { ...empty, ...sources.get(key), ...row }); }
+  const returns = (await env.DB.prepare("SELECT COALESCE(utm_source, 'direct') AS source, COALESCE(utm_campaign, '') AS campaign, SUM(CASE WHEN event_name='promo_verified' THEN 1 ELSE 0 END) AS verified, SUM(CASE WHEN event_name='purchase_clicked' THEN 1 ELSE 0 END) AS checkout FROM festival_funnel_events WHERE event_name IN ('promo_verified', 'purchase_clicked') GROUP BY source, campaign").all()).results;
+  for (const row of returns) { const key = JSON.stringify([row.source, row.campaign]); sources.set(key, { ...empty, ...sources.get(key), ...row }); }
+  const contexts = (await env.DB.prepare("SELECT event_name, placement, selected_tier, participation_format, error_code, COUNT(*) AS n FROM festival_funnel_events WHERE event_name IN ('application_clicked', 'application_error', 'promo_error') GROUP BY event_name, placement, selected_tier, participation_format, error_code").all()).results;
+  return { events: Object.fromEntries(events.map((row) => [row.event_name, row.n])), applications, sources: [...sources.values()], contexts, paymentTracking: 'not_connected' };
 }
 
 export function validateApplication(body) {
@@ -31,17 +47,22 @@ export function validateApplication(body) {
     name: clean(body.name), contact: clean(body.contact), email: clean(body.email).toLowerCase(),
     format: body.format, reason: clean(body.reason), requestId: clean(body.requestId), consent: body.consent,
   };
-  if (body.website) return { error: 'Не удалось принять заявку. Проверьте заполнение формы.' };
-  if (data.name.length < 1 || data.name.length > 100) return { error: 'Укажите имя длиной до 100 символов.' };
-  const telegram = /^@?[a-zA-Z][a-zA-Z0-9_]{4,31}$/.test(data.contact);
+  const invalid = (field, error) => ({ error, field, code: field });
+  if (body.website) return { error: 'Не удалось принять заявку. Проверьте заполнение формы.', code: 'request' };
+  if (data.name.length < 1 || data.name.length > 100) return invalid('name', 'Укажите имя длиной до 100 символов.');
+  const username = data.contact.replace(/^(?:https?:\/\/)?t\.me\//i, '').replace(/\/$/, '').replace(/^@/, '');
+  const telegram = /^[a-zA-Z][a-zA-Z0-9_]{4,31}$/.test(username);
   const phone = /^[+\d\s()\-]+$/.test(data.contact) && /^\d{10,15}$/.test(data.contact.replace(/\D/g, ''));
-  if (data.contact.length > 100 || (!telegram && !phone)) return { error: 'Укажите телефон с кодом страны или Telegram в формате @username.' };
-  if (data.email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) return { error: 'Проверьте e-mail.' };
-  if (!['single', 'pair'].includes(data.format)) return { error: 'Выберите формат участия: один или вдвоём.' };
-  if (!data.reason || data.reason.length > 2000) return { error: 'Ответьте, почему хотите прийти. Не более 2000 символов.' };
-  if (data.consent !== true) return { error: 'Для отправки нужно согласие на обработку персональных данных.' };
-  if (!/^[a-zA-Z0-9-]{16,80}$/.test(data.requestId)) return { error: 'Обновите страницу и повторите отправку заявки.' };
-  return { data };
+  if (data.contact.length > 100 || (!telegram && !phone)) return invalid('contact', 'Укажите телефон с кодом страны, @username или ссылку t.me/username.');
+  if (data.email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) return invalid('email', 'Проверьте e-mail.');
+  if (!['single', 'pair'].includes(data.format)) return invalid('format', 'Выберите формат участия: один или вдвоём.');
+  if (!data.reason || data.reason.length > 2000) return invalid('reason', 'Ответьте, почему хотите прийти. Не более 2000 символов.');
+  if (data.consent !== true) return invalid('consent', 'Для отправки нужно согласие на обработку персональных данных.');
+  if (!/^[a-zA-Z0-9-]{16,80}$/.test(data.requestId)) return { error: 'Не удалось подготовить отправку. Повторите попытку.', code: 'request' };
+  if (body.selectedTier != null && body.selectedTier !== '' && !tiers.has(body.selectedTier)) return invalid('selectedTier', 'Выберите тариф из списка.');
+  // Keep the legacy fingerprint stable for existing applications without a selected tariff.
+  if (tiers.has(body.selectedTier)) data.selectedTier = body.selectedTier;
+  return { data, normalizedContact: telegram ? `@${username}` : `${data.contact.startsWith('+') ? '+' : ''}${data.contact.replace(/\D/g, '')}` };
 }
 
 function isAdmin(request, env) {
@@ -63,7 +84,7 @@ async function handle(request, env, path) {
   const admin = path.startsWith('/api/admissions/admin/');
   if (admin && !isAdmin(request, env)) return json({ error: 'Доступ только у модератора.' }, 403);
   if (path === '/api/admissions/admin/applications' && request.method === 'GET') {
-    const rows = await env.DB.prepare('SELECT reference, name, contact, email, format, reason, status, created_at, reviewed_at, utm_source, utm_campaign FROM festival_applications ORDER BY created_at DESC LIMIT 200').all();
+    const rows = await env.DB.prepare('SELECT reference, name, contact, email, format, selected_tier, reason, status, created_at, reviewed_at, utm_source, utm_campaign FROM festival_applications ORDER BY created_at DESC LIMIT 200').all();
     return json({ ok: true, applications: rows.results });
   }
   if (path === '/api/admissions/admin/metrics' && request.method === 'GET') return json({ ok: true, ...await funnelMetrics(env) });
@@ -76,17 +97,22 @@ async function handle(request, env, path) {
   if (!body || Array.isArray(body) || typeof body !== 'object') return json({ error: 'Некорректные данные формы.' }, 400);
 
   if (path === '/api/admissions/events') {
-    if (!funnelNames.has(body.event) || !/^[a-f0-9-]{36}$/i.test(clean(body.eventId))) return json({ error: 'Некорректное событие.' }, 400);
-    const source = cleanAttribution(body.attribution);
+    if (!funnelNames.has(body.event) || body.event === 'promo_verified' || !/^[a-f0-9-]{36}$/i.test(clean(body.eventId))) return json({ error: 'Некорректное событие.' }, 400);
+    let source = cleanAttribution(body.attribution);
     if (!source.visitId) return json({ error: 'Некорректный идентификатор просмотра.' }, 400);
     if (!await rateLimit(request, env, 'events', 300)) return json({ error: 'Слишком много событий.' }, 429);
-    await env.DB.prepare('INSERT INTO festival_funnel_events (id, visit_id, event_name, utm_source, utm_medium, utm_campaign, utm_content, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT DO NOTHING').bind(body.eventId, source.visitId, body.event, source.utm_source, source.utm_medium, source.utm_campaign, source.utm_content, new Date().toISOString()).run();
+    let reference = null;
+    if (body.event === 'purchase_clicked' && /^MZH-[A-F0-9]{10}$/.test(clean(body.context?.applicationReference))) {
+      const application = await env.DB.prepare("SELECT reference, utm_source, utm_medium, utm_campaign, utm_content FROM festival_applications WHERE reference=? AND status='approved'").bind(body.context.applicationReference).first();
+      if (application) { reference = application.reference; source = { ...source, utm_source: application.utm_source, utm_medium: application.utm_medium, utm_campaign: application.utm_campaign, utm_content: application.utm_content }; }
+    }
+    await recordEvent(env, body.eventId, body.event, source, cleanContext(body.context), reference);
     return json({ ok: true });
   }
 
   if (path === '/api/admissions/applications') {
     const validation = validateApplication(body);
-    if (validation.error) return json({ error: validation.error }, 400);
+    if (validation.error) return json(validation, 400);
     if (!await rateLimit(request, env, 'application', 12)) return json({ error: 'Слишком много отправок. Повторите позже.' }, 429);
     const data = validation.data;
     const source = cleanAttribution(body.attribution);
@@ -94,9 +120,9 @@ async function handle(request, env, path) {
     const now = new Date().toISOString();
     const id = crypto.randomUUID();
     const reference = `MZH-${id.replaceAll('-', '').slice(0, 10).toUpperCase()}`;
-    await env.DB.prepare('INSERT INTO festival_applications (id, request_id, payload_hash, reference, name, contact, email, format, reason, status, consent_version, consent_at, created_at, utm_source, utm_medium, utm_campaign, utm_content, visit_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT(request_id) DO NOTHING').bind(id, data.requestId, payloadHash, reference, data.name, data.contact, data.email, data.format, data.reason, 'pending', consentVersion, now, now, source.utm_source, source.utm_medium, source.utm_campaign, source.utm_content, source.visitId).run();
+    await env.DB.prepare('INSERT INTO festival_applications (id, request_id, payload_hash, reference, name, contact, email, format, reason, status, consent_version, consent_at, created_at, utm_source, utm_medium, utm_campaign, utm_content, visit_id, selected_tier) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT(request_id) DO NOTHING').bind(id, data.requestId, payloadHash, reference, data.name, validation.normalizedContact, data.email, data.format, data.reason, 'pending', consentVersion, now, now, source.utm_source, source.utm_medium, source.utm_campaign, source.utm_content, source.visitId, data.selectedTier ?? null).run();
     const stored = await env.DB.prepare('SELECT reference, payload_hash FROM festival_applications WHERE request_id=?').bind(data.requestId).first();
-    if (!stored || stored.payload_hash !== payloadHash) return json({ error: 'Эта отправка уже сохранена с другими данными. Обновите страницу для новой заявки.' }, 409);
+    if (!stored || stored.payload_hash !== payloadHash) return json({ error: stored ? `Заявка ${stored.reference} уже получена с данными предыдущей отправки. Изменения пока не сохранены. Сообщите их организатору и назовите номер заявки.` : 'Не удалось проверить предыдущую отправку. Повторите попытку.', code: 'conflict' }, 409);
     // Acknowledgement confirms durable receipt only; moderation is a separate action.
     return json({ ok: true, status: 'pending', reference: stored.reference }, 201);
   }
@@ -104,12 +130,15 @@ async function handle(request, env, path) {
   if (path === '/api/admissions/promo') {
     if (!await rateLimit(request, env, 'promo', 30)) return json({ error: 'Слишком много проверок. Повторите позже.' }, 429);
     const code = clean(body.code).normalize('NFKC').toUpperCase();
-    if (!/^[\p{L}\p{N}_-]{4,100}$/u.test(code)) return json({ error: 'Проверьте промокод.' }, 400);
-    const promo = await env.DB.prepare('SELECT p.code_hash FROM admission_promos p JOIN festival_applications a ON a.id=p.application_id WHERE p.code_hash=? AND p.active=1 AND a.status=?').bind(await digest(code), 'approved').first();
-    if (!promo) return json({ error: 'Промокод не найден или больше не действует. Проверьте его или свяжитесь с модератором.' }, 400);
+    if (!/^[\p{L}\p{N}_-]{4,100}$/u.test(code)) return json({ error: 'Проверьте промокод.', code: 'promo' }, 400);
+    const promo = await env.DB.prepare('SELECT a.reference, a.utm_source, a.utm_medium, a.utm_campaign, a.utm_content FROM admission_promos p JOIN festival_applications a ON a.id=p.application_id WHERE p.code_hash=? AND p.active=1 AND a.status=?').bind(await digest(code), 'approved').first();
+    if (!promo) return json({ error: 'Промокод не найден или больше не действует. Проверьте его или свяжитесь с модератором.', code: 'promo' }, 400);
+    const visit = cleanAttribution(body.attribution);
+    // Analytics failures must not prevent an approved guest from checking their code.
+    try { await recordEvent(env, crypto.randomUUID(), 'promo_verified', { ...promo, visitId: visit.visitId }, {}, promo.reference); } catch { /* Best-effort measurement. */ }
     let checkoutUrl;
     try { const target = new URL(env.ADMISSIONS_CHECKOUT_URL); if (target.protocol === 'https:') checkoutUrl = target.href; } catch { /* Checkout is not released until the organizer supplies its URL. */ }
-    return json({ ok: true, ...(checkoutUrl ? { checkoutUrl } : {}), message: checkoutUrl ? 'Промокод подтверждён. Теперь можно перейти к покупке билета.' : 'Промокод подтверждён. Ссылка на покупку пока уточняется. Модератор сообщит, когда она будет доступна.' });
+    return json({ ok: true, reference: promo.reference, ...(checkoutUrl ? { checkoutUrl } : {}), message: checkoutUrl ? 'Промокод подтверждён. Теперь можно перейти к покупке билета.' : 'Промокод подтверждён. Ссылка на покупку пока уточняется. Модератор сообщит, когда она будет доступна.' });
   }
 
   if (path === '/api/admissions/admin/decision') {
