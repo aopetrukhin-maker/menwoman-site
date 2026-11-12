@@ -1,8 +1,8 @@
 export function AdmissionSteps() {
   return <div className="admission-steps" aria-label="Как попасть на фестиваль">
     <article><span>01</span><strong>Оставьте заявку</strong><p>Имя, контакты и пара предложений о том, почему хотите прийти.</p></article>
-    <article><span>02</span><strong>Получите решение</strong><p>Модератор свяжется по указанному телефону или в Telegram.</p></article>
-    <article><span>03</span><strong>Используйте код</strong><p>После одобрения персональный промокод открывает переход к покупке билета.</p></article>
+    <article><span>02</span><strong>Получите ответ</strong><p>Модератор свяжется по указанному телефону или в Telegram.</p></article>
+    <article><span>03</span><strong>Купите билет</strong><p>После одобрения персональный промокод открывает переход к покупке билета.</p></article>
   </div>;
 }
 const questions = [
@@ -13,7 +13,7 @@ const questions = [
 ];
 export default function FestivalParticipation() {
   return <div className="city-participation" id="participation"><div className="container">
-    <div className="section-heading split-heading"><div><p className="section-label">Как попасть на фестиваль</p><h2>Заявка. Решение. <span>Персональный код.</span></h2></div><p>Участие по заявке. Мы формируем состав гостей фестиваля. Оставьте заявку - модератор свяжется с вами и сообщит решение. После одобрения вы получите персональный промокод для покупки билета.</p></div>
+    <div className="section-heading split-heading"><div><p className="section-label">Как попасть на фестиваль</p><h2>Как попасть<br /><span>на фестиваль</span></h2></div><p>Участие по заявке. Мы формируем состав гостей фестиваля. Оставьте заявку - модератор свяжется с вами и сообщит решение. После одобрения вы получите персональный промокод для покупки билета.</p></div>
     <AdmissionSteps />
     <div className="festival-question-list" id="questions">{questions.map((item) => <details key={item.question}><summary>{item.question}<span aria-hidden="true">+</span></summary><p>{item.answer}</p></details>)}</div>
     <div className="organizer-contact"><div><h3>Есть свой вопрос?</h3><p>Команда фестиваля МЖ поможет уточнить формат и условия участия.</p></div><a className="secondary-button" href="https://t.me/redheadlitle" target="_blank" rel="noreferrer">Написать организатору ↗</a></div>

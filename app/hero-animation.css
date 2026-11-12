@@ -7,7 +7,7 @@
 .eco-zone-2{clip-path:polygon(52% 0,100% 0,100% 46%,52% 46%)}
 .eco-zone-3{clip-path:polygon(0 46%,100% 46%,100% 60%,0 60%)}
 .eco-zone-4{clip-path:polygon(0 60%,100% 60%,100% 100%,0 100%)}
-.eco-chandelier{position:absolute;z-index:7;top:-2%;left:42%;width:16%;height:auto;transform-origin:50% 0;filter:drop-shadow(0 18px 15px #000a);will-change:transform}
+.eco-chandelier{position:absolute;z-index:7;top:-2%;left:42%;width:16%;height:auto;transform-origin:50% 0;filter:drop-shadow(0 18px 15px #000a)}
 .eco-landing-flash{position:absolute;z-index:3;left:30%;top:50%;width:43%;height:26%;border-radius:50%;opacity:0;pointer-events:none;background:radial-gradient(ellipse,#e6a45f70,transparent 70%);filter:blur(24px)}
 .eco-light{position:absolute;z-index:3;opacity:0;pointer-events:none;mix-blend-mode:screen;filter:blur(18px)}
 .eco-light-left{inset:9% 54% 39% 7%;background:radial-gradient(ellipse,#ffb85e45,transparent 65%)}
@@ -16,6 +16,7 @@
 .eco-light-front{inset:40% 13% 10% 11%;background:radial-gradient(ellipse,#ffc26b40,transparent 68%)}
 .eco-dust{position:absolute;z-index:5;left:25%;right:24%;top:56%;height:21%;opacity:0;pointer-events:none;filter:blur(18px);background:radial-gradient(ellipse at 50% 65%,#d6aa806b,transparent 70%)}
 .eco-hero-art[data-landing=playing] .eco-chandelier{animation:eco-chandelier-fall 3.5s ease-in-out both}
+.eco-hero-art[data-landing=playing] .eco-chandelier,.eco-hero-art[data-landing=playing] .eco-smoke{will-change:transform,opacity}
 .eco-hero-art[data-landing=playing] .eco-smoke{animation:eco-smoke-clear 3.4s 3.25s ease-out both}
 .eco-hero-art[data-landing=playing] .eco-scene-impact{animation:eco-frame-in 1.5s 4.8s ease-in-out both}
 .eco-hero-art[data-landing=playing] .eco-zone-1{animation:eco-frame-in .65s 5.5s ease-in-out both}
@@ -29,7 +30,7 @@
 .eco-hero-art[data-landing=playing] .eco-light-middle{animation:eco-burst 1.05s 6.7s ease-out both}
 .eco-hero-art[data-landing=playing] .eco-light-front{animation:eco-burst 1.05s 7.3s ease-out both}
 .eco-hero-art[data-landing=complete] .eco-zone{opacity:1}
-.eco-smoke{position:absolute;z-index:6;left:17%;top:38%;width:66%;height:46%;opacity:0;pointer-events:none;filter:blur(18px);background:radial-gradient(ellipse at 50% 54%,rgba(233,214,200,.98) 0%,rgba(214,186,169,.94) 35%,rgba(165,129,111,.78) 60%,rgba(107,78,66,0) 85%);will-change:opacity,transform}
+.eco-smoke{position:absolute;z-index:6;left:17%;top:38%;width:66%;height:46%;opacity:0;pointer-events:none;filter:blur(18px);background:radial-gradient(ellipse at 50% 54%,rgba(233,214,200,.98) 0%,rgba(214,186,169,.94) 35%,rgba(165,129,111,.78) 60%,rgba(107,78,66,0) 85%)}
 .eco-smoke::after{content:"";position:absolute;inset:-10% -15%;background:radial-gradient(ellipse at 30% 65%,rgba(240,222,208,.8),transparent 58%),radial-gradient(ellipse at 72% 40%,rgba(226,202,184,.8),transparent 62%);filter:blur(24px)}
 .eco-hero-art[data-landing=complete] .eco-chandelier,.eco-hero-art[data-landing=complete] .eco-smoke{display:none}
 @keyframes eco-chandelier-fall{0%{opacity:1;transform:rotate(0)}17%{transform:rotate(16deg)}34%{transform:rotate(-15deg)}51%{transform:rotate(12deg)}66%{transform:rotate(0);opacity:1}89%{transform:translateY(200%) rotate(8deg) scale(.98);opacity:1}94%{transform:translateY(214%) rotate(12deg) scale(.92);opacity:1}100%{transform:translateY(224%) rotate(18deg) scale(.85);opacity:0}}

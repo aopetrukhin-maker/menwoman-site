@@ -1,0 +1,138 @@
+.carousel {
+  --card-size: calc((100% - 40px) / 3);
+  --card-gap: 20px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  margin-top: 32px;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 22px;
+}
+
+.caption {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  min-width: 0;
+}
+
+.label {
+  color: #d5c1a5;
+  font-size: 12px;
+  line-height: 1.5;
+  letter-spacing: .07em;
+}
+
+.counter {
+  flex: 0 0 auto;
+  color: #f1dfc4;
+  font-size: 12px;
+  line-height: 1.5;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: .08em;
+}
+
+.counterDivider { color: #a2896b; }
+
+.controls {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 10px;
+}
+
+.arrow {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  padding: 0;
+  border: 1px solid #8c7256;
+  border-radius: 50%;
+  background: #2b1d1b;
+  color: #edcf9f;
+  cursor: pointer;
+  transition: background .2s ease, border-color .2s ease, opacity .2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.arrow:disabled { opacity: .3; cursor: default; }
+.arrow:focus-visible, .viewport:focus-visible { outline: 2px solid #edcf9f; outline-offset: 5px; }
+
+@media (hover: hover) {
+  .arrow:not(:disabled):hover { background: #622e35; border-color: #d4af79; }
+}
+
+/* Keep the scroll area explicitly sized and every card nonshrinking.
+   Module selectors isolate this layout from the site's legacy grid rules. */
+.viewport {
+  position: relative;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: stretch;
+  gap: var(--card-gap);
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0 0 20px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #987a55 #241b18;
+  -webkit-overflow-scrolling: touch;
+}
+
+.slide {
+  display: flex;
+  box-sizing: border-box;
+  flex: 0 0 var(--card-size);
+  width: var(--card-size);
+  min-width: var(--card-size);
+  max-width: var(--card-size);
+  scroll-snap-align: start;
+  scroll-snap-stop: normal;
+}
+
+.slide > * {
+  box-sizing: border-box;
+  flex: 1 1 auto;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.swipeHint { display: none; }
+.srOnly { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+
+@media (max-width: 1000px) {
+  .carousel { --card-size: calc((100% - 20px) / 2); }
+}
+
+@media (max-width: 760px) {
+  .carousel { --card-size: 88%; --card-gap: 16px; margin-top: 26px; }
+  .toolbar { gap: 12px; margin-bottom: 18px; }
+  .caption { flex-direction: column; align-items: flex-start; gap: 6px; }
+  .label { font-size: 11px; letter-spacing: .03em; }
+  .counter { font-size: 11px; }
+  .controls { gap: 8px; }
+  .arrow { width: 48px; height: 48px; }
+  .swipeHint { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 9px; color: #bda58b; font-size: 10px; line-height: 1.5; }
+  .swipeHint > span { font-size: 21px; }
+}
+
+@media (max-width: 360px) {
+  .carousel { --card-size: 92%; --card-gap: 12px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arrow { transition: none; }
+}

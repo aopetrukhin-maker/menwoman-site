@@ -99,7 +99,8 @@ test("the approved city narrative runs from a personal question to participation
   for (const value of ["МЖ Сити.", "Тайная квартира", "Фестиваль отношений с собой, с людьми и с жизнью", "3 декабря 2026", "Марата, 1/71", "Подать заявку", "У меня есть промокод"]) assert.ok(opening.includes(value));
   const order = [...html.matchAll(/<section class="[^"]*primary-section[^"]*" id="([^"]+)"/g)].map((match) => match[1]);
   assert.deepEqual(order, ["festival-introduction", "reflection", "balance", "program", "consultations", "expo", "dating", "bonuses", "bar", "afterparty", "community", "partners", "logistics", "pricing", "admission"]);
-  assert.ok(html.indexOf('id="admission"') < html.indexOf('id="connection-code"'));
+  assert.ok(!html.includes('id="connection-code"'));
+  assert.ok(!html.includes("Код связи"));
   assert.ok(html.includes('id="questions"'));
   assert.ok(html.includes("Возможность позднего входа"));
   assert.ok(html.includes("Фиксированный срок рассмотрения пока не объявлен"));
@@ -114,7 +115,7 @@ test("the concept offers eight accessible directions and links to real festival 
   assert.equal((balance.match(/aria-controls="balance-direction"/g) ?? []).length, 8);
   assert.ok(balance.includes('aria-live="polite"'));
   for (const value of ["Я и внутренняя опора", "Любовь и близость", "Семья", "Друзья и общение", "Тело и энергия", "Дело и деньги", "Развитие", "Отдых и впечатления"]) assert.ok(balance.includes(value));
-  for (const value of ["Площадь встреч", "Улица диалога", "Квартал ресурса", "Бульвар знакомств"]) assert.ok(balance.includes(value));
+  for (const value of ["Выступления", "Консультации", "Практики и игры", "Знакомства"]) assert.ok(balance.includes(value));
   assert.ok(!balance.includes("Семь пространств"));
   assert.ok(!balance.includes("психологическая диагностика"));
 });
@@ -130,4 +131,18 @@ test("new experience blocks explain boundaries and gifts without inventing a vid
   assert.ok(!section("afterparty").includes("22:00"));
   assert.ok(!section("community").includes("Смотреть видео"));
   for (const value of ["Партнёры фестиваля", "Информационные партнёры", "не подтверждает участие проектов 3 декабря"]) assert.ok(section("partners").includes(value));
+});
+
+
+test("apartment doors, guest archive and cinematic offer remain discoverable", () => {
+  assert.equal((html.match(/aria-label="Открыть дверь:/g) ?? []).length, 6);
+  assert.ok(html.includes("распределение программы по залам уточняется"));
+  assert.ok(html.includes('id="consultation-workshops"'));
+  assert.ok(html.includes("Голоса гостей прошлой встречи"));
+  assert.ok(html.includes("Остановить ленту"));
+  assert.ok(html.includes('data-phase="pending"'));
+  assert.ok(html.includes("К фестивалю"));
+  assert.ok(html.includes("<noscript>"));
+  const ids = new Set([...html.matchAll(/\bid="([^"]+)"/g)].map((match) => match[1]));
+  for (const match of html.matchAll(/href="#([^"]+)"/g)) assert.ok(ids.has(match[1]), `Missing anchor: ${match[1]}`);
 });
