@@ -7,6 +7,7 @@ import { attribution, trackFunnelEvent } from "./funnel-tracking";
 import "./festival-admission.css";
 
 const apiBase = process.env.NEXT_PUBLIC_ADMISSIONS_API_URL?.replace(/\/$/, "") ?? "/api/admissions";
+const tuqoFormEndpoint = process.env.NEXT_PUBLIC_TUQO_FORM_ENDPOINT?.trim();
 class SubmissionError extends Error {
   constructor(message: string, readonly field?: string, readonly code = "network") { super(message); }
 }
@@ -17,13 +18,41 @@ async function post(path: string, data: object) {
   return result;
 }
 
+async function submitTuqoForm(data: Record<string, FormDataEntryValue>, selection: AdmissionContext, requestId: string, shownAt: number) {
+  if (!tuqoFormEndpoint || !/^https:\/\/api\.tuqo\.ru\/f\/[a-zA-Z0-9_-]+\/?$/.test(tuqoFormEndpoint)) {
+    throw new SubmissionError("Приём заявок ещё не подключён. Пожалуйста, свяжитесь с организатором.", undefined, "configuration");
+  }
+  const fields = new URLSearchParams({
+    "Имя": String(data.name ?? ""),
+    "Телефон или Telegram": String(data.contact ?? ""),
+    "E-mail": String(data.email ?? ""),
+    "Формат участия": selection.format === "pair" ? "Вдвоём" : "Один",
+    "Интересующий тариф": selection.tier ?? "Пока не выбрал",
+    "Почему хотите прийти": String(data.reason ?? ""),
+    "Согласие на обработку персональных данных": data.consent === "on" ? "Да" : "Нет",
+    _request_id: requestId,
+    _submit_time: String(shownAt),
+  });
+  const response = await fetch(tuqoFormEndpoint, { method: "POST", body: fields });
+  if (response.ok) return;
+  const messages: Record<number, string> = {
+    400: "Проверьте заполнение полей и попробуйте ещё раз.",
+    402: "Приём заявок временно недоступен. Пожалуйста, свяжитесь с организатором.",
+    403: "Отправка с этого адреса сайта пока не разрешена. Пожалуйста, свяжитесь с организатором.",
+    429: "Слишком много попыток. Подождите немного и отправьте заявку снова.",
+  };
+  throw new SubmissionError(messages[response.status] ?? "Не удалось отправить заявку. Проверьте соединение и попробуйте ещё раз.", undefined, `tuqo_${response.status}`);
+}
+
 export default function FestivalAdmission() {
   const requestId = useRef<string | null>(null);
+  const shownAt = useRef(Date.now());
   const [selection, setSelection] = useState<AdmissionContext>({ format: "single" });
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
   const [fieldError, setFieldError] = useState<{ field: string; message: string } | null>(null);
   const [reference, setReference] = useState("");
+  const [submitted, setSubmitted] = useState(false);
   const [checking, setChecking] = useState(false);
   const [promoError, setPromoError] = useState("");
   const [promoResult, setPromoResult] = useState<{ checkoutUrl?: string; message: string; reference?: string } | null>(null);
@@ -44,9 +73,16 @@ export default function FestivalAdmission() {
     setSending(true); setError(""); setFieldError(null);
     requestId.current ??= crypto.randomUUID();
     try {
-      const result = await post("/applications", { name: data.name, contact: data.contact, email: data.email, format: selection.format, selectedTier: selection.tier, reason: data.reason, consent: data.consent === "on", website: data.website, requestId: requestId.current, attribution: attribution() });
-      if (result.status !== "pending" || typeof result.reference !== "string") throw new Error("Не удалось подтвердить получение заявки. Попробуйте ещё раз.");
-      setReference(result.reference);
+      if (tuqoFormEndpoint) {
+        if (data.website) throw new SubmissionError("Не удалось отправить заявку. Проверьте поля и повторите попытку.", undefined, "honeypot");
+        await submitTuqoForm(data, selection, requestId.current, shownAt.current);
+        setSubmitted(true);
+      } else {
+        const result = await post("/applications", { name: data.name, contact: data.contact, email: data.email, format: selection.format, selectedTier: selection.tier, reason: data.reason, consent: data.consent === "on", website: data.website, requestId: requestId.current, attribution: attribution() });
+        if (result.status !== "pending" || typeof result.reference !== "string") throw new Error("Не удалось подтвердить получение заявки. Попробуйте ещё раз.");
+        setReference(result.reference);
+        setSubmitted(true);
+      }
       trackFunnelEvent("application_success", { tier: selection.tier, format: selection.format });
     } catch (failure) {
       const message = failure instanceof SubmissionError ? failure.message : "Не удалось подтвердить отправку заявки. Проверьте соединение и повторите попытку — повторная отправка не создаст дубликат.";
@@ -82,7 +118,7 @@ export default function FestivalAdmission() {
     <div className="section-heading center-heading"><p className="section-label">15 / Ваш следующий шаг</p><h2>Какой вопрос вы<br /><span>принесёте в МЖ?</span></h2><p>Желание познакомиться. Разговор, который давно откладывали. Интерес к определённой теме. Или просто любопытство — каким может получиться этот вечер. Расскажите немного о себе и о том, почему хотите прийти.</p></div>
     <div className="admission-grid">
       <div className="admission-panel" id="application-form">
-        {reference ? <div className="admission-success" role="status" aria-live="polite"><p className="section-label">Спасибо за интерес к фестивалю</p><h3>Заявка получена</h3><p>Номер заявки: <strong>{reference}</strong></p><p>Модератор рассмотрит заявку и свяжется с вами по указанному контакту. Решение об участии ещё не принято.</p></div> : <form method="post" onSubmit={apply} onInput={clearFieldError} onInvalidCapture={() => trackFunnelEvent("application_error", { errorCode: "browser_validation" })} aria-busy={sending}>
+        {submitted ? <div className="admission-success" role="status" aria-live="polite"><p className="section-label">Спасибо за интерес к фестивалю</p><h3>Заявка получена</h3>{reference && <p>Номер заявки: <strong>{reference}</strong></p>}<p>Модератор рассмотрит заявку и свяжется с вами по указанному контакту. Решение об участии ещё не принято.</p></div> : <form method="post" onSubmit={apply} onInput={clearFieldError} onInvalidCapture={() => trackFunnelEvent("application_error", { errorCode: "browser_validation" })} aria-busy={sending}>
           <h3>Подать заявку</h3>
           <div className="admission-selection"><label htmlFor="admission-tier">Интересующий тариф <small className="admission-field-note">Можно выбрать сейчас или обсудить с модератором.</small><select id="admission-tier" name="selectedTier" value={selection.tier ?? ""} onChange={(event) => setSelection({ ...selection, tier: (event.target.value || undefined) as TicketTier | undefined })}><option value="">Пока не выбрал</option>{tickets.map((ticket) => <option key={ticket.tier} value={ticket.tier}>{ticket.name} · {formatPrice((selection.format === "pair" ? pairPrices : ticketPrices)[ticket.tier])}{selection.format === "pair" ? " за двоих" : " за одного"}</option>)}</select></label><p>Выбор тарифа в заявке не обязывает к оплате.</p></div>
           <div className="admission-fields">
@@ -100,7 +136,7 @@ export default function FestivalAdmission() {
           <p className="admission-small">Отправка заявки не гарантирует одобрение участия.</p>
         </form>}
       </div>
-      <div className="admission-panel admission-promo" id="promo-code"><p className="section-label">После одобрения</p><h3>У меня есть промокод</h3><p>Введите персональный промокод, который вы получили от модератора.</p><form method="post" onSubmit={checkPromo} aria-busy={checking}><label htmlFor="admission-code">Промокод<input id="admission-code" name="code" autoComplete="off" autoCapitalize="characters" spellCheck={false} required maxLength={100} aria-invalid={Boolean(promoError) || undefined} aria-describedby={promoError ? "promo-error" : undefined} /></label>{promoError && <p className="admission-error" id="promo-error" role="alert">{promoError}</p>}<button className="secondary-button" type="submit" disabled={checking}>{checking ? "Проверяем…" : "Проверить промокод"}</button></form>
+      <div className="admission-panel admission-promo" id="promo-code"><p className="section-label">После одобрения</p><h3>У меня есть промокод</h3>{tuqoFormEndpoint ? <><p>Получили персональный промокод? Напишите организатору, чтобы уточнить покупку билета.</p><a className="secondary-button" href="mailto:aopetrukhin@gmail.com?subject=%D0%9C%D0%96%20%D0%A1%D0%B8%D1%82%D0%B8%20%E2%80%94%20%D0%BC%D0%BE%D0%B9%20%D0%BF%D1%80%D0%BE%D0%BC%D0%BE%D0%BA%D0%BE%D0%B4">Написать с промокодом</a></> : <><p>Введите персональный промокод, который вы получили от модератора.</p><form method="post" onSubmit={checkPromo} aria-busy={checking}><label htmlFor="admission-code">Промокод<input id="admission-code" name="code" autoComplete="off" autoCapitalize="characters" spellCheck={false} required maxLength={100} aria-invalid={Boolean(promoError) || undefined} aria-describedby={promoError ? "promo-error" : undefined} /></label>{promoError && <p className="admission-error" id="promo-error" role="alert">{promoError}</p>}<button className="secondary-button" type="submit" disabled={checking}>{checking ? "Проверяем…" : "Проверить промокод"}</button></form></>}
         {promoResult && <div className="admission-promo-result" role="status"><p>{promoResult.message}</p>{promoResult.checkoutUrl && <a className="primary-button" href={promoResult.checkoutUrl} target="_blank" rel="noreferrer" onClick={() => trackFunnelEvent("purchase_clicked", { applicationReference: promoResult.reference })}>Перейти к покупке билета</a>}</div>}
       </div>
     </div>

@@ -21,6 +21,7 @@ export function attribution() {
 export function trackFunnelEvent(event: FunnelEvent, context: FunnelContext = {}) {
   if (typeof window === "undefined" || recorded.has(event)) return;
   recorded.add(event);
+  if (process.env.NEXT_PUBLIC_TUQO_FORM_ENDPOINT) return;
   const data = { event, context, attribution: attribution(), eventId: crypto.randomUUID() };
   // Analytics never blocks the application, navigation or checkout.
   void fetch(`${apiBase}/events`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data), keepalive: true }).catch(() => {});
