@@ -54,7 +54,9 @@ test("responsive intro assets and all rendered local images are available", asyn
   assert.ok(html.includes("/speakers/tatyana-pronina.webp"));
   assert.ok(html.includes("/speakers/maria-rubinskaya.webp"));
   assert.ok(html.includes("/speakers/elena-guseva.webp"));
-  assert.ok(html.includes("/speakers/olga-tsvik.webp"));
+  assert.ok(html.includes("/speakers/olga-tsvik-aroma.webp"));
+  assert.ok(html.includes("/speakers/svetlana-lapukhina.webp"));
+  assert.ok(!html.includes("/speakers/olga-tsvik.webp"));
   const paths = new Set([...html.matchAll(/(?:src|srcSet|srcset)="(\/[^"?]+)"/g)].map((match) => match[1]));
   for (const path of paths) await access(new URL(`../out${path}`, import.meta.url));
 });

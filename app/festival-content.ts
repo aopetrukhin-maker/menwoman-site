@@ -33,7 +33,7 @@ export const speakers: Speaker[] = [
     topic: "Сначала Я. Потом МЫ. Любовь и отношения после 40",
     description: "Автор методики «Хочу. Могу. Делаю» и создатель ток-шоу «Жизнь без срока годности» о любви, отношениях, самореализации и новых начинаниях в зрелом возрасте.",
     facts: ["Специалист по системным и бизнес-расстановкам", "Предприниматель с 15-летним опытом"],
-    initials: "СЛ", tone: "coral",
+    initials: "СЛ", tone: "coral", image: "/speakers/svetlana-lapukhina.webp", imagePosition: "center 18%",
     links: [{ label: "Жизнь без срока годности", href: "https://t.me/live_without_date" }],
   },
   {
