@@ -73,6 +73,7 @@ export const speakers: Speaker[] = [
   {
     name: "Мария Рубинская", role: "Школа «Девичий Свет» · «Клубный особняк Лемана»",
     note: "Биография требует согласования.", facts: [], initials: "МР", tone: "violet",
+    image: "/speakers/maria-rubinskaya.webp", imagePosition: "center 14%",
     links: [{ label: "Девичий Свет", href: "https://t.me/devichisvet" }, { label: "Клубный особняк Лемана", href: "https://t.me/lemanosob" }],
   },
   {

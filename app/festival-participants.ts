@@ -13,6 +13,7 @@ const suppliedRoles: Record<string, string> = {
 };
 const suppliedImages: Record<string, string> = {
   "Мечислав Жильцов": "/speakers/mechislav-zhiltsov.webp",
+  "Татьяна Пронина": "/speakers/tatyana-pronina.webp",
 };
 
 function add(cards: FestivalCard[], label: string) {
