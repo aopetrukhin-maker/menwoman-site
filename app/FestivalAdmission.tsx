@@ -23,13 +23,14 @@ async function submitTuqoForm(data: Record<string, FormDataEntryValue>, selectio
     throw new SubmissionError("Приём заявок ещё не подключён. Пожалуйста, свяжитесь с организатором.", undefined, "configuration");
   }
   const fields = new URLSearchParams({
-    "Имя": String(data.name ?? ""),
+    name: String(data.name ?? ""),
+    email: String(data.email ?? ""),
+    message: `Почему хотите прийти: ${String(data.reason ?? "")}`,
     "Телефон или Telegram": String(data.contact ?? ""),
-    "E-mail": String(data.email ?? ""),
     "Формат участия": selection.format === "pair" ? "Вдвоём" : "Один",
     "Интересующий тариф": selection.tier ?? "Пока не выбрал",
-    "Почему хотите прийти": String(data.reason ?? ""),
     "Согласие на обработку персональных данных": data.consent === "on" ? "Да" : "Нет",
+    _hp_a0d70926f3: "",
     _request_id: requestId,
     _submit_time: String(shownAt),
   });
