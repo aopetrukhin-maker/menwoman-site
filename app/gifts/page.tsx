@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import access from "./access.json";
 import styles from "./gifts.module.css";
 
@@ -172,6 +172,16 @@ function giftContact(gift: Gift) {
 }
 
 export default function GiftsPage() {
+  const [giftAccessOpen, setGiftAccessOpen] = useState(false);
+  useEffect(() => {
+    const update = () => {
+      const moscowDate = new Intl.DateTimeFormat("sv-SE", { timeZone: "Europe/Moscow", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
+      setGiftAccessOpen(moscowDate >= "2026-12-04");
+    };
+    update();
+    const timer = window.setInterval(update, 60_000);
+    return () => window.clearInterval(timer);
+  }, []);
   const [email, setEmail] = useState("");
   const [person, setPerson] = useState<AccessRecord | null>(null);
   const [error, setError] = useState("");
@@ -276,11 +286,21 @@ export default function GiftsPage() {
     setSaving(false);
   }
 
+  if (!giftAccessOpen) return <main className={styles.page}><section className={`${styles.login} ${styles.comingSoon}`}>
+    <a className={styles.back} href="/">← Вернуться на сайт</a>
+    <p className={styles.eyebrow}>ПОДАРОЧНЫЙ ФОНД · МЖ СИТИ</p>
+    <h1>Подарки откроются <em>4 декабря</em></h1>
+    <p className={styles.lead}>На следующий день после фестиваля владельцы билетов «Перезагрузка» и VIP смогут выбрать подарки и сертификаты партнёров. Получить их раньше нельзя.</p>
+    <div className={styles.limits}><span>Перезагрузка <b>до 50 000 ₽</b></span><span>VIP <b>до 100 000 ₽</b></span></div>
+    <p className={styles.note}>Суммы обозначают лимит номинальной стоимости выбранных предложений, а не денежную выплату. Для доступа потребуется почта, указанная при покупке билета.</p>
+    <a className={styles.previewButton} href="/#pricing">Посмотреть билеты →</a>
+  </section></main>;
+
   if (!person) return <main className={styles.page}><section className={styles.login}>
     <a className={styles.back} href="/">← Вернуться на сайт</a>
     <p className={styles.eyebrow}>ПОДАРОЧНЫЙ ФОНД ФЕСТИВАЛЯ</p>
     <h1>Соберите свой набор подарков</h1>
-    <p className={styles.lead}>Каталог открыт владельцам билетов «Перезагрузка» и VIP. Тариф и доступный лимит определятся автоматически по почте из заказа.</p>
+    <p className={styles.lead}>С 4 декабря каталог доступен владельцам билетов «Перезагрузка» и VIP. Тариф и доступный лимит определятся автоматически по почте из заказа.</p>
     <div className={styles.limits}><span>Перезагрузка <b>до 50 000 ₽</b></span><span>VIP <b>до 100 000 ₽</b></span></div>
     <form onSubmit={login} className={styles.form} noValidate><label htmlFor="gift-email">Почта, указанная при покупке билета</label><div><input id="gift-email" type="email" inputMode="email" autoCapitalize="none" autoCorrect="off" spellCheck={false} required value={email} onChange={(e)=>{setEmail(e.target.value);setError("");}} placeholder="name@example.com"/><button type="submit" disabled={!emailReady} style={emailReady ? undefined : {background:"#d9cec7",color:"#776c66",cursor:"not-allowed",opacity:.78}}>Открыть каталог</button></div></form>
     {error && <p className={styles.error}>{error}</p>}

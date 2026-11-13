@@ -66,7 +66,7 @@ test("responsive intro assets and all rendered local images are available", asyn
 
 test("December event details replace the old venue and expired checkout", () => {
   for (const value of ["3 декабря 2026", "16:00–00:00", "Антресоль и Перец", "ул. Марата, 1/71", "Маяковская", "В ночь на 4 декабря"]) assert.ok(html.includes(value), value);
-  for (const value of ["22 августа", "2026-08", "22.08.2026", "Кваренги", "Казанская", "qtickets.ru/event/246143", "Выбрать билет от 990", "Регистрация с 12:00", "Программа с 13:00"]) assert.ok(!html.includes(value), `Obsolete event data: ${value}`);
+  for (const value of ["22 августа", "2026-08", "22.08.2026", "Казанская", "qtickets.ru/event/246143", "Выбрать билет от 990", "Регистрация с 12:00", "Программа с 13:00"]) assert.ok(!html.includes(value), `Obsolete event data: ${value}`);
   const logistics = section("logistics");
   assert.equal((logistics.match(/<figure>/g) ?? []).length, 4);
   const map = logistics.match(/href="(https:\/\/yandex.ru\/maps\/[^\"]+)"/);
@@ -79,7 +79,7 @@ test("December event details replace the old venue and expired checkout", () => 
   assert.ok(!pricing.includes("У меня есть промокод"));
 });
 
-test("event metadata ends at midnight the next day and gift access keeps its original flow", async () => {
+test("event metadata ends at midnight and gifts open the next day", async () => {
   const match = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
   assert.ok(match);
   const event = JSON.parse(match[1]);
@@ -90,9 +90,9 @@ test("event metadata ends at midnight the next day and gift access keeps its ori
   assert.equal(event.location.address.streetAddress, "ул. Марата, 1/71");
   assert.ok(!event.offers);
   const gifts = await readFile(new URL("../out/gifts/index.html", import.meta.url), "utf8");
-  assert.ok(gifts.includes("Соберите свой набор подарков"));
-  assert.ok(gifts.includes("Каталог открыт владельцам билетов"));
-  assert.ok(!gifts.includes("Каталог прошлой встречи МЖ"));
+  assert.ok(gifts.includes("Подарки откроются"));
+  assert.ok(gifts.includes("4 декабря"));
+  assert.ok(!gifts.includes('id="gift-email"'));
 });
 
 
@@ -149,13 +149,16 @@ test("new experience blocks explain boundaries and gifts without inventing a vid
   const dating = section("dating");
   for (const value of ["Зелёный", "Открыт к знакомствам", "Красный", "Сегодня без знакомств", "Продолжать ли разговор — всегда решаете вы"]) assert.ok(dating.includes(value));
   const gifts = section("bonuses");
-  for (const value of ["50 000", "100 000", "номинальной стоимости", "не денежная выплата", "/gifts/"]) assert.ok(gifts.includes(value));
+  for (const value of ["50 000", "100 000", "номинальной стоимости", "не денежная выплата", "4 декабря", "Подарки не выдаются на фестивале", "/gifts/"]) assert.ok(gifts.includes(value));
+  assert.ok(html.includes('class="nav-gift-cta" href="#bonuses"'));
   assert.ok(section("bar").includes("бар с барменом"));
   assert.ok(!section("bar").includes("включены в билет"));
   assert.ok(section("afterparty").includes("Фестиваль до 00:00"));
   assert.ok(!section("afterparty").includes("22:00"));
   assert.ok(!section("community").includes("Смотреть видео"));
-  for (const value of ["Партнёры фестиваля", "Информационные партнёры", "не подтверждает участие проектов 3 декабря"]) assert.ok(section("partners").includes(value));
+  const partners = section("partners");
+  assert.equal((partners.match(/class="partner-card"/g) ?? []).length, 27);
+  for (const value of ["Партнёры МЖ", "Грелка", "Кваренги", "Бизнес Дельники", "Фонд ЭНБИ"]) assert.ok(partners.includes(value));
 });
 
 
