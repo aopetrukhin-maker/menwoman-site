@@ -143,7 +143,7 @@ test("new experience blocks explain boundaries and gifts without inventing a vid
   const dating = section("dating");
   for (const value of ["Зелёный", "Открыт к знакомствам", "Красный", "Сегодня без знакомств", "Продолжать ли разговор — всегда решаете вы"]) assert.ok(dating.includes(value));
   const gifts = section("bonuses");
-  for (const value of ["50 000", "100 000", "по номинальной стоимости", "не денежная выплата", "/gifts/"]) assert.ok(gifts.includes(value));
+  for (const value of ["50 000", "100 000", "номинальной стоимости", "не денежная выплата", "/gifts/"]) assert.ok(gifts.includes(value));
   assert.ok(section("bar").includes("бар с барменом"));
   assert.ok(!section("bar").includes("включены в билет"));
   assert.ok(section("afterparty").includes("Фестиваль до 00:00"));

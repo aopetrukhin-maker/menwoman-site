@@ -129,11 +129,45 @@
 .luxury-edition :is(.speakers-carousel, .consultations-carousel, .expo-carousel) [role="list"] { align-items: flex-start; }
 .luxury-edition :is(.speakers-carousel, .consultations-carousel, .expo-carousel) [role="listitem"] { align-self: flex-start; }
 
+/* Lead with a clear reason to attend in each commercial section. */
+.luxury-edition :is(.programme-section, .city-consultations, .city-exhibition, .city-gifts).primary-section { padding-top: clamp(52px, 6vw, 86px); }
+.luxury-edition .conversion-section-heading { grid-template-columns: minmax(0, 1.55fr) minmax(240px, .62fr); gap: clamp(24px, 4.5vw, 72px); align-items: end; margin-bottom: 32px; }
+.luxury-edition .conversion-section-heading .section-label { display: inline-flex; align-items: center; width: fit-content; min-height: 36px; margin: 0 0 21px; padding: 7px 12px; border: 1px solid #deb98385; border-radius: 3px; color: #e9c996; background: #c5a4701b; font-size: 12px; font-weight: 750; letter-spacing: .11em; }
+.luxury-edition .conversion-section-heading .section-label::before { margin-right: 9px; }
+.luxury-edition .conversion-section-heading h2 { max-width: 900px; margin: 0; color: #fff0d8; font-size: clamp(48px, 5.7vw, 82px); line-height: 1.01; text-wrap: balance; }
+.luxury-edition .conversion-section-heading h2 span { color: #e7bd7d; }
+.luxury-edition .conversion-section-heading > p,
+.luxury-edition .conversion-section-heading > div:last-child:not(:first-child) > p { max-width: 430px; margin: 0 0 3px; padding-left: 20px; border-left: 2px solid #d5ab75; color: #e0d0b9; font-size: 17px; line-height: 1.65; }
+.luxury-edition .consultation-heading > div:last-child > p { max-width: 430px; }
+.luxury-edition .consultation-heading .consultation-badge { display: inline-flex; width: fit-content; max-width: 100%; margin-top: 23px; padding: 11px 14px; border-color: #d9b577; color: #241a11; background: linear-gradient(110deg, #f1d49f, #c89d65); font-size: 12px; font-weight: 750; line-height: 1.4; }
+.luxury-edition .section-offer-strip { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin: 0 0 32px; padding: 20px 24px; border: 1px solid #d4ad7663; border-left: 4px solid #e5bb7b; border-radius: 5px; background: radial-gradient(ellipse at 95% 50%, #65412c4d, transparent 65%), #2a1d18; }
+.luxury-edition .section-offer-strip strong { display: block; color: #fff0d6; font: 500 clamp(26px, 2.7vw, 36px)/1.06 var(--font-display), Georgia, serif; }
+.luxury-edition .section-offer-strip span { display: block; max-width: 660px; margin-top: 7px; color: #dac9b1; font-size: 13px; line-height: 1.5; }
+.luxury-edition .section-offer-strip a { flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; min-height: 46px; padding: 12px 18px; border: 1px solid #e4bf8a; border-radius: 4px; color: #20160e; background: #e4bf8a; font-size: 13px; font-weight: 750; text-decoration: none; }
+.luxury-edition .section-offer-strip a:hover { background: #f3d6a8; }
+.luxury-edition .city-gifts .city-gift-tiers article { position: relative; overflow: hidden; border-color: #d4ad767a; box-shadow: inset 0 1px #ffe8bd24, 0 20px 40px #0002; }
+.luxury-edition .city-gifts .city-gift-tiers article::before { position: absolute; top: -100px; right: -80px; width: 250px; height: 250px; border-radius: 50%; background: #d7aa7140; filter: blur(65px); content: ""; pointer-events: none; }
+.luxury-edition .city-gifts .city-gift-tiers p { position: relative; max-width: 370px; color: #f0dfc5; font: 500 clamp(25px, 2.8vw, 35px)/1.1 var(--font-display), Georgia, serif; }
+.luxury-edition .city-gifts .city-gift-tiers strong { position: relative; color: #ffe0ad; text-shadow: 0 0 35px #dda95e30; }
+.luxury-edition .city-gifts .city-gift-tiers article > span:last-child { position: relative; }
+
 /* The old festival belongs at the end, presented as a composed archive. */
 .luxury-edition .festival-history .history-layout { align-items: center; }
 .luxury-edition .festival-history .history-layout figure img { width: 100%; aspect-ratio: 1.5; object-fit: contain; background: #130f0d; border-radius: 3px; filter: saturate(.9) contrast(1.02); }
 .luxury-edition .guest-stories-carousel { margin-top: 26px; }
 @media (max-width: 760px) {
+  .luxury-edition :is(.programme-section, .city-consultations, .city-exhibition, .city-gifts).primary-section { padding-top: 48px; }
+  .luxury-edition .conversion-section-heading { grid-template-columns: minmax(0, 1fr); gap: 19px; margin-bottom: 26px; }
+  .luxury-edition .conversion-section-heading .section-label { min-height: 33px; margin-bottom: 17px; font-size: 10px; }
+  .luxury-edition .conversion-section-heading h2 { font-size: clamp(43px, 10.3vw, 58px); line-height: 1.03; }
+  .luxury-edition .city-consultations .conversion-section-heading h2 { font-size: clamp(43px, 10vw, 56px); }
+  .luxury-edition .conversion-section-heading > p,
+  .luxury-edition .conversion-section-heading > div:last-child:not(:first-child) > p { padding-left: 14px; font-size: 15px; line-height: 1.55; }
+  .luxury-edition .consultation-heading .consultation-badge { margin-top: 18px; font-size: 11px; }
+  .luxury-edition .section-offer-strip { align-items: stretch; flex-direction: column; gap: 15px; margin-bottom: 22px; padding: 18px; }
+  .luxury-edition .section-offer-strip strong { font-size: 30px; }
+  .luxury-edition .section-offer-strip a { align-self: flex-start; }
+  .luxury-edition .city-gifts .city-gift-tiers p { font-size: 30px; }
   .luxury-edition .reflection-layout { grid-template-columns: minmax(0, 1fr); gap: 28px; }
   .luxury-edition .reflection-layout h2 { margin-bottom: 20px; font-size: clamp(46px, 11.5vw, 62px); }
   .luxury-edition .reflection-editorial p:not(.section-label) { margin-bottom: 13px; }

@@ -22,7 +22,7 @@ async function submitTuqoForm(data: Record<string, FormDataEntryValue>, selectio
   if (!tuqoFormEndpoint || !/^https:\/\/api\.tuqo\.ru\/f\/[a-zA-Z0-9_-]+\/?$/.test(tuqoFormEndpoint)) {
     throw new SubmissionError("Приём заявок ещё не подключён. Пожалуйста, свяжитесь с организатором.", undefined, "configuration");
   }
-  const fields = new URLSearchParams({
+  const fields = {
     name: String(data.name ?? ""),
     message: `Почему хотите прийти: ${String(data.reason ?? "")}`,
     "Телефон": String(data.phone ?? ""),
@@ -34,8 +34,8 @@ async function submitTuqoForm(data: Record<string, FormDataEntryValue>, selectio
     _hp_a0d70926f3: "",
     _request_id: requestId,
     _submit_time: String(shownAt),
-  });
-  const response = await fetch(tuqoFormEndpoint, { method: "POST", body: fields });
+  };
+  const response = await fetch(tuqoFormEndpoint, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(fields) });
   if (response.ok) return;
   const messages: Record<number, string> = {
     400: "Проверьте заполнение полей и попробуйте ещё раз.",

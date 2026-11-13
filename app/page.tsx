@@ -53,8 +53,8 @@ function ArrowIcon() {
 
 function BonusSection() {
   return <section className="section city-gifts primary-section" id="bonuses"><div className="container">
-    <div className="section-heading split-heading"><div><p className="section-label">08 / Подарки партнёров</p><h2>Подарки, которыми<br /><span>вечер не заканчивается</span></h2></div><p>Знакомство с проектами партнёров можно продолжить и после фестиваля: через услуги, впечатления и предложения из подарочного каталога. Выбирайте то, что интересно именно вам.</p></div>
-    <div className="city-gift-tiers"><article><span>Перезагрузка</span><p>Выбор подарков и сертификатов</p><strong><small>до</small> 50 000 <small>₽</small></strong><span>по номинальной стоимости предложений</span></article><article><span>VIP</span><p>Расширенный выбор подарков и сертификатов</p><strong><small>до</small> 100 000 <small>₽</small></strong><span>по номинальной стоимости предложений</span></article></div>
+    <div className="section-heading split-heading conversion-section-heading"><div><p className="section-label">08 / Подарки в тарифах</p><h2>Подарки и сертификаты<br /><span>до 100 000 ₽</span></h2></div><p>В тарифе «Перезагрузка» выбирайте предложения партнёров с общей номинальной стоимостью до 50 000 ₽. В VIP — до 100 000 ₽. Найдите подарок под свои интересы.</p></div>
+    <div className="city-gift-tiers"><article><span>Тариф «Перезагрузка»</span><p>Выберите подарки и сертификаты для себя</p><strong><small>до</small> 50 000 <small>₽</small></strong><span>общая номинальная стоимость выбранных предложений</span></article><article><span>Тариф VIP</span><p>Больше возможностей для выбора подарков</p><strong><small>до</small> 100 000 <small>₽</small></strong><span>общая номинальная стоимость выбранных предложений</span></article></div>
     <p className="city-fine-print">Это лимит номинальной стоимости выбранных предложений, а не денежная выплата. Состав каталога на 3 декабря, сроки использования, ограничения и возможные дополнительные расходы уточняются.</p>
     <a className="gift-archive-link" href="/gifts/">Открыть подарки для купивших билеты</a>
   </div></section>;

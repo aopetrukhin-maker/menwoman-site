@@ -5,7 +5,8 @@ import ParticipantPortrait from "./ParticipantPortrait";
 
 export default function FestivalProgramme({ onSelect }: { onSelect: (participant: FestivalParticipant) => void }) {
   return <section className="section programme-section primary-section" id="program"><div className="container" id="speakers">
-    <div className="section-heading split-heading"><div><p className="section-label">04 / Программа и спикеры</p><h2>Выберите разговор,<br /><span>ради которого придёте</span></h2></div><p>Близость, отношения, деньги и право выбирать себя. Найдите тему, которая попадает в ваш вопрос, и приходите слушать того, кто работает с ней каждый день.</p></div>
+    <div className="section-heading split-heading conversion-section-heading"><div><p className="section-label">04 / Программа и спикеры</p><h2>Выберите тему,<br /><span>ради которой придёте</span></h2></div><p>От близости и отношений до внутренней опоры и новых возможностей. Посмотрите программу и выберите спикера, которого хотите услышать лично.</p></div>
+    <div className="section-offer-strip"><div><strong>Услышьте эксперта лично</strong><span>Темы о любви, близости, самоценности и новых возможностях — в живой программе фестиваля.</span></div><a href="#application-form" data-cta-location="program-offer">Подать заявку</a></div>
     <FestivalCarousel label="Спикеры фестиваля" className="speakers-carousel">{speakers.map((speaker, index) => <article className={`city-speaker ${speaker.topic ? "topic-confirmed" : "topic-pending"}`} key={speaker.name}>
       <ParticipantPortrait participant={participantProfiles[speaker.name]} />
       <div className="speaker-card-topline"><span>{String(index + 1).padStart(2, "0")} / МЖ · Спикер</span></div>
