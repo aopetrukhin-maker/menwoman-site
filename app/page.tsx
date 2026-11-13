@@ -62,16 +62,9 @@ function BonusSection() {
 
 function AttendeeSection() {
   return <section className="section festival-history primary-section" id="community"><div className="container">
-    <div className="history-layout"><figure><img src="/history/festival-guests.jpg" alt="Гости и команда предыдущего фестиваля МЖ" width="2048" height="1365" loading="lazy" /><figcaption>Предыдущая встреча сообщества МЖ</figcaption></figure><div><p className="section-label">11 / Предыдущий фестиваль</p><h2>До этой встречи у МЖ<br /><span>уже была история</span></h2><p>Люди, разговоры, выступления и знакомства, из которых складывается атмосфера фестиваля. Посмотрите, как проходила предыдущая встреча.</p><a className="text-link" href="#application-form">Присоединиться к новой встрече</a></div></div>
+    <div className="history-layout"><figure><img src="/history/festival-guests.jpg" alt="Гости и команда предыдущего фестиваля МЖ" width="2048" height="1365" loading="lazy" /><figcaption>Реальный кадр с предыдущего фестиваля МЖ</figcaption></figure><div><p className="section-label">После программы / Предыдущий фестиваль</p><h2>Так встречались<br /><span>в прошлый раз</span></h2><p>На сцене и в зале были живые разговоры, новые знакомства и люди, которые пришли со своим вопросом. Ниже — их фотографии и слова о том, зачем они шли на фестиваль.</p><a className="text-link" href="#application-form">Подать заявку на новую встречу</a></div></div>
     <FestivalGuestMarquee />
   </div></section>;
-}
-
-function FestivalProof() {
-  return <aside className="city-proof" aria-label="Как выглядел прошлый фестиваль МЖ"><div className="container city-proof-layout">
-    <figure><img src="/history/festival-guests.jpg" alt="Гости и команда на предыдущем фестивале МЖ" width="2048" height="1365" loading="lazy" /><figcaption>Реальные кадры прошлой встречи</figcaption></figure>
-    <div><p className="section-label">МЖ уже собирал гостей</p><h2>У этого вечера<br /><em>есть своя история.</em></h2><p>Мы уже встречались, слушали спикеров и знакомились. Посмотрите, какой была атмосфера прошлого фестиваля, а затем выберите свой маршрут на 3 декабря.</p><a className="text-link" href="#community">Посмотреть прошлый фестиваль</a></div>
-  </div></aside>;
 }
 
 function PricingSection() {
@@ -169,7 +162,6 @@ export default function Home() {
       </nav>
 
       <FestivalHero />
-      <FestivalProof />
 
       <FestivalReflection />
       <FestivalConcept />
@@ -180,11 +172,11 @@ export default function Home() {
       <BonusSection />
       <FestivalBar />
       <FestivalAfterparty />
-      <AttendeeSection />
       <FestivalPartners archive={partners} />
       <FestivalVenue />
       <PricingSection />
       <FestivalAdmission />
+      <AttendeeSection />
 
       <footer>
         <div className="container footer-grid">

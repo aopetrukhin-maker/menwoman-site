@@ -81,3 +81,58 @@
   .luxury-edition .cookie-banner button { min-height: 40px; padding: 8px 12px; }
   .luxury-edition .balance-choices button { font-size: 13px; }
 }
+
+/* The first screen after the opening now shows the actual venue, with concise editorial copy. */
+.luxury-edition .city-reflection { overflow: hidden; background: radial-gradient(ellipse at 10% 10%, #60412625, transparent 48%), #15110e; }
+.luxury-edition .reflection-layout { grid-template-columns: minmax(0, 1.04fr) minmax(0, .96fr); gap: clamp(32px, 5vw, 84px); align-items: center; }
+.luxury-edition .reflection-editorial { position: relative; z-index: 1; }
+.luxury-edition .reflection-layout h2 { margin: 14px 0 26px; font-size: clamp(50px, 6.2vw, 86px); }
+.luxury-edition .reflection-editorial .text-link { display: inline-flex; align-items: center; min-height: 44px; margin-top: 12px; }
+.luxury-edition .reflection-scene { position: relative; min-width: 0; height: clamp(430px, 43vw, 630px); margin: 0; overflow: hidden; border: 1px solid #c5a4706e; background: #231811; box-shadow: 22px 22px 0 #c5a4700e, 0 24px 75px #0008; }
+.luxury-edition .reflection-scene::after { position: absolute; inset: 0; content: ""; background: linear-gradient(0deg, #16110edb, transparent 45%), linear-gradient(90deg, #16110e40, transparent 38%); pointer-events: none; }
+.luxury-edition .reflection-scene img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 53% center; filter: saturate(.85) contrast(1.06); }
+.luxury-edition .reflection-scene figcaption { position: absolute; z-index: 1; bottom: 28px; left: 28px; max-width: 70%; color: #e5d3b5; font-size: 12px; letter-spacing: .07em; }
+.luxury-edition .reflection-scene-mark { position: absolute; z-index: 1; top: 18px; right: 22px; color: #f3dfbaae; font: 500 46px/1 var(--font-display), Georgia, serif; letter-spacing: -.08em; }
+
+/* A physical-feeling wheel: drag, tap a sector, or use the keyboard. */
+.luxury-edition .wheel-control { position: relative; width: min(100%, 480px); aspect-ratio: 1; margin-inline: auto; touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; }
+.luxury-edition .wheel-control[data-dragging="true"] { cursor: grabbing; }
+.luxury-edition .wheel-control svg { width: 100%; height: 100%; }
+.luxury-edition .wheel-ring { transform-origin: 220px 220px; transition: transform .58s cubic-bezier(.2,.85,.2,1); }
+.luxury-edition .wheel-control[data-dragging="true"] .wheel-ring { transition: none; }
+.luxury-edition .wheel-marker { position: absolute; z-index: 2; top: -4px; left: 50%; width: 0; height: 0; transform: translateX(-50%); border-left: 11px solid transparent; border-right: 11px solid transparent; border-top: 19px solid #e4c28d; filter: drop-shadow(0 2px 8px #0008); pointer-events: none; }
+.luxury-edition .balance-visual > span { max-width: 360px; margin-top: 8px; color: #d6bc93; font-size: 13px; }
+.luxury-edition .wheel-control:focus-visible { outline: 2px solid #f3d3a2; outline-offset: 8px; border-radius: 50%; }
+
+/* Full-height editorial portraits replace the small floating circles. */
+.luxury-edition .city-speaker, .luxury-edition .city-consultant { --portrait-pad: 28px; padding: var(--portrait-pad); align-self: flex-start; }
+.luxury-edition :is(.city-speaker, .city-consultant) .participant-portrait { position: relative; display: grid; place-items: center; width: calc(100% + var(--portrait-pad) * 2); max-width: none; aspect-ratio: .91; margin: calc(-1 * var(--portrait-pad)) calc(-1 * var(--portrait-pad)) 23px; overflow: hidden; border: 0; border-bottom: 1px solid #c5a4705c; border-radius: 7px 7px 0 0; background: radial-gradient(ellipse at 54% 22%, #66543a, #1c251c 68%); box-shadow: none; }
+.luxury-edition :is(.city-speaker, .city-consultant) .participant-portrait::after { position: absolute; z-index: 2; right: 20px; bottom: 13px; content: "МЖ"; color: #f5dcb6b3; font: 500 43px/1 var(--font-display), Georgia, serif; letter-spacing: -.08em; pointer-events: none; }
+.luxury-edition :is(.city-speaker, .city-consultant) .participant-portrait img { width: 100%; height: 100%; object-fit: cover; filter: saturate(.72) sepia(.08) contrast(1.05); -webkit-mask-image: linear-gradient(#000 0%, #000 80%, transparent 100%); mask-image: linear-gradient(#000 0%, #000 80%, transparent 100%); }
+.luxury-edition :is(.city-speaker, .city-consultant) .participant-portrait.has-initials { aspect-ratio: 1.13; background: radial-gradient(circle at 50% 35%, #8f6c463f, transparent 45%), repeating-linear-gradient(90deg, transparent 0 30px, #e3c48b09 31px), #1b261e; }
+.luxury-edition :is(.city-speaker, .city-consultant) .participant-portrait.has-initials > span { font-size: clamp(78px, 9vw, 118px); }
+.luxury-edition .speaker-card-topline { margin: 0 0 16px; }
+.luxury-edition .city-speaker-role { min-height: 0; margin-bottom: 17px; }
+.luxury-edition .city-speaker-topic { flex: none; padding-top: 16px; }
+.luxury-edition .city-consultant > .participant-link { margin-top: 18px; }
+.luxury-edition :is(.speakers-carousel, .consultations-carousel) [role="list"] { align-items: flex-start; }
+.luxury-edition :is(.speakers-carousel, .consultations-carousel) [role="listitem"] { align-self: flex-start; }
+
+/* The old festival belongs at the end, presented as a composed archive. */
+.luxury-edition .festival-history .history-layout { align-items: center; }
+.luxury-edition .festival-history .history-layout figure img { width: 100%; aspect-ratio: 1.5; object-fit: contain; background: #130f0d; border-radius: 3px; filter: saturate(.9) contrast(1.02); }
+.luxury-edition .guest-stories-carousel { margin-top: 26px; }
+@media (max-width: 760px) {
+  .luxury-edition .reflection-layout { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  .luxury-edition .reflection-layout h2 { margin-bottom: 20px; font-size: clamp(46px, 11.5vw, 62px); }
+  .luxury-edition .reflection-editorial p:not(.section-label) { margin-bottom: 13px; }
+  .luxury-edition .reflection-scene { height: min(85vw, 400px); box-shadow: 12px 12px 0 #c5a4700e; }
+  .luxury-edition .reflection-scene figcaption { bottom: 18px; left: 18px; font-size: 11px; }
+  .luxury-edition .reflection-scene-mark { top: 12px; right: 15px; font-size: 36px; }
+  .luxury-edition .city-speaker, .luxury-edition .city-consultant { --portrait-pad: 24px; padding: var(--portrait-pad); }
+  .luxury-edition :is(.city-speaker, .city-consultant) .participant-portrait { width: calc(100% + var(--portrait-pad) * 2); max-width: none; aspect-ratio: .95; }
+  .luxury-edition .wheel-control { width: min(100%, 380px); }
+  .luxury-edition .festival-history .history-layout figure img { aspect-ratio: 1.5; }
+}
+@media (max-width: 380px) { .luxury-edition .city-speaker, .luxury-edition .city-consultant { --portrait-pad: 20px; } }
+@media (prefers-reduced-motion: reduce) { .luxury-edition .wheel-ring { transition: none; } }

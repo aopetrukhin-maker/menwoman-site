@@ -111,7 +111,9 @@ test("the approved city narrative runs from a personal question to participation
   const opening = section("festival-introduction");
   for (const value of ["МЖ Сити.", "Тайная квартира", "Фестиваль отношений с собой, с людьми и с жизнью", "3 декабря 2026", "Марата, 1/71", "Подать заявку", "У меня есть промокод"]) assert.ok(opening.includes(value));
   const order = [...html.matchAll(/<section class="[^"]*primary-section[^"]*" id="([^"]+)"/g)].map((match) => match[1]);
-  assert.deepEqual(order, ["festival-introduction", "reflection", "balance", "program", "consultations", "expo", "dating", "bonuses", "bar", "afterparty", "community", "partners", "logistics", "pricing", "admission"]);
+  assert.deepEqual(order, ["festival-introduction", "reflection", "balance", "program", "consultations", "expo", "dating", "bonuses", "bar", "afterparty", "partners", "logistics", "pricing", "admission", "community"]);
+  assert.ok(!html.includes('class="city-proof"'));
+  assert.ok(section("reflection").includes("/venue/venue-cabinet.jpeg"));
   assert.ok(!html.includes('id="connection-code"'));
   assert.ok(!html.includes("Код связи"));
   assert.ok(html.includes('id="questions"'));
@@ -126,6 +128,8 @@ test("the approved city narrative runs from a personal question to participation
 test("the concept offers eight accessible directions and links to real festival sections", () => {
   const balance = section("balance");
   assert.equal((balance.match(/aria-controls="balance-direction"/g) ?? []).length, 8);
+  assert.ok(balance.includes('role="slider"'));
+  assert.ok(balance.includes("Крутите колесо пальцем"));
   assert.ok(balance.includes('aria-live="polite"'));
   for (const value of ["Я и внутренняя опора", "Любовь и близость", "Семья", "Друзья и общение", "Тело и энергия", "Дело и деньги", "Развитие", "Отдых и впечатления"]) assert.ok(balance.includes(value));
   for (const value of ["Выступления", "Консультации", "Практики и игры", "Знакомства"]) assert.ok(balance.includes(value));
@@ -151,8 +155,9 @@ test("apartment doors, guest archive and cinematic offer remain discoverable", (
   assert.equal((html.match(/aria-label="Открыть дверь:/g) ?? []).length, 6);
   assert.ok(html.includes("распределение программы по залам уточняется"));
   assert.ok(html.includes('id="consultation-workshops"'));
-  assert.ok(html.includes("Голоса гостей прошлой встречи"));
-  assert.ok(html.includes("Остановить ленту"));
+  assert.ok(html.includes("Люди прошлого фестиваля"));
+  assert.ok(html.includes("Гости прошлого фестиваля"));
+  assert.ok(!html.includes("Остановить ленту"));
   assert.ok(html.includes('data-phase="pending"'));
   assert.ok(html.includes("Смотреть фестиваль"));
   assert.ok(!html.includes("Приостановить анимацию"));
