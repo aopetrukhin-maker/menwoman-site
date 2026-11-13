@@ -54,16 +54,18 @@ export default function FestivalHero() {
       <div className={styles.shade} data-hero-shade aria-hidden="true" />
       <div className={styles.copy} data-hero-offer>
         <p className={styles.eyebrow}>Частный вечер в сердце Петербурга</p>
-        <p className={styles.date}>3 декабря 2026 <span aria-hidden="true">/</span> {event.timeLabel}</p>
         <h1 id="festival-title" className={styles.title} ref={offerHeading} tabIndex={-1}>МЖ Сити.<br /><em>Тайная квартира</em></h1>
         <p className={styles.subtitle}>Фестиваль отношений с собой, с людьми и с жизнью</p>
-        <p className={styles.lead}>Выступления о близости и выборе, консультационная зона, знакомства в своём темпе, выставка, бар и афтепати. Один вечер — и у каждого свой маршрут.</p>
-        <p className={styles.place}>«{event.venue}» · {event.city}<br />{event.address} · метро «{event.metro}»</p>
+        <p className={styles.lead}>Выступления о близости и выборе, личные консультации, выставка и новые знакомства. Бар и афтепати — до полуночи.</p>
+        <div className={styles.facts} aria-label="Дата, место и стоимость участия">
+          <p><strong>{event.dateLabel}</strong><span>{event.timeLabel}</span></p>
+          <p><strong>«{event.venue}»</strong><span>{event.address} · м. «{event.metro}»</span></p>
+          <p><strong>от {formatPrice(ticketPrices.start)}</strong><span>Билеты после одобрения заявки</span></p>
+        </div>
         <div className={styles.actions}>
           <a className={styles.primary} href="#application-form" data-cta-location="hero">Подать заявку</a>
-          <a className={styles.secondary} href="#program" data-cta-location="hero">Посмотреть программу</a>
+          <a className={styles.secondary} href="#apartment" data-cta-location="hero">Открыть двери</a>
         </div>
-        <p className={styles.admission}>Билеты от {formatPrice(ticketPrices.start)}. Сначала заявка, после одобрения — покупка билета.</p>
       </div>
       {phase !== "offer" && (
         <div className={styles.controls} data-hero-controls>

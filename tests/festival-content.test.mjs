@@ -111,11 +111,12 @@ test("admission form contains the requested fields and explains moderation witho
 
 test("the approved city narrative runs from a personal question to participation", () => {
   const opening = section("festival-introduction");
-  for (const value of ["МЖ Сити.", "Тайная квартира", "Фестиваль отношений с собой, с людьми и с жизнью", "3 декабря 2026", "Марата, 1/71", "Подать заявку", "Посмотреть программу"]) assert.ok(opening.includes(value));
+  for (const value of ["МЖ Сити.", "Тайная квартира", "Фестиваль отношений с собой, с людьми и с жизнью", "3 декабря 2026", "Марата, 1/71", "Подать заявку", "Открыть двери"]) assert.ok(opening.includes(value));
   const order = [...html.matchAll(/<section class="[^"]*primary-section[^"]*" id="([^"]+)"/g)].map((match) => match[1]);
-  assert.deepEqual(order, ["festival-introduction", "reflection", "balance", "program", "consultations", "expo", "dating", "bonuses", "bar", "afterparty", "partners", "logistics", "pricing", "admission", "community"]);
+  assert.deepEqual(order, ["festival-introduction", "apartment", "program", "consultations", "expo", "balance", "dating", "bonuses", "bar", "afterparty", "partners", "logistics", "pricing", "admission", "community"]);
   assert.ok(!html.includes('class="city-proof"'));
-  assert.ok(section("reflection").includes("/venue/venue-cabinet.jpeg"));
+  assert.ok(section("apartment").includes("Выберите, с какой двери"));
+  assert.ok(!html.includes('id="reflection"'));
   assert.ok(!html.includes('id="connection-code"'));
   assert.ok(!html.includes("Код связи"));
   assert.ok(html.includes('id="questions"'));
@@ -133,8 +134,13 @@ test("the concept offers eight accessible directions and links to real festival 
   assert.ok(balance.includes('role="slider"'));
   assert.ok(balance.includes("Крутите колесо пальцем"));
   assert.ok(balance.includes('aria-live="polite"'));
+  assert.ok(balance.includes("Выберите сферу жизни"));
+  assert.ok(balance.includes("Евгения Цапина"));
+  assert.ok(balance.includes("Татьяна Пронина"));
+  assert.ok(balance.includes("Мария Рубинская"));
+  assert.ok(balance.includes("Разговор у бара"));
   for (const value of ["Я и внутренняя опора", "Любовь и близость", "Семья", "Друзья и общение", "Тело и энергия", "Дело и деньги", "Развитие", "Отдых и впечатления"]) assert.ok(balance.includes(value));
-  for (const value of ["Выступления", "Консультации", "Практики и игры", "Знакомства"]) assert.ok(balance.includes(value));
+  assert.ok(!balance.includes("Вечер в вашем ритме"));
   assert.ok(!balance.includes("Семь пространств"));
   assert.ok(!balance.includes("психологическая диагностика"));
 });

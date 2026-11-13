@@ -101,7 +101,7 @@ export default function FestivalAdmission() {
     } finally { setSending(false); }
   }
   return <section className="section admission-section primary-section" id="admission"><div className="container">
-    <div className="section-heading center-heading"><p className="section-label">15 / Ваш следующий шаг</p><h2>Какой вопрос вы<br /><span>принесёте в МЖ?</span></h2><p>Желание познакомиться. Разговор, который давно откладывали. Интерес к определённой теме. Или просто любопытство — каким может получиться этот вечер. Расскажите немного о себе и о том, почему хотите прийти.</p></div>
+    <div className="section-heading center-heading"><p className="section-label">14 / Ваш следующий шаг</p><h2>Какой вопрос вы<br /><span>принесёте в МЖ?</span></h2><p>Расскажите, что вас заинтересовало в фестивале. Модератор рассмотрит заявку и свяжется с вами.</p></div>
     <div className="admission-grid">
       <div className="admission-panel" id="application-form">
         {submitted ? <div className="admission-success" role="status" aria-live="polite"><p className="section-label">Спасибо за интерес к фестивалю</p><h3>Заявка получена</h3>{reference && <p>Номер заявки: <strong>{reference}</strong></p>}<p>Модератор рассмотрит заявку и свяжется с вами по указанному контакту. Решение об участии ещё не принято.</p></div> : <form method="post" onSubmit={apply} onInput={clearFieldError} onInvalidCapture={() => trackFunnelEvent("application_error", { errorCode: "browser_validation" })} aria-busy={sending}>

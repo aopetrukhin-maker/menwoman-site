@@ -1,8 +1,8 @@
-.apartment { margin-top: clamp(64px, 9vw, 140px); min-width: 0; }
+.apartment { min-width: 0; margin: 0; background: radial-gradient(ellipse at 15% 3%, #6a4d2a31, transparent 40%), #100e0b; border-top: 1px solid #c5a4703d; }
 .intro { max-width: 820px; margin-bottom: 40px; }
-.intro h3 { font: 400 clamp(38px, 5vw, 76px)/1.04 var(--font-display), Georgia, serif; letter-spacing: -.035em; color: #f5e9d6; margin: 18px 0 26px; }
-.intro h3 em { color: #d5b780; font-weight: 400; }
-.intro > p:last-child { max-width: 640px; font-size: clamp(17px, 1.5vw, 21px); line-height: 1.75; color: #bfb1a0; }
+.intro h2 { font: 400 clamp(42px, 5.3vw, 78px)/1.02 var(--font-display), Georgia, serif; letter-spacing: -.035em; color: #f5e9d6; margin: 18px 0 22px; }
+.intro h2 em { color: #d5b780; font-weight: 400; }
+.intro > p:not(:first-child):not(.touchHint) { max-width: 680px; margin: 0; font-size: clamp(16px, 1.5vw, 20px); line-height: 1.6; color: #cec0ad; }
 .intro .touchHint { display: inline-flex; align-items: center; width: fit-content; margin: 12px 0 0; padding: 11px 17px; border: 1px solid #dabc85a3; border-radius: 3px; background: linear-gradient(115deg, #9f743d38, #2b2519 55%, #9f743d38); box-shadow: inset 0 0 18px #d6a66417, 0 0 24px #d6a66420; color: #f7dfaf; font-size: clamp(14px, 1.25vw, 17px); font-weight: 700; letter-spacing: .035em; }
 .room { display: flex; flex-direction: column; width: 100%; min-width: 0; overflow: hidden; border: 1px solid #b8996155; border-radius: 6px; background: #141813; box-shadow: 0 20px 58px #0005; }
 .frame { position: relative; isolation: isolate; height: clamp(340px, 34vw, 450px); overflow: hidden; background: #0c0e0b; perspective: 1300px; }
@@ -47,5 +47,5 @@
 .description a { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: auto; padding-top: 17px; border-top: 1px solid #b4976b3b; color: #e6c78d; font-size: 14px; text-decoration: none; min-height: 44px; }
 .description a:hover { color: #fff0cf; }
 .note { color: #a99c8d; font-size: 13px; line-height: 1.7; max-width: 740px; margin-top: 24px; }
-@media (max-width: 760px) { .frame { height: 370px; } .plaque { gap: 15px; } .plaque strong { font-size: clamp(31px, 8vw, 42px); } .lock { width: 66px; height: 66px; } .lock b { top: 29px; } .lock::before, .lock::after { width: 26px; } .invitation { font-size: 12px; padding: 11px 12px; } .description { padding: 22px; } .intro { margin-bottom: 24px; } }
+@media (max-width: 760px) { .frame { height: 370px; } .plaque { gap: 15px; } .plaque strong { font-size: clamp(31px, 8vw, 42px); } .lock { width: 66px; height: 66px; } .lock b { top: 29px; } .lock::before, .lock::after { width: 26px; } .invitation { font-size: 12px; padding: 11px 12px; } .description { padding: 22px; } .intro { margin-bottom: 24px; } .intro h2 { font-size: clamp(43px, 10.5vw, 60px); } }
 @media (prefers-reduced-motion: reduce) { .photo, .leftLeaf, .rightLeaf, .plaque, .lock, .closeLabel, .photoCaption { transition: none !important; animation: none !important; } .invitation { animation: none !important; } }

@@ -2,13 +2,14 @@
 
 import { useEffect, useState } from "react";
 import FestivalHero from "./FestivalHero";
+import FestivalApartment from "./FestivalApartment";
 import FestivalGuestMarquee from "./FestivalGuestMarquee";
 import FestivalVenue from "./FestivalVenue";
 import FestivalAdmission from "./FestivalAdmission";
 import FestivalParticipation from "./FestivalExperience";
 import FestivalProgramme from "./FestivalProgramme";
 import FestivalExhibition, { FestivalConsultations } from "./FestivalSections";
-import FestivalConcept, { FestivalReflection } from "./FestivalConcept";
+import FestivalConcept from "./FestivalConcept";
 import { FestivalDating, FestivalBar, FestivalAfterparty, FestivalPartners } from "./FestivalAtmosphere";
 import { type FestivalParticipant } from "./festival-participants";
 import { startFunnelTracking } from "./funnel-tracking";
@@ -73,7 +74,7 @@ function PricingSection() {
     <section className="section pricing-section primary-section" id="pricing">
       <div className="container">
         <div className="section-heading center-heading">
-          <p className="section-label">14 / Билеты и состав тарифов</p>
+          <p className="section-label">13 / Билеты и состав тарифов</p>
           <h2>Как вы хотите<br /><span>провести этот вечер?</span></h2>
           <p>Оставьте заявку. После одобрения модератор сообщит, как купить выбранный билет.</p>
         </div>
@@ -151,21 +152,20 @@ export default function Home() {
           <strong>МЖ Сити</strong>
           <span>{event.dateLabel}</span>
         </a>
-        <div className="nav-links"><a href="#balance">Концепция</a><a href="#program">Спикеры</a><a href="#consultations">Консультации</a><a href="#dating">Знакомства</a><a href="#pricing">Билеты</a></div>
+        <div className="nav-links"><a href="#apartment">Двери</a><a href="#program">Спикеры</a><a href="#consultations">Консультации</a><a href="#expo">Экспозона</a><a href="#balance">Маршрут</a><a href="#pricing">Билеты</a></div>
         <a className="nav-bonus-cta" href="#application-form" data-cta-location="header"><span className="nav-bonus-full">Подать заявку</span><span className="nav-bonus-short">Заявка</span></a>
         <details className="mobile-nav">
           <summary aria-label="Открыть меню">Меню</summary>
-          <div><a href="#balance">Свой маршрут по фестивалю</a><a href="#program">Программа и спикеры</a><a href="#consultations">Консультации</a><a href="#dating">Знакомства</a><a href="#expo">Экспозона и практики</a><a href="#logistics">Площадка</a><a href="#pricing">Билеты</a><a href="#participation">Как попасть</a><a href="#application-form" data-cta-location="mobile-menu">Подать заявку</a><a href="/gifts/">Подарки для купивших</a></div>
+          <div><a href="#apartment">Открыть двери</a><a href="#program">Спикеры</a><a href="#consultations">Консультации</a><a href="#expo">Выставка и экспозона</a><a href="#balance">Свой маршрут</a><a href="#dating">Знакомства</a><a href="#logistics">Площадка</a><a href="#pricing">Билеты</a><a href="#participation">Как попасть</a><a href="#application-form" data-cta-location="mobile-menu">Подать заявку</a><a href="/gifts/">Подарки для купивших</a></div>
         </details>
       </nav>
 
       <FestivalHero />
-
-      <FestivalReflection />
-      <FestivalConcept />
+      <FestivalApartment />
       <FestivalProgramme onSelect={setSelectedSpeaker} />
       <FestivalConsultations onSelect={setSelectedSpeaker} />
       <FestivalExhibition onSelect={setSelectedSpeaker} />
+      <FestivalConcept />
       <FestivalDating />
       <BonusSection />
       <FestivalBar />
