@@ -23,6 +23,8 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build:static
+        env:
+          NEXT_PUBLIC_ADMISSIONS_API_URL: https://menwoman-review-december.aopetrukhin.chatgpt.site/api/admissions
       - run: touch out/.nojekyll
       - name: Publish to GitHub Pages branch
         uses: peaceiris/actions-gh-pages@v4
