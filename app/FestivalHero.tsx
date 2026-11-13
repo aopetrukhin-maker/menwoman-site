@@ -57,13 +57,13 @@ export default function FestivalHero() {
         <p className={styles.date}>3 декабря 2026 <span aria-hidden="true">/</span> {event.timeLabel}</p>
         <h1 id="festival-title" className={styles.title} ref={offerHeading} tabIndex={-1}>МЖ Сити.<br /><em>Тайная квартира</em></h1>
         <p className={styles.subtitle}>Фестиваль отношений с собой, с людьми и с жизнью</p>
-        <p className={styles.lead}>Один вечер, чтобы выйти из привычного круга, услышать интересных людей, задать свой вопрос специалисту и познакомиться с теми, с кем хочется продолжить разговор.</p>
+        <p className={styles.lead}>Выступления о близости и выборе, консультационная зона, знакомства в своём темпе, выставка, бар и афтепати. Один вечер — и у каждого свой маршрут.</p>
         <p className={styles.place}>«{event.venue}» · {event.city}<br />{event.address} · метро «{event.metro}»</p>
         <div className={styles.actions}>
           <a className={styles.primary} href="#application-form" data-cta-location="hero">Подать заявку</a>
           <a className={styles.secondary} href="#promo-code" data-cta-location="hero">У меня есть промокод</a>
         </div>
-        <p className={styles.admission}>Билеты от {formatPrice(ticketPrices.start)} · Покупка после одобрения заявки</p>
+        <p className={styles.admission}>Билеты от {formatPrice(ticketPrices.start)}. Сначала заявка, после одобрения — покупка билета.</p>
       </div>
       {phase !== "offer" && (
         <div className={styles.controls} data-hero-controls>

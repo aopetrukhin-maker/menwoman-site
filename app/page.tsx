@@ -16,6 +16,7 @@ import "./festival-conversion.css";
 import "./festival-structure.css";
 import "./festival-city.css";
 import "./festival-luxury.css";
+import "./festival-upgrades.css";
 import { startAdmissionNavigation } from "./admission-context";
 import { tickets, ticketPrices, pairPrices, formatPrice } from "./ticket-tariffs";
 import { festivalEvent as event } from "./festival-event";
@@ -64,6 +65,13 @@ function AttendeeSection() {
     <div className="history-layout"><figure><img src="/history/festival-guests.jpg" alt="Гости и команда предыдущего фестиваля МЖ" width="2048" height="1365" loading="lazy" /><figcaption>Предыдущая встреча сообщества МЖ</figcaption></figure><div><p className="section-label">11 / Предыдущий фестиваль</p><h2>До этой встречи у МЖ<br /><span>уже была история</span></h2><p>Люди, разговоры, выступления и знакомства, из которых складывается атмосфера фестиваля. Посмотрите, как проходила предыдущая встреча.</p><a className="text-link" href="#application-form">Присоединиться к новой встрече</a></div></div>
     <FestivalGuestMarquee />
   </div></section>;
+}
+
+function FestivalProof() {
+  return <aside className="city-proof" aria-label="Как выглядел прошлый фестиваль МЖ"><div className="container city-proof-layout">
+    <figure><img src="/history/festival-guests.jpg" alt="Гости и команда на предыдущем фестивале МЖ" width="2048" height="1365" loading="lazy" /><figcaption>Реальные кадры прошлой встречи</figcaption></figure>
+    <div><p className="section-label">МЖ уже собирал гостей</p><h2>У этого вечера<br /><em>есть своя история.</em></h2><p>Мы уже встречались, слушали спикеров и знакомились. Посмотрите, какой была атмосфера прошлого фестиваля, а затем выберите свой маршрут на 3 декабря.</p><a className="text-link" href="#community">Посмотреть прошлый фестиваль</a></div>
+  </div></aside>;
 }
 
 function PricingSection() {
@@ -161,6 +169,7 @@ export default function Home() {
       </nav>
 
       <FestivalHero />
+      <FestivalProof />
 
       <FestivalReflection />
       <FestivalConcept />
@@ -201,7 +210,7 @@ export default function Home() {
               <p className="section-label">Участник фестиваля</p>
               <h2 id="speaker-modal-title">{selectedSpeaker.name}</h2>
               <p className="modal-role">{selectedSpeaker.role}</p>
-              {selectedSpeaker.stage && <div className="modal-topic"><span>Тема выступления</span><strong>{selectedSpeaker.topic ?? "Тема требует согласования"}</strong></div>}
+              {selectedSpeaker.stage && <div className="modal-topic"><span>Тема выступления</span><strong>{selectedSpeaker.topic ?? "Тему объявим после согласования"}</strong></div>}
               {selectedSpeaker.note && <p className="festival-pending">{selectedSpeaker.note}</p>}
               {selectedSpeaker.description && <p className="modal-description">{selectedSpeaker.description}</p>}
               {selectedSpeaker.facts.length > 0 && <ul>{selectedSpeaker.facts.map((fact) => <li key={fact}>{fact}</li>)}</ul>}

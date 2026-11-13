@@ -9,7 +9,7 @@ export default function FestivalProgramme({ onSelect }: { onSelect: (participant
     <FestivalCarousel label="Спикеры фестиваля" className="speakers-carousel">{speakers.map((speaker, index) => <article className={`city-speaker ${speaker.topic ? "topic-confirmed" : "topic-pending"}`} key={speaker.name}>
       <div className="speaker-card-topline"><span>{String(index + 1).padStart(2, "0")} / МЖ</span></div>
       <ParticipantPortrait participant={participantProfiles[speaker.name]} />
-      <h3>{speaker.name}</h3><p className="city-speaker-role">{speaker.role}</p><p className="city-speaker-topic">{speaker.topic ?? "Тема требует согласования"}</p>
+      <h3>{speaker.name}</h3><p className="city-speaker-role">{speaker.role}</p><p className="city-speaker-topic">{speaker.topic ?? "Тему объявим после согласования"}</p>
       {speaker.note && <p className="programme-note">{speaker.note}</p>}
       <button className="participant-link" type="button" onClick={() => onSelect(participantProfiles[speaker.name])}>Подробнее об эксперте</button>
     </article>)}</FestivalCarousel>

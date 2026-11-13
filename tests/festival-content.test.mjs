@@ -13,7 +13,7 @@ test("only the supplied speakers and agreed topics are shown", () => {
   const speakers = section("program");
   assert.equal((speakers.match(/class="city-speaker topic-confirmed"/g) ?? []).length, 3);
   assert.equal((speakers.match(/class="city-speaker topic-pending"/g) ?? []).length, 8);
-  assert.equal((speakers.match(/Тема требует согласования/g) ?? []).length, 8);
+  assert.equal((speakers.match(/Тему объявим после согласования/g) ?? []).length, 8);
   for (const name of ["Анна Рацун", "Елена Гусева", "Светлана Лапухина", "Мария Рубинская", "Евгения Цапина"]) assert.ok(speakers.includes(name));
   const program = section("program");
   assert.equal((program.match(/Секс, деньги и отношения/g) ?? []).length, 1);
@@ -42,7 +42,7 @@ test("expo and consultations retain pending conditions beside the offers", () =>
   const consultations = section("consultations");
   assert.equal((consultations.match(/class="[^"]*\bfestival-info-card\b[^"]*"/g) ?? []).length, 11);
   assert.ok(consultations.includes("Бесплатные консультации для гостей фестиваля"));
-  for (const phrase of ["Условия получения необходимо подтвердить", "Возможность индивидуального разбора уточняется", "пока не являются подтверждёнными условиями участия", "способ записи"]) assert.ok(consultations.includes(phrase));
+  for (const phrase of ["Условия получения необходимо подтвердить", "Возможность индивидуального разбора уточняется", "число мест и способ записи объявим после подтверждения", "Подарочные диагностики, игры и сертификаты публикуем отдельно"]) assert.ok(consultations.includes(phrase));
 });
 
 test("responsive intro assets and all rendered local images are available", async () => {
@@ -97,7 +97,7 @@ test("admission form contains the requested fields and explains moderation witho
   const admission = section("admission");
   for (const name of ["name", "contact", "email", "format", "reason", "consent"]) assert.ok(admission.includes(`name="${name}"`));
   assert.ok(admission.includes("Почему хотите прийти?"));
-  assert.ok(section("pricing").includes("модератор свяжется с вами и сообщит решение"));
+  assert.ok(section("pricing").includes("модератор рассмотрит заявку и сообщит решение"));
   assert.ok(admission.includes('name="selectedTier"'));
   assert.ok(admission.includes('method="post"'));
   assert.ok(admission.includes("Отправка заявки не гарантирует одобрение участия"));
