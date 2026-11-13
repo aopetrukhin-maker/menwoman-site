@@ -216,9 +216,10 @@ export default function Home() {
               {selectedSpeaker.stage && <div className="modal-topic"><span>Тема выступления</span><strong>{selectedSpeaker.topic ?? "Тему объявим после согласования"}</strong></div>}
               {selectedSpeaker.note && <p className="festival-pending">{selectedSpeaker.note}</p>}
               {selectedSpeaker.description && <p className="modal-description">{selectedSpeaker.description}</p>}
-              {selectedSpeaker.facts.length > 0 && <ul>{selectedSpeaker.facts.map((fact) => <li key={fact}>{fact}</li>)}</ul>}
-              {selectedSpeaker.sessionHighlights && <div className="participant-session"><h3>Что будем делать</h3><ul>{selectedSpeaker.sessionHighlights.map((item) => <li key={item}>{item}</li>)}</ul></div>}
-              {selectedSpeaker.sessionOutcome && <div className="participant-session"><h3>Что вы заберёте с собой</h3><p>{selectedSpeaker.sessionOutcome}</p></div>}
+              {selectedSpeaker.facts.length > 0 && <div className="participant-session"><h3>Опыт и проекты</h3><ul>{selectedSpeaker.facts.map((fact) => <li key={fact}>{fact}</li>)}</ul></div>}
+              {selectedSpeaker.sessionHighlights && <div className="participant-session"><h3>Что будет внутри</h3><ol>{selectedSpeaker.sessionHighlights.map((item) => <li key={item}>{item}</li>)}</ol></div>}
+              {selectedSpeaker.sessionOutcome && <div className="participant-session"><h3>С чем уйдёте</h3><p>{selectedSpeaker.sessionOutcome}</p></div>}
+              {selectedSpeaker.sessionFormat && <div className="participant-session"><h3>Формат</h3><p>{selectedSpeaker.sessionFormat}</p></div>}
               <div className="participant-formats">{selectedSpeaker.appearances.map((appearance) => <article key={appearance.label}><h4>{appearance.label}</h4><p>{appearance.text}</p>{appearance.note && <p className="festival-pending">{appearance.note}</p>}</article>)}</div>
               <div className="speaker-project-links">{selectedSpeaker.links?.map((link) => <a key={link.href} href={link.href} target="_blank" rel="noreferrer">{link.label}</a>)}</div>
             </div>

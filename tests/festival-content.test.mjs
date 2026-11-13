@@ -9,28 +9,27 @@ const section = (id) => {
   return match[1];
 };
 
-test("only the supplied speakers and agreed topics are shown", () => {
+test("speaker programme follows the supplied editorial brief and puts Lapukhina first", () => {
   const speakers = section("program");
-  assert.equal((speakers.match(/class="city-speaker topic-confirmed"/g) ?? []).length, 7);
-  assert.equal((speakers.match(/class="city-speaker topic-pending"/g) ?? []).length, 4);
-  assert.equal((speakers.match(/Тему объявим после согласования/g) ?? []).length, 4);
-  for (const name of ["Анна Рацун", "Елена Гусева", "Светлана Лапухина", "Мария Рубинская", "Евгения Цапина", "Ольга Васильева", "Ольга Жильникова", "Екатерина Тистол"]) assert.ok(speakers.includes(name));
+  assert.equal((speakers.match(/class="city-speaker topic-confirmed"/g) ?? []).length, 11);
+  assert.equal((speakers.match(/class="city-speaker topic-pending"/g) ?? []).length, 1);
+  assert.ok(speakers.indexOf("Светлана Лапухина") < speakers.indexOf("Елена Солнечная"));
+  for (const name of ["Елена Солнечная", "Анна Рацун", "Елена Гусева", "Светлана Лапухина", "Мария Рубинская", "Евгения Цапина", "Ольга Васильева", "Ольга Жильникова", "Екатерина Тистол"]) assert.ok(speakers.includes(name));
   assert.ok(!html.includes("Ирина Рожик"));
-  for (const topic of ["Как сохранить страсть в отношениях", "Резолюция эгоизма", "Как вернуть свою женскую силу", "Как путешествия меняют наше окружение"]) assert.ok(speakers.includes(topic));
+  for (const topic of ["Как сохранить страсть в отношениях", "Разреши себе быть важной", "Почему женщина перестаёт хотеть", "Почему путешествия меняют не только места"]) assert.ok(speakers.includes(topic));
   const program = section("program");
-  assert.equal((program.match(/Секс, деньги и отношения/g) ?? []).length, 1);
-  assert.ok(program.includes("Секс, деньги и отношения"));
+  assert.ok(program.includes("Секс, деньги и обиды"));
   assert.ok(program.includes("Сначала Я. Потом МЫ. Любовь и отношения после 40"));
-  assert.ok(program.includes("к безопасному выходу"));
+  assert.ok(program.includes("когда любовь превращается в абьюз"));
 });
 
 test("withheld participants and obsolete topics are absent from both routes", async () => {
   const gifts = await readFile(new URL("../out/gifts/index.html", import.meta.url), "utf8");
-  for (const name of ["Елена Забанова", "Арина Казанских"]) {
+  for (const name of ["Елена Забанова", "Арина Казанских", "Злата Нечаева"]) {
     assert.ok(!html.includes(name), `Unexpected participant: ${name}`);
     assert.ok(!gifts.includes(name), `Unexpected gift provider: ${name}`);
   }
-  assert.ok(!html.includes("Елена Солнечная"), "Elena Solnechnaya must not appear in the current festival");
+  assert.ok(html.includes("Елена Солнечная"));
   for (const topic of ["Что мы на самом деле приносим в отношения", "Секс становится обязанностью", "Парадоксы взаимоотношений"]) assert.ok(!html.includes(topic));
 });
 
