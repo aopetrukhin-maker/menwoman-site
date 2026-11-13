@@ -5,13 +5,13 @@ import ParticipantPortrait from "./ParticipantPortrait";
 
 export default function FestivalProgramme({ onSelect }: { onSelect: (participant: FestivalParticipant) => void }) {
   return <section className="section programme-section primary-section" id="program"><div className="container" id="speakers">
-    <div className="section-heading split-heading"><div><p className="section-label">04 / Программа и спикеры</p><h2>Разговоры, которые<br /><span>касаются вашей жизни</span></h2></div><p>О близости и деньгах. О кризисах в паре. О любви, новых начинаниях и возможности выбирать себя в любом возрасте. Спикеры МЖ делятся опытом и подходами к вопросам, с которыми люди приходят к ним в практику.</p></div>
+    <div className="section-heading split-heading"><div><p className="section-label">04 / Программа и спикеры</p><h2>Выберите разговор,<br /><span>ради которого придёте</span></h2></div><p>Близость, отношения, деньги и право выбирать себя. Найдите тему, которая попадает в ваш вопрос, и приходите слушать того, кто работает с ней каждый день.</p></div>
     <FestivalCarousel label="Спикеры фестиваля" className="speakers-carousel">{speakers.map((speaker, index) => <article className={`city-speaker ${speaker.topic ? "topic-confirmed" : "topic-pending"}`} key={speaker.name}>
       <ParticipantPortrait participant={participantProfiles[speaker.name]} />
       <div className="speaker-card-topline"><span>{String(index + 1).padStart(2, "0")} / МЖ · Спикер</span></div>
-      <h3>{speaker.name}</h3><p className="city-speaker-role">{speaker.role}</p><p className="city-speaker-topic">{speaker.topic ?? "Тему объявим после согласования"}</p>
+      {speaker.topic ? <><h3 className="speaker-offer">{speaker.topic}</h3><p className="speaker-person">{speaker.name}</p><p className="city-speaker-role">{speaker.role}</p></> : <><h3>{speaker.name}</h3><p className="city-speaker-role">{speaker.role}</p><p className="city-speaker-topic">Тему объявим после согласования</p></>}
       {speaker.note && <p className="programme-note">{speaker.note}</p>}
-      <button className="participant-link" type="button" onClick={() => onSelect(participantProfiles[speaker.name])}>Подробнее об эксперте</button>
+      <button className="participant-link" type="button" onClick={() => onSelect(participantProfiles[speaker.name])}>О спикере и выступлении</button>
     </article>)}</FestivalCarousel>
     <p className="city-fine-print">Время выступлений и оставшиеся темы программы объявим после согласования.</p>
   </div></section>;

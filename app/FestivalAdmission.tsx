@@ -24,9 +24,10 @@ async function submitTuqoForm(data: Record<string, FormDataEntryValue>, selectio
   }
   const fields = new URLSearchParams({
     name: String(data.name ?? ""),
-    email: String(data.email ?? ""),
     message: `Почему хотите прийти: ${String(data.reason ?? "")}`,
-    "Телефон или Telegram": String(data.contact ?? ""),
+    "Телефон": String(data.phone ?? ""),
+    "Telegram": String(data.telegram ?? ""),
+    "Телефон или Telegram": [data.phone, data.telegram].map((value) => String(value ?? "")).filter(Boolean).join(" · "),
     "Формат участия": selection.format === "pair" ? "Вдвоём" : "Один",
     "Интересующий тариф": selection.tier ?? "Пока не выбрал",
     "Согласие на обработку персональных данных": data.consent === "on" ? "Да" : "Нет",
@@ -54,9 +55,6 @@ export default function FestivalAdmission() {
   const [fieldError, setFieldError] = useState<{ field: string; message: string } | null>(null);
   const [reference, setReference] = useState("");
   const [submitted, setSubmitted] = useState(false);
-  const [checking, setChecking] = useState(false);
-  const [promoError, setPromoError] = useState("");
-  const [promoResult, setPromoResult] = useState<{ checkoutUrl?: string; message: string; reference?: string } | null>(null);
   useEffect(() => {
     const select = (event: Event) => { if (event instanceof CustomEvent) setSelection(event.detail as AdmissionContext); };
     window.addEventListener(selectionEvent, select);
@@ -71,6 +69,12 @@ export default function FestivalAdmission() {
     if (sending) return;
     const form = event.currentTarget;
     const data = Object.fromEntries(new FormData(form));
+    const phone = String(data.phone ?? "").trim();
+    const telegram = String(data.telegram ?? "").trim();
+    const contactError = (field: "phone" | "telegram", message: string) => { setFieldError({ field, message }); const input = form.elements.namedItem(field); if (input instanceof HTMLElement) input.focus(); };
+    if (!phone && !telegram) { contactError("phone", "Укажите телефон или Telegram — достаточно одного контакта."); return; }
+    if (phone && (!/^[+\d\s()\-]+$/.test(phone) || !/^\d{10,15}$/.test(phone.replace(/\D/g, "")))) { contactError("phone", "Укажите телефон с кодом страны."); return; }
+    if (telegram && !/^[a-zA-Z][a-zA-Z0-9_]{4,31}$/.test(telegram.replace(/^(?:https?:\/\/)?t\.me\//i, "").replace(/\/$/, "").replace(/^@/, ""))) { contactError("telegram", "Укажите @username или t.me/username."); return; }
     setSending(true); setError(""); setFieldError(null);
     requestId.current ??= crypto.randomUUID();
     try {
@@ -79,7 +83,7 @@ export default function FestivalAdmission() {
         await submitTuqoForm(data, selection, requestId.current, shownAt.current);
         setSubmitted(true);
       } else {
-        const result = await post("/applications", { name: data.name, contact: data.contact, email: data.email, format: selection.format, selectedTier: selection.tier, reason: data.reason, consent: data.consent === "on", website: data.website, requestId: requestId.current, attribution: attribution() });
+        const result = await post("/applications", { name: data.name, phone, telegram, format: selection.format, selectedTier: selection.tier, reason: data.reason, consent: data.consent === "on", website: data.website, requestId: requestId.current, attribution: attribution() });
         if (result.status !== "pending" || typeof result.reference !== "string") throw new Error("Не удалось подтвердить получение заявки. Попробуйте ещё раз.");
         setReference(result.reference);
         setSubmitted(true);
@@ -96,25 +100,6 @@ export default function FestivalAdmission() {
       trackFunnelEvent("application_error", { errorCode: failure instanceof SubmissionError ? failure.code : "network", tier: selection.tier, format: selection.format });
     } finally { setSending(false); }
   }
-  async function checkPromo(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (checking) return;
-    setChecking(true); setPromoError(""); setPromoResult(null);
-    const data = new FormData(event.currentTarget);
-    try {
-      const result = await post("/promo", { code: data.get("code"), attribution: attribution() });
-      let checkoutUrl: string | undefined;
-      if (result.checkoutUrl) {
-        const target = new URL(result.checkoutUrl);
-        if (target.protocol !== "https:") throw new Error("Ссылка на покупку временно недоступна.");
-        checkoutUrl = target.href;
-      }
-      setPromoResult({ checkoutUrl, reference: result.reference, message: result.message || "Промокод подтверждён." });
-    } catch (failure) {
-      setPromoError(failure instanceof SubmissionError ? failure.message : "Не удалось проверить промокод. Проверьте соединение и повторите попытку.");
-      trackFunnelEvent("promo_error", { errorCode: failure instanceof SubmissionError ? failure.code : "network" });
-    } finally { setChecking(false); }
-  }
   return <section className="section admission-section primary-section" id="admission"><div className="container">
     <div className="section-heading center-heading"><p className="section-label">15 / Ваш следующий шаг</p><h2>Какой вопрос вы<br /><span>принесёте в МЖ?</span></h2><p>Желание познакомиться. Разговор, который давно откладывали. Интерес к определённой теме. Или просто любопытство — каким может получиться этот вечер. Расскажите немного о себе и о том, почему хотите прийти.</p></div>
     <div className="admission-grid">
@@ -124,21 +109,19 @@ export default function FestivalAdmission() {
           <div className="admission-selection"><label htmlFor="admission-tier">Интересующий тариф <small className="admission-field-note">Можно выбрать сейчас или обсудить с модератором.</small><select id="admission-tier" name="selectedTier" value={selection.tier ?? ""} onChange={(event) => setSelection({ ...selection, tier: (event.target.value || undefined) as TicketTier | undefined })}><option value="">Пока не выбрал</option>{tickets.map((ticket) => <option key={ticket.tier} value={ticket.tier}>{ticket.name} · {formatPrice((selection.format === "pair" ? pairPrices : ticketPrices)[ticket.tier])}{selection.format === "pair" ? " за двоих" : " за одного"}</option>)}</select></label><p>Выбор тарифа в заявке не обязывает к оплате.</p></div>
           <div className="admission-fields">
             <label htmlFor="admission-name">Имя<input id="admission-name" name="name" autoComplete="name" required maxLength={100} {...errorProps("name")} />{inlineError("name")}</label>
-            <label htmlFor="admission-contact">Телефон или Telegram<input id="admission-contact" name="contact" autoComplete="tel" placeholder="+7… / @username / t.me/username" required maxLength={100} {...errorProps("contact")} />{inlineError("contact")}</label>
-            <label className="admission-wide" htmlFor="admission-email">E-mail<input id="admission-email" name="email" type="email" autoComplete="email" required maxLength={254} {...errorProps("email")} />{inlineError("email")}<small className="admission-field-note">Контакт для информации о вашем участии.</small></label>
+            <label htmlFor="admission-phone">Телефон<input id="admission-phone" name="phone" type="tel" autoComplete="tel" inputMode="tel" placeholder="+7 999 123-45-67" maxLength={100} {...errorProps("phone")} />{inlineError("phone")}</label>
+            <label htmlFor="admission-telegram">Telegram<input id="admission-telegram" name="telegram" autoComplete="off" placeholder="@username" maxLength={100} {...errorProps("telegram")} />{inlineError("telegram")}</label>
+            <p className="admission-wide admission-contact-note">Оставьте телефон или Telegram. Можно указать оба.</p>
             <fieldset className="admission-wide"><legend>Формат участия</legend><div className="admission-radio"><label><input name="format" type="radio" value="single" checked={selection.format === "single"} onChange={() => setSelection({ ...selection, format: "single" })} required />Один</label><label><input name="format" type="radio" value="pair" checked={selection.format === "pair"} onChange={() => setSelection({ ...selection, format: "pair" })} required />Вдвоём</label></div>{inlineError("format")}</fieldset>
             <label className="admission-wide" htmlFor="admission-reason">Почему хотите прийти?<textarea id="admission-reason" name="reason" required maxLength={2000} rows={3} placeholder="Что вам интересно: новые знакомства, время вдвоём, определённая тема или практика?" {...errorProps("reason")} />{inlineError("reason")}<small className="admission-field-note">Достаточно 1–2 предложений.</small></label>
           </div>
           <div className="admission-trap" aria-hidden="true"><label>Ваш сайт<input name="website" tabIndex={-1} autoComplete="off" /></label></div>
           <label className="admission-consent"><input name="consent" type="checkbox" required {...errorProps("consent")} /><span>Согласен на обработку персональных данных для рассмотрения заявки и связи со мной.</span></label>{inlineError("consent")}
-          <details className="admission-consent-details"><summary>О согласии на обработку данных</summary><p>Даю организатору фестиваля МЖ согласие на обработку имени, контактных данных, e-mail, выбранных тарифа и формата участия и ответа в заявке для рассмотрения участия и связи по его результатам. Согласие можно отозвать, обратившись к организатору по контактам внизу сайта.</p></details>
+          <details className="admission-consent-details"><summary>О согласии на обработку данных</summary><p>Даю организатору фестиваля МЖ согласие на обработку имени, телефона и/или Telegram, выбранных тарифа и формата участия и ответа в заявке для рассмотрения участия и связи по его результатам. Согласие можно отозвать, обратившись к организатору по контактам внизу сайта.</p></details>
           {error && <p className="admission-error" role="alert">{error}</p>}
           <button className="primary-button" type="submit" disabled={sending}>{sending ? "Отправляем…" : "Отправить заявку"}</button>
           <p className="admission-small">Отправка заявки не гарантирует одобрение участия.</p>
         </form>}
-      </div>
-      <div className="admission-panel admission-promo" id="promo-code"><p className="section-label">После одобрения</p><h3>У меня есть промокод</h3>{tuqoFormEndpoint ? <><p>Получили персональный промокод? Напишите организатору, чтобы уточнить покупку билета.</p><a className="secondary-button" href="mailto:aopetrukhin@gmail.com?subject=%D0%9C%D0%96%20%D0%A1%D0%B8%D1%82%D0%B8%20%E2%80%94%20%D0%BC%D0%BE%D0%B9%20%D0%BF%D1%80%D0%BE%D0%BC%D0%BE%D0%BA%D0%BE%D0%B4">Написать с промокодом</a></> : <><p>Введите персональный промокод, который вы получили от модератора.</p><form method="post" onSubmit={checkPromo} aria-busy={checking}><label htmlFor="admission-code">Промокод<input id="admission-code" name="code" autoComplete="off" autoCapitalize="characters" spellCheck={false} required maxLength={100} aria-invalid={Boolean(promoError) || undefined} aria-describedby={promoError ? "promo-error" : undefined} /></label>{promoError && <p className="admission-error" id="promo-error" role="alert">{promoError}</p>}<button className="secondary-button" type="submit" disabled={checking}>{checking ? "Проверяем…" : "Проверить промокод"}</button></form></>}
-        {promoResult && <div className="admission-promo-result" role="status"><p>{promoResult.message}</p>{promoResult.checkoutUrl && <a className="primary-button" href={promoResult.checkoutUrl} target="_blank" rel="noreferrer" onClick={() => trackFunnelEvent("purchase_clicked", { applicationReference: promoResult.reference })}>Перейти к покупке билета</a>}</div>}
       </div>
     </div>
   </div></section>;

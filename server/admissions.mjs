@@ -1,11 +1,11 @@
-const consentVersion = 'mzh-2026-12-03-v1';
+const consentVersion = 'mzh-2026-12-03-v2';
 const clean = (value) => typeof value === 'string' ? value.trim() : '';
 const digest = async (value) => [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(value)))].map((byte) => byte.toString(16).padStart(2, '0')).join('');
 const json = (body, status = 200) => Response.json(body, { status, headers: { 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' } });
 const funnelNames = new Set(['page_view', 'application_opened', 'application_clicked', 'application_viewed', 'application_success', 'application_error', 'promo_opened', 'promo_clicked', 'promo_viewed', 'promo_error', 'purchase_clicked', 'tariffs_viewed', 'quiz_started', 'quiz_completed']);
 const tiers = new Set(['start', 'reload', 'vip']);
 const placements = new Set(['header', 'hero', 'mobile', 'mobile-menu', 'community', 'pricing', 'participation', 'tariff-start', 'tariff-reload', 'tariff-vip', 'connection-code', 'consultations', 'balance', 'reflection', 'dating', 'bonuses', 'bar', 'afterparty']);
-const errorCodes = new Set(['name', 'contact', 'email', 'format', 'reason', 'consent', 'selectedTier', 'request', 'conflict', 'promo', 'browser_validation', 'network', 'server']);
+const errorCodes = new Set(['name', 'contact', 'phone', 'telegram', 'email', 'format', 'reason', 'consent', 'selectedTier', 'request', 'conflict', 'promo', 'browser_validation', 'network', 'server']);
 
 function cleanContext(input) {
   const value = input && typeof input === 'object' && !Array.isArray(input) ? input : {};
@@ -43,18 +43,32 @@ async function funnelMetrics(env) {
 }
 
 export function validateApplication(body) {
+  const rawPhone = clean(body.phone);
+  const rawTelegram = clean(body.telegram);
+  const legacyContact = clean(body.contact);
+  const splitContacts = body.phone !== undefined || body.telegram !== undefined;
   const data = {
-    name: clean(body.name), contact: clean(body.contact), email: clean(body.email).toLowerCase(),
+    name: clean(body.name), contact: legacyContact, email: clean(body.email).toLowerCase(),
     format: body.format, reason: clean(body.reason), requestId: clean(body.requestId), consent: body.consent,
   };
   const invalid = (field, error) => ({ error, field, code: field });
   if (body.website) return { error: 'Не удалось принять заявку. Проверьте заполнение формы.', code: 'request' };
   if (data.name.length < 1 || data.name.length > 100) return invalid('name', 'Укажите имя длиной до 100 символов.');
-  const username = data.contact.replace(/^(?:https?:\/\/)?t\.me\//i, '').replace(/\/$/, '').replace(/^@/, '');
-  const telegram = /^[a-zA-Z][a-zA-Z0-9_]{4,31}$/.test(username);
-  const phone = /^[+\d\s()\-]+$/.test(data.contact) && /^\d{10,15}$/.test(data.contact.replace(/\D/g, ''));
-  if (data.contact.length > 100 || (!telegram && !phone)) return invalid('contact', 'Укажите телефон с кодом страны, @username или ссылку t.me/username.');
-  if (data.email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) return invalid('email', 'Проверьте e-mail.');
+  const normalizeTelegram = (value) => value.replace(/^(?:https?:\/\/)?t\.me\//i, '').replace(/\/$/, '').replace(/^@/, '');
+  const validTelegram = (value) => /^[a-zA-Z][a-zA-Z0-9_]{4,31}$/.test(normalizeTelegram(value));
+  const validPhone = (value) => /^[+\d\s()\-]+$/.test(value) && /^\d{10,15}$/.test(value.replace(/\D/g, ''));
+  let normalizedContact;
+  if (splitContacts) {
+    if (!rawPhone && !rawTelegram) return invalid('phone', 'Укажите телефон или Telegram.');
+    if (rawPhone && (rawPhone.length > 100 || !validPhone(rawPhone))) return invalid('phone', 'Укажите телефон с кодом страны.');
+    if (rawTelegram && (rawTelegram.length > 100 || !validTelegram(rawTelegram))) return invalid('telegram', 'Укажите @username или t.me/username.');
+    normalizedContact = [rawPhone && `${rawPhone.startsWith('+') ? '+' : ''}${rawPhone.replace(/\D/g, '')}`, rawTelegram && `@${normalizeTelegram(rawTelegram)}`].filter(Boolean).join(' · ');
+  } else {
+    if (legacyContact.length > 100 || (!validTelegram(legacyContact) && !validPhone(legacyContact))) return invalid('contact', 'Укажите телефон с кодом страны, @username или ссылку t.me/username.');
+    normalizedContact = validTelegram(legacyContact) ? `@${normalizeTelegram(legacyContact)}` : `${legacyContact.startsWith('+') ? '+' : ''}${legacyContact.replace(/\D/g, '')}`;
+  }
+  if (splitContacts) data.contact = normalizedContact;
+  if (data.email && (data.email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email))) return invalid('email', 'Проверьте e-mail.');
   if (!['single', 'pair'].includes(data.format)) return invalid('format', 'Выберите формат участия: один или вдвоём.');
   if (!data.reason || data.reason.length > 2000) return invalid('reason', 'Ответьте, почему хотите прийти. Не более 2000 символов.');
   if (data.consent !== true) return invalid('consent', 'Для отправки нужно согласие на обработку персональных данных.');
@@ -62,7 +76,7 @@ export function validateApplication(body) {
   if (body.selectedTier != null && body.selectedTier !== '' && !tiers.has(body.selectedTier)) return invalid('selectedTier', 'Выберите тариф из списка.');
   // Keep the legacy fingerprint stable for existing applications without a selected tariff.
   if (tiers.has(body.selectedTier)) data.selectedTier = body.selectedTier;
-  return { data, normalizedContact: telegram ? `@${username}` : `${data.contact.startsWith('+') ? '+' : ''}${data.contact.replace(/\D/g, '')}` };
+  return { data, normalizedContact };
 }
 
 function isAdmin(request, env) {

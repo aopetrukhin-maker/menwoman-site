@@ -43,8 +43,8 @@ test("expo and consultations retain pending conditions beside the offers", () =>
   assert.ok(expo.includes("Возможный показ мод требует отдельного согласования"));
   const consultations = section("consultations");
   assert.equal((consultations.match(/class="[^"]*\bfestival-info-card\b[^"]*"/g) ?? []).length, 10);
-  assert.ok(consultations.includes("Бесплатные консультации для гостей фестиваля"));
-  for (const phrase of ["Условия получения необходимо подтвердить", "Возможность индивидуального разбора уточняется", "число мест и способ записи объявим после подтверждения", "Подарочные диагностики, игры и сертификаты публикуем отдельно"]) assert.ok(consultations.includes(phrase));
+  assert.ok(consultations.includes("бесплатную консультацию"));
+  for (const phrase of ["Условия получения необходимо подтвердить", "Возможность индивидуального разбора уточняется", "число мест и запись объявим после подтверждения", "Поговорите о том, что происходит в семье"]) assert.ok(consultations.includes(phrase));
 });
 
 test("responsive intro assets and all rendered local images are available", async () => {
@@ -58,6 +58,7 @@ test("responsive intro assets and all rendered local images are available", asyn
   assert.ok(html.includes("/speakers/elena-guseva.webp"));
   assert.ok(html.includes("/speakers/olga-tsvik-aroma.webp"));
   assert.ok(html.includes("/speakers/svetlana-lapukhina.webp"));
+  assert.ok(html.includes("/speakers/valeria-mirsalimova-cutout.png"));
   assert.ok(!html.includes("/speakers/olga-tsvik.webp"));
   const paths = new Set([...html.matchAll(/(?:src|srcSet|srcset)="(\/[^"?]+)"/g)].map((match) => match[1]));
   for (const path of paths) await access(new URL(`../out${path}`, import.meta.url));
@@ -75,7 +76,7 @@ test("December event details replace the old venue and expired checkout", () => 
   assert.equal((pricing.match(/class="price-head"/g) ?? []).length, 3);
   for (const price of [1490, 2990, 5900]) assert.ok(pricing.includes(new Intl.NumberFormat("ru-RU").format(price)));
   assert.ok(pricing.includes("Подать заявку"));
-  assert.ok(pricing.includes("У меня есть промокод"));
+  assert.ok(!pricing.includes("У меня есть промокод"));
 });
 
 test("event metadata ends at midnight the next day and gift access keeps its original flow", async () => {
@@ -97,19 +98,20 @@ test("event metadata ends at midnight the next day and gift access keeps its ori
 
 test("admission form contains the requested fields and explains moderation without promising approval", () => {
   const admission = section("admission");
-  for (const name of ["name", "contact", "email", "format", "reason", "consent"]) assert.ok(admission.includes(`name="${name}"`));
+  for (const name of ["name", "phone", "telegram", "format", "reason", "consent"]) assert.ok(admission.includes(`name="${name}"`));
+  for (const name of ["contact", "email"]) assert.ok(!admission.includes(`name="${name}"`));
   assert.ok(admission.includes("Почему хотите прийти?"));
   assert.ok(section("pricing").includes("модератор рассмотрит заявку и сообщит решение"));
   assert.ok(admission.includes('name="selectedTier"'));
   assert.ok(admission.includes('method="post"'));
   assert.ok(admission.includes("Отправка заявки не гарантирует одобрение участия"));
-  assert.ok(admission.includes('id="promo-code"'));
+  assert.ok(!admission.includes('id="promo-code"'));
   assert.ok(!admission.includes("qtickets.ru"));
 });
 
 test("the approved city narrative runs from a personal question to participation", () => {
   const opening = section("festival-introduction");
-  for (const value of ["МЖ Сити.", "Тайная квартира", "Фестиваль отношений с собой, с людьми и с жизнью", "3 декабря 2026", "Марата, 1/71", "Подать заявку", "У меня есть промокод"]) assert.ok(opening.includes(value));
+  for (const value of ["МЖ Сити.", "Тайная квартира", "Фестиваль отношений с собой, с людьми и с жизнью", "3 декабря 2026", "Марата, 1/71", "Подать заявку", "Посмотреть программу"]) assert.ok(opening.includes(value));
   const order = [...html.matchAll(/<section class="[^"]*primary-section[^"]*" id="([^"]+)"/g)].map((match) => match[1]);
   assert.deepEqual(order, ["festival-introduction", "reflection", "balance", "program", "consultations", "expo", "dating", "bonuses", "bar", "afterparty", "partners", "logistics", "pricing", "admission", "community"]);
   assert.ok(!html.includes('class="city-proof"'));

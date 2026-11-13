@@ -105,18 +105,29 @@
 .luxury-edition .wheel-control:focus-visible { outline: 2px solid #f3d3a2; outline-offset: 8px; border-radius: 50%; }
 
 /* Full-height editorial portraits replace the small floating circles. */
-.luxury-edition .city-speaker, .luxury-edition .city-consultant { --portrait-pad: 28px; padding: var(--portrait-pad); align-self: flex-start; }
-.luxury-edition :is(.city-speaker, .city-consultant) .participant-portrait { position: relative; display: grid; place-items: center; width: calc(100% + var(--portrait-pad) * 2); max-width: none; aspect-ratio: .91; margin: calc(-1 * var(--portrait-pad)) calc(-1 * var(--portrait-pad)) 23px; overflow: hidden; border: 0; border-bottom: 1px solid #c5a4705c; border-radius: 7px 7px 0 0; background: radial-gradient(ellipse at 54% 22%, #66543a, #1c251c 68%); box-shadow: none; }
-.luxury-edition :is(.city-speaker, .city-consultant) .participant-portrait::after { position: absolute; z-index: 2; right: 20px; bottom: 13px; content: "МЖ"; color: #f5dcb6b3; font: 500 43px/1 var(--font-display), Georgia, serif; letter-spacing: -.08em; pointer-events: none; }
-.luxury-edition :is(.city-speaker, .city-consultant) .participant-portrait img { width: 100%; height: 100%; object-fit: cover; filter: saturate(.72) sepia(.08) contrast(1.05); -webkit-mask-image: linear-gradient(#000 0%, #000 80%, transparent 100%); mask-image: linear-gradient(#000 0%, #000 80%, transparent 100%); }
-.luxury-edition :is(.city-speaker, .city-consultant) .participant-portrait.has-initials { aspect-ratio: 1.13; background: radial-gradient(circle at 50% 35%, #8f6c463f, transparent 45%), repeating-linear-gradient(90deg, transparent 0 30px, #e3c48b09 31px), #1b261e; }
-.luxury-edition :is(.city-speaker, .city-consultant) .participant-portrait.has-initials > span { font-size: clamp(78px, 9vw, 118px); }
+.luxury-edition .city-speaker, .luxury-edition .city-consultant, .luxury-edition .city-exhibitor { --portrait-pad: 28px; padding: var(--portrait-pad); align-self: flex-start; }
+.luxury-edition :is(.city-speaker, .city-consultant, .city-exhibitor) .participant-portrait { position: relative; display: grid; place-items: center; width: calc(100% + var(--portrait-pad) * 2); max-width: none; aspect-ratio: .91; margin: calc(-1 * var(--portrait-pad)) calc(-1 * var(--portrait-pad)) 23px; overflow: hidden; border: 0; border-bottom: 1px solid #c5a4705c; border-radius: 7px 7px 0 0; background: radial-gradient(ellipse at 54% 22%, #66543a, #1c251c 68%); box-shadow: none; }
+.luxury-edition :is(.city-speaker, .city-consultant, .city-exhibitor) .participant-portrait::after { position: absolute; z-index: 2; right: 20px; bottom: 13px; content: "МЖ"; color: #f5dcb6b3; font: 500 43px/1 var(--font-display), Georgia, serif; letter-spacing: -.08em; pointer-events: none; }
+.luxury-edition :is(.city-speaker, .city-consultant, .city-exhibitor) .participant-portrait img { width: 100%; height: 100%; object-fit: cover; filter: saturate(.72) sepia(.08) contrast(1.05); -webkit-mask-image: linear-gradient(#000 0%, #000 80%, transparent 100%); mask-image: linear-gradient(#000 0%, #000 80%, transparent 100%); }
+.luxury-edition :is(.city-speaker, .city-consultant, .city-exhibitor) .participant-portrait.has-initials { aspect-ratio: 1.13; background: radial-gradient(circle at 50% 35%, #8f6c463f, transparent 45%), repeating-linear-gradient(90deg, transparent 0 30px, #e3c48b09 31px), #1b261e; }
+.luxury-edition :is(.city-speaker, .city-consultant, .city-exhibitor) .participant-portrait.has-initials > span { font-size: clamp(78px, 9vw, 118px); }
+.luxury-edition .city-exhibitor .participant-portrait { aspect-ratio: 1.08; }
+.luxury-edition .participant-portrait:has(img[src*="valeria-mirsalimova-cutout"]) { background: radial-gradient(ellipse at 55% 32%, #795a3d, transparent 60%), linear-gradient(145deg, #293629, #131e18); }
+.luxury-edition .participant-portrait img[src*="valeria-mirsalimova-cutout"] { object-position: 54% 35%; -webkit-mask-image: none; mask-image: none; }
+.luxury-edition .speaker-offer { margin: 0 0 18px; color: #f4e5cd; font: 500 clamp(27px, 2.5vw, 35px)/1.13 var(--font-display), Georgia, serif; }
+.luxury-edition .speaker-person { margin: 0 0 3px; color: #e4be83; font-size: 16px; font-weight: 700; }
+.luxury-edition .city-speaker .city-speaker-role { margin-bottom: 10px; }
+.luxury-edition .consultant-eyebrow { margin: 0 0 10px; color: #d6ad76 !important; font-size: 10px !important; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.luxury-edition .city-consultant > h3, .luxury-edition .city-exhibitor > h3 { margin-bottom: 14px; font-size: clamp(28px, 2.7vw, 38px); }
+.luxury-edition .consultant-name, .luxury-edition .exhibitor-name { margin: 0 0 17px; padding-bottom: 13px; border-bottom: 1px solid #c5a4704a; color: #e1b982 !important; font-size: 16px !important; font-weight: 700; }
+.luxury-edition .city-exhibitor .exhibitor-category { margin-bottom: 12px; }
+.luxury-edition .city-exhibitor .participant-link { margin-top: 18px; padding-top: 0; }
 .luxury-edition .speaker-card-topline { margin: 0 0 16px; }
 .luxury-edition .city-speaker-role { min-height: 0; margin-bottom: 17px; }
 .luxury-edition .city-speaker-topic { flex: none; padding-top: 16px; }
 .luxury-edition .city-consultant > .participant-link { margin-top: 18px; }
-.luxury-edition :is(.speakers-carousel, .consultations-carousel) [role="list"] { align-items: flex-start; }
-.luxury-edition :is(.speakers-carousel, .consultations-carousel) [role="listitem"] { align-self: flex-start; }
+.luxury-edition :is(.speakers-carousel, .consultations-carousel, .expo-carousel) [role="list"] { align-items: flex-start; }
+.luxury-edition :is(.speakers-carousel, .consultations-carousel, .expo-carousel) [role="listitem"] { align-self: flex-start; }
 
 /* The old festival belongs at the end, presented as a composed archive. */
 .luxury-edition .festival-history .history-layout { align-items: center; }
@@ -129,10 +140,11 @@
   .luxury-edition .reflection-scene { height: min(85vw, 400px); box-shadow: 12px 12px 0 #c5a4700e; }
   .luxury-edition .reflection-scene figcaption { bottom: 18px; left: 18px; font-size: 11px; }
   .luxury-edition .reflection-scene-mark { top: 12px; right: 15px; font-size: 36px; }
-  .luxury-edition .city-speaker, .luxury-edition .city-consultant { --portrait-pad: 24px; padding: var(--portrait-pad); }
-  .luxury-edition :is(.city-speaker, .city-consultant) .participant-portrait { width: calc(100% + var(--portrait-pad) * 2); max-width: none; aspect-ratio: .95; }
+  .luxury-edition .city-speaker, .luxury-edition .city-consultant, .luxury-edition .city-exhibitor { --portrait-pad: 24px; padding: var(--portrait-pad); }
+  .luxury-edition :is(.city-speaker, .city-consultant, .city-exhibitor) .participant-portrait { width: calc(100% + var(--portrait-pad) * 2); max-width: none; aspect-ratio: .95; }
+  .luxury-edition .city-consultations .section-heading h2 { font-size: clamp(45px, 10.2vw, 66px); }
   .luxury-edition .wheel-control { width: min(100%, 380px); }
   .luxury-edition .festival-history .history-layout figure img { aspect-ratio: 1.5; }
 }
-@media (max-width: 380px) { .luxury-edition .city-speaker, .luxury-edition .city-consultant { --portrait-pad: 20px; } }
+@media (max-width: 380px) { .luxury-edition .city-speaker, .luxury-edition .city-consultant, .luxury-edition .city-exhibitor { --portrait-pad: 20px; } }
 @media (prefers-reduced-motion: reduce) { .luxury-edition .wheel-ring { transition: none; } }

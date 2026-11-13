@@ -75,11 +75,10 @@ function PricingSection() {
         <div className="section-heading center-heading">
           <p className="section-label">14 / Билеты и состав тарифов</p>
           <h2>Как вы хотите<br /><span>провести этот вечер?</span></h2>
-          <p>Участие по заявке. После одобрения модератором вы получите персональный промокод для покупки билета.</p>
+          <p>Оставьте заявку. После одобрения модератор сообщит, как купить выбранный билет.</p>
         </div>
         <div className="admission-actions">
           <a className="primary-button" href="#application-form">Подать заявку</a>
-          <a className="secondary-button" href="#promo-code">У меня есть промокод</a>
         </div>
         <div className="ticket-format-choice" role="group" aria-label="Количество участников в билете"><button type="button" aria-pressed={purchaseFormat === "single"} onClick={() => setPurchaseFormat("single")}>Один</button><button type="button" aria-pressed={purchaseFormat === "pair"} onClick={() => setPurchaseFormat("pair")}>Вдвоём</button></div>
         <div className="pricing-grid">
@@ -91,7 +90,6 @@ function PricingSection() {
               <p>{ticket.description}</p>
               <details className="ticket-details"><summary>Полный состав тарифа <b>+</b></summary><ul>{ticket.items.map((item) => <li key={item}><b>✓</b>{item}</li>)}</ul></details>
               <a href="#application-form" data-tier={ticket.tier} data-format={purchaseFormat} data-cta-location={`tariff-${ticket.tier}`}>Подать заявку <i className="button-icon"><ArrowIcon /></i></a>
-              <a className="admission-promo-link" href="#promo-code" data-cta-location={`tariff-${ticket.tier}`}>У меня есть промокод</a>
             </article>
           ))}
         </div>
@@ -157,7 +155,7 @@ export default function Home() {
         <a className="nav-bonus-cta" href="#application-form" data-cta-location="header"><span className="nav-bonus-full">Подать заявку</span><span className="nav-bonus-short">Заявка</span></a>
         <details className="mobile-nav">
           <summary aria-label="Открыть меню">Меню</summary>
-          <div><a href="#balance">Свой маршрут по фестивалю</a><a href="#program">Программа и спикеры</a><a href="#consultations">Консультации</a><a href="#dating">Знакомства</a><a href="#expo">Экспозона и практики</a><a href="#logistics">Площадка</a><a href="#pricing">Билеты</a><a href="#participation">Как попасть</a><a href="#application-form" data-cta-location="mobile-menu">Подать заявку</a><a href="#promo-code" data-cta-location="mobile-menu">У меня есть промокод</a><a href="/gifts/">Подарки для купивших</a></div>
+          <div><a href="#balance">Свой маршрут по фестивалю</a><a href="#program">Программа и спикеры</a><a href="#consultations">Консультации</a><a href="#dating">Знакомства</a><a href="#expo">Экспозона и практики</a><a href="#logistics">Площадка</a><a href="#pricing">Билеты</a><a href="#participation">Как попасть</a><a href="#application-form" data-cta-location="mobile-menu">Подать заявку</a><a href="/gifts/">Подарки для купивших</a></div>
         </details>
       </nav>
 

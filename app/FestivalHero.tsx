@@ -61,7 +61,7 @@ export default function FestivalHero() {
         <p className={styles.place}>«{event.venue}» · {event.city}<br />{event.address} · метро «{event.metro}»</p>
         <div className={styles.actions}>
           <a className={styles.primary} href="#application-form" data-cta-location="hero">Подать заявку</a>
-          <a className={styles.secondary} href="#promo-code" data-cta-location="hero">У меня есть промокод</a>
+          <a className={styles.secondary} href="#program" data-cta-location="hero">Посмотреть программу</a>
         </div>
         <p className={styles.admission}>Билеты от {formatPrice(ticketPrices.start)}. Сначала заявка, после одобрения — покупка билета.</p>
       </div>

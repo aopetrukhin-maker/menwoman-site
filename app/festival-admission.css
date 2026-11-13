@@ -1,6 +1,7 @@
 .admission-section { background: #f2eae3; }
 .admission-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin: 0 0 40px; }
-.admission-grid { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, .8fr); gap: 24px; align-items: start; }
+.admission-grid { display: grid; grid-template-columns: minmax(0, 820px); justify-content: center; gap: 24px; align-items: start; }
+.admission-contact-note { margin: -10px 0 0; color: #b9a993; font-size: 13px; font-weight: 400; }
 .admission-panel { min-width: 0; padding: clamp(24px, 4vw, 48px); border: 1px solid #ddcec5; border-radius: 24px; background: #fffaf4; scroll-margin-top: 110px; overflow-wrap: anywhere; }
 .admission-panel h3 { margin: 0 0 24px; font-size: clamp(26px, 3vw, 36px); line-height: 1.15; }
 .admission-panel p { line-height: 1.6; }

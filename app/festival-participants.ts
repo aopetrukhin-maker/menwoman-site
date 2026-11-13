@@ -15,6 +15,7 @@ const suppliedImages: Record<string, string> = {
   "Мечислав Жильцов": "/speakers/mechislav-zhiltsov.webp",
   "Татьяна Пронина": "/speakers/tatyana-pronina.webp",
   "Ольга Цвик": "/speakers/olga-tsvik-aroma.webp",
+  "Валерия Мирсалимова": "/speakers/valeria-mirsalimova-cutout.png",
 };
 
 function add(cards: FestivalCard[], label: string) {

@@ -138,6 +138,19 @@ test('Telegram links and telephone formatting normalize, tariff and pair selecti
   env.sqlite.close();
 });
 
+test('a guest may leave separate phone and Telegram contacts without an email', async () => {
+  const env = environment();
+  const response = await admissions(request('applications', body({ contact: undefined, email: undefined, phone: '+7 (999) 123-45-67', telegram: 'https://t.me/guest_test' })), env);
+  assert.equal(response.status, 201);
+  const saved = await response.json();
+  const record = env.sqlite.prepare('SELECT contact, email FROM festival_applications WHERE reference=?').get(saved.reference);
+  assert.deepEqual({ ...record }, { contact: '+79991234567 · @guest_test', email: '' });
+  for (const fields of [{ phone: '', telegram: '' }, { phone: 'bad', telegram: '' }, { phone: '', telegram: 'bad' }]) {
+    assert.equal((await admissions(request('applications', body({ contact: undefined, email: undefined, ...fields })), env)).status, 400);
+  }
+  env.sqlite.close();
+});
+
 test('returning code holders retain the application source through verification and checkout click', async () => {
   const env = environment();
   const original = { visitId: crypto.randomUUID(), utm_source: 'expert_anna', utm_campaign: 'december' };
