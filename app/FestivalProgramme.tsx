@@ -13,6 +13,6 @@ export default function FestivalProgramme({ onSelect }: { onSelect: (participant
       {speaker.note && <p className="programme-note">{speaker.note}</p>}
       <button className="participant-link" type="button" onClick={() => onSelect(participantProfiles[speaker.name])}>Подробнее об эксперте</button>
     </article>)}</FestivalCarousel>
-    <p className="city-fine-print">Три согласованные темы — в начале списка. Время выступлений и остальная программа будут опубликованы после согласования.</p>
+    <p className="city-fine-print">Время выступлений и оставшиеся темы программы объявим после согласования.</p>
   </div></section>;
 }

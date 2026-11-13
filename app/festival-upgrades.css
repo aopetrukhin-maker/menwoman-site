@@ -1,4 +1,8 @@
 /* Editorial conversion details for the December Tuqo preview. */
+.luxury-edition .participant-session { margin-top: 24px; padding-top: 20px; border-top: 1px solid #c5a47038; }
+.luxury-edition .participant-session h3 { margin: 0; color: #e5c58f; font-size: 13px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; }
+.luxury-edition .participant-session ul { margin-top: 16px; }
+.luxury-edition .participant-session p { margin: 14px 0 0; color: #c7b294; font-size: 13px; line-height: 1.7; }
 .luxury-edition .city-proof {
   padding: clamp(25px, 4vw, 48px) 0;
   border-block: 1px solid #c5a4703d;

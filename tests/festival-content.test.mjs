@@ -11,10 +11,12 @@ const section = (id) => {
 
 test("only the supplied speakers and agreed topics are shown", () => {
   const speakers = section("program");
-  assert.equal((speakers.match(/class="city-speaker topic-confirmed"/g) ?? []).length, 3);
-  assert.equal((speakers.match(/class="city-speaker topic-pending"/g) ?? []).length, 8);
-  assert.equal((speakers.match(/Тему объявим после согласования/g) ?? []).length, 8);
-  for (const name of ["Анна Рацун", "Елена Гусева", "Светлана Лапухина", "Мария Рубинская", "Евгения Цапина"]) assert.ok(speakers.includes(name));
+  assert.equal((speakers.match(/class="city-speaker topic-confirmed"/g) ?? []).length, 7);
+  assert.equal((speakers.match(/class="city-speaker topic-pending"/g) ?? []).length, 4);
+  assert.equal((speakers.match(/Тему объявим после согласования/g) ?? []).length, 4);
+  for (const name of ["Анна Рацун", "Елена Гусева", "Светлана Лапухина", "Мария Рубинская", "Евгения Цапина", "Ольга Васильева", "Ольга Жильникова", "Екатерина Тистол"]) assert.ok(speakers.includes(name));
+  assert.ok(!html.includes("Ирина Рожик"));
+  for (const topic of ["Как сохранить страсть в отношениях", "Резолюция эгоизма", "Как вернуть свою женскую силу", "Как путешествия меняют наше окружение"]) assert.ok(speakers.includes(topic));
   const program = section("program");
   assert.equal((program.match(/Секс, деньги и отношения/g) ?? []).length, 1);
   assert.ok(program.includes("Секс, деньги и отношения"));
@@ -34,13 +36,13 @@ test("withheld participants and obsolete topics are absent from both routes", as
 
 test("expo and consultations retain pending conditions beside the offers", () => {
   const expo = section("expo");
-  assert.equal((expo.match(/class="city-exhibitor festival-info-card"/g) ?? []).length, 17);
+  assert.equal((expo.match(/class="city-exhibitor festival-info-card"/g) ?? []).length, 16);
   for (const name of ["Яна Якушева", "Ольга Цвик", "Юлия Кропивницкая"]) assert.ok(expo.includes(name));
   assert.ok(expo.includes("Выставка внутри фестиваля"));
   for (const category of ["Психология и отношения", "Игры, практики и личное развитие", "Товары, стиль и творчество", "Сообщества и проекты"]) assert.ok(expo.includes(category));
   assert.ok(expo.includes("Возможный показ мод требует отдельного согласования"));
   const consultations = section("consultations");
-  assert.equal((consultations.match(/class="[^"]*\bfestival-info-card\b[^"]*"/g) ?? []).length, 11);
+  assert.equal((consultations.match(/class="[^"]*\bfestival-info-card\b[^"]*"/g) ?? []).length, 10);
   assert.ok(consultations.includes("Бесплатные консультации для гостей фестиваля"));
   for (const phrase of ["Условия получения необходимо подтвердить", "Возможность индивидуального разбора уточняется", "число мест и способ записи объявим после подтверждения", "Подарочные диагностики, игры и сертификаты публикуем отдельно"]) assert.ok(consultations.includes(phrase));
 });
