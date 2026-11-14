@@ -2,13 +2,14 @@
 
 import { useEffect, useState } from "react";
 import FestivalHero from "./FestivalHero";
+import FestivalApartment from "./FestivalApartment";
 import FestivalGuestMarquee from "./FestivalGuestMarquee";
 import FestivalVenue from "./FestivalVenue";
 import FestivalAdmission from "./FestivalAdmission";
 import FestivalParticipation from "./FestivalExperience";
 import FestivalProgramme from "./FestivalProgramme";
 import FestivalExhibition, { FestivalConsultations } from "./FestivalSections";
-import FestivalConcept, { FestivalReflection } from "./FestivalConcept";
+import FestivalConcept from "./FestivalConcept";
 import { FestivalDating, FestivalBar, FestivalAfterparty, FestivalPartners } from "./FestivalAtmosphere";
 import { type FestivalParticipant } from "./festival-participants";
 import { startFunnelTracking } from "./funnel-tracking";
@@ -17,6 +18,7 @@ import "./festival-structure.css";
 import "./festival-city.css";
 import "./festival-luxury.css";
 import "./festival-upgrades.css";
+import "./festival-gifts.css";
 import { startAdmissionNavigation } from "./admission-context";
 import { tickets, ticketPrices, pairPrices, formatPrice } from "./ticket-tariffs";
 import { festivalEvent as event } from "./festival-event";
@@ -24,6 +26,11 @@ import { festivalEvent as event } from "./festival-event";
 const telegramUrl = "https://t.me/redheadlitle";
 
 const partners = [
+  { name: "ADORO", image: "/partners/adoro.jpg" },
+  { name: "Бизнес Дельники", image: "/partners/bizdelniki.jpg" },
+  { name: "Бизнес События СПБ", image: "/partners/busines.jpg" },
+  { name: "Дедушка русского пара", image: "/partners/dedushka.png" },
+  { name: "Фонд ЭНБИ", image: "/partners/enbi.png" },
   { name: "Грелка", image: "/partners/grelka.webp" },
   { name: "Кипенский гриб", image: "/partners/kipensky-grib.webp" },
   { name: "Secret", image: "/partners/secret.webp" },
@@ -36,6 +43,12 @@ const partners = [
   { name: "Только по делу", image: "/partners/tolko.jpg" },
   { name: "Body Impulse", image: "/partners/bi.png" },
   { name: "Хвойный квас", image: "/partners/hvoyny-kvas.webp" },
+  { name: "Кузнецова", image: "/partners/kuznezova.jpg" },
+  { name: "Паунти", image: "/partners/paunty.jpg" },
+  { name: "ЯПокупаю", image: "/partners/pokupau.jpg" },
+  { name: "ПРОЯВИСЬ", image: "/partners/proyavis.jpg" },
+  { name: "Кваренги", image: "/partners/quarenghi.jpg" },
+  { name: "Женский клуб", image: "/partners/women-club.png" },
   { name: "Журнал SOK - Стиль. Образ. Качество жизни", image: "/partners/sok-magazine.webp" },
   { name: "Центр просвещения и досуга «СюрПриз»", image: "/partners/surpriz.webp" },
   { name: "Философия Здоровья доктора К. С. Суханова", image: "/partners/philosophy-health-sukhanov.jpg" },
@@ -53,10 +66,10 @@ function ArrowIcon() {
 
 function BonusSection() {
   return <section className="section city-gifts primary-section" id="bonuses"><div className="container">
-    <div className="section-heading split-heading conversion-section-heading"><div><p className="section-label">08 / Подарки в тарифах</p><h2>Подарки и сертификаты<br /><span>до 100 000 ₽</span></h2></div><p>В тарифе «Перезагрузка» выбирайте предложения партнёров с общей номинальной стоимостью до 50 000 ₽. В VIP — до 100 000 ₽. Найдите подарок под свои интересы.</p></div>
-    <div className="city-gift-tiers"><article><span>Тариф «Перезагрузка»</span><p>Выберите подарки и сертификаты для себя</p><strong><small>до</small> 50 000 <small>₽</small></strong><span>общая номинальная стоимость выбранных предложений</span></article><article><span>Тариф VIP</span><p>Больше возможностей для выбора подарков</p><strong><small>до</small> 100 000 <small>₽</small></strong><span>общая номинальная стоимость выбранных предложений</span></article></div>
-    <p className="city-fine-print">Это лимит номинальной стоимости выбранных предложений, а не денежная выплата. Состав каталога на 3 декабря, сроки использования, ограничения и возможные дополнительные расходы уточняются.</p>
-    <a className="gift-archive-link" href="/gifts/">Открыть подарки для купивших билеты</a>
+    <div className="gift-spotlight"><div><p className="section-label">08 / Подарочный фонд</p><p className="gift-kicker">Для тарифов «Перезагрузка» и VIP</p><h2>Подарки, которые ждут вас <em>после фестиваля</em></h2><p className="gift-spotlight-lead">4 декабря, на следующий день после МЖ, владельцы этих билетов смогут выбрать подарки и сертификаты партнёров.</p><a className="gift-fund-link" href="/gifts/">Посмотреть условия фонда</a></div><div className="gift-spotlight-number"><span>Подарочный фонд VIP</span><strong><small>до</small> 100 000 <small>₽</small></strong><p>по номинальной стоимости выбранных предложений</p></div></div>
+    <div className="city-gift-tiers"><article><span>Тариф «Перезагрузка»</span><p>Подарки и сертификаты на ваш выбор</p><strong><small>до</small> 50 000 <small>₽</small></strong><span>Доступ к выбору — с 4 декабря</span></article><article><span>Тариф VIP</span><p>Расширенный выбор подарков</p><strong><small>до</small> 100 000 <small>₽</small></strong><span>Доступ к выбору — с 4 декабря</span></article></div>
+    <p className="gift-terms">Подарки не выдаются на фестивале. Выбор и получение начинаются 4 декабря, после события. Указанные суммы — лимиты номинальной стоимости предложений, не денежная выплата. Состав каталога, сроки и условия использования уточняются.</p>
+    <a className="gift-pricing-link" href="#pricing">Выбрать билет с подарками</a>
   </div></section>;
 }
 
@@ -73,7 +86,7 @@ function PricingSection() {
     <section className="section pricing-section primary-section" id="pricing">
       <div className="container">
         <div className="section-heading center-heading">
-          <p className="section-label">14 / Билеты и состав тарифов</p>
+          <p className="section-label">13 / Билеты и состав тарифов</p>
           <h2>Как вы хотите<br /><span>провести этот вечер?</span></h2>
           <p>Оставьте заявку. После одобрения модератор сообщит, как купить выбранный билет.</p>
         </div>
@@ -148,29 +161,29 @@ export default function Home() {
     <main className="page-restructured city-edition luxury-edition">
       <nav className="floating-nav" aria-label="Навигация по странице">
         <a className="nav-brand" href="#">
-          <strong>МЖ Сити</strong>
+          <strong>МЖ</strong>
           <span>{event.dateLabel}</span>
         </a>
-        <div className="nav-links"><a href="#balance">Концепция</a><a href="#program">Спикеры</a><a href="#consultations">Консультации</a><a href="#dating">Знакомства</a><a href="#pricing">Билеты</a></div>
+        <div className="nav-links"><a href="#apartment">Двери</a><a href="#program">Спикеры</a><a href="#consultations">Консультации</a><a href="#expo">Экспозона</a><a href="#balance">Маршрут</a><a href="#pricing">Билеты</a></div>
+        <a className="nav-gift-cta" href="#bonuses" aria-label="Подарочный фонд до 100 тысяч рублей"><span>Подарки</span><strong>до 100 000 ₽</strong></a>
         <a className="nav-bonus-cta" href="#application-form" data-cta-location="header"><span className="nav-bonus-full">Подать заявку</span><span className="nav-bonus-short">Заявка</span></a>
         <details className="mobile-nav">
           <summary aria-label="Открыть меню">Меню</summary>
-          <div><a href="#balance">Свой маршрут по фестивалю</a><a href="#program">Программа и спикеры</a><a href="#consultations">Консультации</a><a href="#dating">Знакомства</a><a href="#expo">Экспозона и практики</a><a href="#logistics">Площадка</a><a href="#pricing">Билеты</a><a href="#participation">Как попасть</a><a href="#application-form" data-cta-location="mobile-menu">Подать заявку</a><a href="/gifts/">Подарки для купивших</a></div>
+          <div><a href="#apartment">Открыть двери</a><a href="#program">Спикеры</a><a href="#consultations">Консультации</a><a href="#expo">Выставка и экспозона</a><a href="#balance">Свой маршрут</a><a href="#dating">Знакомства</a><a href="#logistics">Площадка</a><a href="#pricing">Билеты</a><a href="#participation">Как попасть</a><a href="#application-form" data-cta-location="mobile-menu">Подать заявку</a><a href="#bonuses">Подарочный фонд</a></div>
         </details>
       </nav>
 
       <FestivalHero />
-
-      <FestivalReflection />
-      <FestivalConcept />
+      <FestivalApartment />
       <FestivalProgramme onSelect={setSelectedSpeaker} />
       <FestivalConsultations onSelect={setSelectedSpeaker} />
       <FestivalExhibition onSelect={setSelectedSpeaker} />
+      <FestivalConcept />
       <FestivalDating />
       <BonusSection />
       <FestivalBar />
       <FestivalAfterparty />
-      <FestivalPartners archive={partners} />
+      <FestivalPartners partners={partners} />
       <FestivalVenue />
       <PricingSection />
       <FestivalAdmission />
@@ -182,7 +195,7 @@ export default function Home() {
           <div><span>Задать вопрос</span><a href="tel:+79625759813">8 962 575-98-13</a><a href={telegramUrl} target="_blank" rel="noreferrer">Telegram: @redheadlitle</a><a href="mailto:noname.eventspb@gmail.com">noname.eventspb@gmail.com</a></div>
           <div><span>Адрес фестиваля МЖ</span><p>«{event.venue}»<br />{event.city}, {event.address}<br />Метро «{event.metro}»<br />{event.dateLabel} · {event.timeLabel}</p></div>
         </div>
-        <div className="container footer-bottom"><span>© 2026 Фестиваль «Мужчина и Женщина»</span><a href="/gifts/">Подарки для купивших билеты</a><a href="#">Вернуться к началу</a></div>
+        <div className="container footer-bottom"><span>© 2026 Фестиваль «Мужчина и Женщина»</span><a href="/gifts/">Подарочный фонд · с 4 декабря</a><a href="#">Вернуться к началу</a></div>
       </footer>
 
       {selectedSpeaker && (
@@ -203,9 +216,10 @@ export default function Home() {
               {selectedSpeaker.stage && <div className="modal-topic"><span>Тема выступления</span><strong>{selectedSpeaker.topic ?? "Тему объявим после согласования"}</strong></div>}
               {selectedSpeaker.note && <p className="festival-pending">{selectedSpeaker.note}</p>}
               {selectedSpeaker.description && <p className="modal-description">{selectedSpeaker.description}</p>}
-              {selectedSpeaker.facts.length > 0 && <ul>{selectedSpeaker.facts.map((fact) => <li key={fact}>{fact}</li>)}</ul>}
-              {selectedSpeaker.sessionHighlights && <div className="participant-session"><h3>Что будем делать</h3><ul>{selectedSpeaker.sessionHighlights.map((item) => <li key={item}>{item}</li>)}</ul></div>}
-              {selectedSpeaker.sessionOutcome && <div className="participant-session"><h3>Что вы заберёте с собой</h3><p>{selectedSpeaker.sessionOutcome}</p></div>}
+              {selectedSpeaker.facts.length > 0 && <div className="participant-session"><h3>Опыт и проекты</h3><ul>{selectedSpeaker.facts.map((fact) => <li key={fact}>{fact}</li>)}</ul></div>}
+              {selectedSpeaker.sessionHighlights && <div className="participant-session"><h3>Что будет внутри</h3><ol>{selectedSpeaker.sessionHighlights.map((item) => <li key={item}>{item}</li>)}</ol></div>}
+              {selectedSpeaker.sessionOutcome && <div className="participant-session"><h3>С чем уйдёте</h3><p>{selectedSpeaker.sessionOutcome}</p></div>}
+              {selectedSpeaker.sessionFormat && <div className="participant-session"><h3>Формат</h3><p>{selectedSpeaker.sessionFormat}</p></div>}
               <div className="participant-formats">{selectedSpeaker.appearances.map((appearance) => <article key={appearance.label}><h4>{appearance.label}</h4><p>{appearance.text}</p>{appearance.note && <p className="festival-pending">{appearance.note}</p>}</article>)}</div>
               <div className="speaker-project-links">{selectedSpeaker.links?.map((link) => <a key={link.href} href={link.href} target="_blank" rel="noreferrer">{link.label}</a>)}</div>
             </div>

@@ -1,0 +1,105 @@
+.luxury-edition .nav-bonus-cta { animation: none; }
+.luxury-edition .nav-gift-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-height: 44px;
+  margin-left: auto;
+  padding: 9px 13px;
+  border: 1px solid #ff827b;
+  border-radius: 5px;
+  color: #fff7e8;
+  background: linear-gradient(120deg, #e64649, #9e1629);
+  box-shadow: 0 0 0 0 #e6404566, 0 8px 22px #850e2580;
+  font-size: 11px;
+  font-weight: 750;
+  line-height: 1.2;
+  text-decoration: none;
+  white-space: nowrap;
+  animation: gift-button-pulse 2.2s ease-in-out infinite;
+}
+.luxury-edition .nav-gift-cta strong { font-size: inherit; font-weight: 850; }
+.luxury-edition .nav-gift-cta:hover { color: white; background: linear-gradient(120deg, #f55558, #b52235); }
+@keyframes gift-button-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 #e6404566, 0 8px 22px #850e2580; }
+  50% { box-shadow: 0 0 0 5px #e640452e, 0 8px 28px #e64045a8; }
+}
+
+/* A clear change of setting as visitors move through the festival. */
+.luxury-edition .programme-section { background: radial-gradient(ellipse at 90% 0, #842e3a40, transparent 58%), #211216; }
+.luxury-edition .city-exhibition { background: radial-gradient(ellipse at 10% 100%, #9d623b2e, transparent 50%), #2a1c17; }
+.luxury-edition .city-dating { background: radial-gradient(ellipse at 90% 0, #692f4a40, transparent 55%), #21151d; }
+.luxury-edition .city-gifts {
+  overflow: hidden;
+  border-block: 1px solid #ffca9f7a;
+  background: radial-gradient(circle at 84% 12%, #be543a80, transparent 31%), linear-gradient(135deg, #45111c, #77232c 58%, #33111a);
+  color: #fff1db;
+}
+.luxury-edition .gift-spotlight { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(270px, .75fr); gap: clamp(26px, 5vw, 78px); align-items: center; margin-bottom: 32px; }
+.luxury-edition .gift-spotlight .section-label { color: #ffdfae; }
+.luxury-edition .gift-kicker { margin: 28px 0 12px; color: #ffbba3; font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+.luxury-edition .gift-spotlight h2 { max-width: 790px; margin: 0; color: #fff7e8; font: 500 clamp(54px, 6.7vw, 98px)/.98 var(--font-display), Georgia, serif; letter-spacing: -.04em; text-wrap: balance; }
+.luxury-edition .gift-spotlight h2 em { color: #ffcd9e; font-style: italic; }
+.luxury-edition .gift-spotlight-lead { max-width: 650px; margin: 24px 0 0; color: #f5d8c7; font-size: clamp(16px, 1.8vw, 20px); line-height: 1.55; }
+.luxury-edition .gift-fund-link, .luxury-edition .gift-pricing-link { display: inline-flex; align-items: center; justify-content: center; gap: 13px; min-height: 50px; margin-top: 25px; padding: 13px 21px; border: 1px solid #ffd3a2; border-radius: 5px; color: #33151a; background: #f8d5a7; font-size: 13px; font-weight: 800; text-decoration: none; }
+.luxury-edition .gift-fund-link:hover, .luxury-edition .gift-pricing-link:hover { background: #ffe9c7; }
+.luxury-edition .gift-spotlight-number { padding: clamp(25px, 3vw, 42px); border: 1px solid #ffdfb980; border-radius: 8px; background: #250d16a6; box-shadow: 0 26px 65px #23040855, inset 0 1px #fff5df2e; }
+.luxury-edition .gift-spotlight-number > span { display: block; color: #ffd1a2; font-size: 11px; font-weight: 750; letter-spacing: .13em; text-transform: uppercase; }
+.luxury-edition .gift-spotlight-number strong { display: block; margin: 20px 0 12px; color: #fff0c9; font: 500 clamp(52px, 6vw, 86px)/.93 var(--font-display), Georgia, serif; letter-spacing: -.045em; white-space: nowrap; }
+.luxury-edition .gift-spotlight-number strong small { font: 600 .33em var(--font-sans), sans-serif; letter-spacing: 0; }
+.luxury-edition .gift-spotlight-number p { max-width: 230px; margin: 0; color: #e9c3b1; font-size: 12px; line-height: 1.5; }
+.luxury-edition .city-gifts .city-gift-tiers { gap: 16px; }
+.luxury-edition .city-gifts .city-gift-tiers article, .luxury-edition .city-gifts .city-gift-tiers article:last-child { min-height: 230px; padding: clamp(24px, 3vw, 38px); border: 1px solid #ffdeba8c; border-radius: 7px; background: #f5e5d2; color: #3f1d20; box-shadow: 0 20px 45px #29061033; }
+.luxury-edition .city-gifts .city-gift-tiers article:last-child { background: #231e1c; color: #ffe7c3; }
+.luxury-edition .city-gifts .city-gift-tiers article::before { background: #c7504a36; }
+.luxury-edition .city-gifts .city-gift-tiers article > span:first-child { color: #a33b3e; font-size: 12px; }
+.luxury-edition .city-gifts .city-gift-tiers article:last-child > span:first-child { color: #f3c89d; }
+.luxury-edition .city-gifts .city-gift-tiers p { margin: 20px 0 10px; color: #4c2525; }
+.luxury-edition .city-gifts .city-gift-tiers article:last-child p { color: #f1d8ba; }
+.luxury-edition .city-gifts .city-gift-tiers strong { color: #a42f39; text-shadow: none; }
+.luxury-edition .city-gifts .city-gift-tiers article:last-child strong { color: #ffddb0; }
+.luxury-edition .city-gifts .city-gift-tiers article > span:last-child { color: #6f4d47; font-size: 12px; font-weight: 750; opacity: 1; }
+.luxury-edition .city-gifts .city-gift-tiers article:last-child > span:last-child { color: #e7c7a6; }
+.luxury-edition .gift-terms { max-width: 900px; margin: 24px 0 0; color: #f0c9bb; font-size: 13px; line-height: 1.65; }
+.luxury-edition .gift-pricing-link { margin-top: 21px; background: transparent; color: #fff1dc; }
+.luxury-edition .gift-pricing-link:hover { background: #fff1dc1c; }
+
+/* The partner roster is visible, with light paper between the green afterparty and dark venue. */
+.luxury-edition .city-partners { background: #e9ddcb; color: #2b211a; }
+.luxury-edition .city-partners .section-heading h2 { color: #291e18; }
+.luxury-edition .city-partners .section-heading h2 span { color: #8d4243; }
+.luxury-edition .city-partners .section-label { color: #8d4243; }
+.luxury-edition .city-partners .section-heading > p { color: #5b4c3e; }
+.luxury-edition .festival-partner-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin: 0 0 56px; }
+.luxury-edition .festival-partner-grid .partner-card { min-height: 180px; padding: 13px; border: 1px solid #967d6354; border-radius: 6px; background: #fffaf2; box-shadow: 0 10px 22px #3a26151a; }
+.luxury-edition .festival-partner-grid .partner-card img { height: 115px; object-fit: contain; border-radius: 4px; background: #fff; }
+.luxury-edition .festival-partner-grid .partner-card strong { color: #34291e; font-size: 12px; }
+.luxury-edition .city-partners .partner-invitations article { border-color: #9a775960; }
+.luxury-edition .city-partners .partner-invitations article > span, .luxury-edition .city-partners .partner-invitations a { color: #823440; }
+.luxury-edition .city-partners .partner-invitations h3 { color: #2a1e18; }
+.luxury-edition .city-partners .partner-invitations p { color: #584839; }
+
+@media (max-width: 850px) {
+  .luxury-edition .nav-gift-cta { margin-left: 0; }
+  .luxury-edition .festival-partner-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 760px) {
+  .luxury-edition .floating-nav { gap: 5px; }
+  .luxury-edition .nav-brand { flex: 1 1 auto; }
+  .luxury-edition .nav-gift-cta { flex-direction: column; gap: 1px; min-width: 102px; min-height: 44px; padding: 5px 8px; font-size: 10px; }
+  .luxury-edition .gift-spotlight { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .luxury-edition .gift-spotlight h2 { font-size: clamp(47px, 12vw, 68px); }
+  .luxury-edition .gift-spotlight-number strong { font-size: clamp(57px, 14vw, 76px); }
+  .luxury-edition .festival-partner-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; margin-bottom: 36px; }
+  .luxury-edition .festival-partner-grid .partner-card { min-height: 155px; padding: 9px; }
+  .luxury-edition .festival-partner-grid .partner-card img { height: 97px; }
+}
+@media (max-width: 380px) {
+  .luxury-edition .nav-brand strong { font-size: 19px; }
+  .luxury-edition .nav-brand span { display: none; }
+  .luxury-edition .nav-gift-cta { min-width: 92px; font-size: 9px; }
+  .luxury-edition .nav-bonus-cta { padding-inline: 9px; font-size: 10px; }
+  .luxury-edition .mobile-nav summary { padding-inline: 9px; }
+}
+@media (prefers-reduced-motion: reduce) { .luxury-edition .nav-gift-cta { animation: none; } }

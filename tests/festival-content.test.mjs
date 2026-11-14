@@ -9,28 +9,27 @@ const section = (id) => {
   return match[1];
 };
 
-test("only the supplied speakers and agreed topics are shown", () => {
+test("speaker programme follows the supplied editorial brief and puts Lapukhina first", () => {
   const speakers = section("program");
-  assert.equal((speakers.match(/class="city-speaker topic-confirmed"/g) ?? []).length, 7);
-  assert.equal((speakers.match(/class="city-speaker topic-pending"/g) ?? []).length, 4);
-  assert.equal((speakers.match(/Тему объявим после согласования/g) ?? []).length, 4);
-  for (const name of ["Анна Рацун", "Елена Гусева", "Светлана Лапухина", "Мария Рубинская", "Евгения Цапина", "Ольга Васильева", "Ольга Жильникова", "Екатерина Тистол"]) assert.ok(speakers.includes(name));
+  assert.equal((speakers.match(/class="city-speaker topic-confirmed"/g) ?? []).length, 11);
+  assert.equal((speakers.match(/class="city-speaker topic-pending"/g) ?? []).length, 1);
+  assert.ok(speakers.indexOf("Светлана Лапухина") < speakers.indexOf("Елена Солнечная"));
+  for (const name of ["Елена Солнечная", "Анна Рацун", "Елена Гусева", "Светлана Лапухина", "Мария Рубинская", "Евгения Цапина", "Ольга Васильева", "Ольга Жильникова", "Екатерина Тистол"]) assert.ok(speakers.includes(name));
   assert.ok(!html.includes("Ирина Рожик"));
-  for (const topic of ["Как сохранить страсть в отношениях", "Резолюция эгоизма", "Как вернуть свою женскую силу", "Как путешествия меняют наше окружение"]) assert.ok(speakers.includes(topic));
+  for (const topic of ["Как сохранить страсть в отношениях", "Разреши себе быть важной", "Почему женщина перестаёт хотеть", "Почему путешествия меняют не только места"]) assert.ok(speakers.includes(topic));
   const program = section("program");
-  assert.equal((program.match(/Секс, деньги и отношения/g) ?? []).length, 1);
-  assert.ok(program.includes("Секс, деньги и отношения"));
+  assert.ok(program.includes("Секс, деньги и обиды"));
   assert.ok(program.includes("Сначала Я. Потом МЫ. Любовь и отношения после 40"));
-  assert.ok(program.includes("к безопасному выходу"));
+  assert.ok(program.includes("когда любовь превращается в абьюз"));
 });
 
 test("withheld participants and obsolete topics are absent from both routes", async () => {
   const gifts = await readFile(new URL("../out/gifts/index.html", import.meta.url), "utf8");
-  for (const name of ["Елена Забанова", "Арина Казанских"]) {
+  for (const name of ["Елена Забанова", "Арина Казанских", "Злата Нечаева"]) {
     assert.ok(!html.includes(name), `Unexpected participant: ${name}`);
     assert.ok(!gifts.includes(name), `Unexpected gift provider: ${name}`);
   }
-  assert.ok(!html.includes("Елена Солнечная"), "Elena Solnechnaya must not appear in the current festival");
+  assert.ok(html.includes("Елена Солнечная"));
   for (const topic of ["Что мы на самом деле приносим в отношения", "Секс становится обязанностью", "Парадоксы взаимоотношений"]) assert.ok(!html.includes(topic));
 });
 
@@ -66,7 +65,7 @@ test("responsive intro assets and all rendered local images are available", asyn
 
 test("December event details replace the old venue and expired checkout", () => {
   for (const value of ["3 декабря 2026", "16:00–00:00", "Антресоль и Перец", "ул. Марата, 1/71", "Маяковская", "В ночь на 4 декабря"]) assert.ok(html.includes(value), value);
-  for (const value of ["22 августа", "2026-08", "22.08.2026", "Кваренги", "Казанская", "qtickets.ru/event/246143", "Выбрать билет от 990", "Регистрация с 12:00", "Программа с 13:00"]) assert.ok(!html.includes(value), `Obsolete event data: ${value}`);
+  for (const value of ["22 августа", "2026-08", "22.08.2026", "Казанская", "qtickets.ru/event/246143", "Выбрать билет от 990", "Регистрация с 12:00", "Программа с 13:00"]) assert.ok(!html.includes(value), `Obsolete event data: ${value}`);
   const logistics = section("logistics");
   assert.equal((logistics.match(/<figure>/g) ?? []).length, 4);
   const map = logistics.match(/href="(https:\/\/yandex.ru\/maps\/[^\"]+)"/);
@@ -79,7 +78,7 @@ test("December event details replace the old venue and expired checkout", () => 
   assert.ok(!pricing.includes("У меня есть промокод"));
 });
 
-test("event metadata ends at midnight the next day and gift access keeps its original flow", async () => {
+test("event metadata ends at midnight while prior gift access remains open", async () => {
   const match = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
   assert.ok(match);
   const event = JSON.parse(match[1]);
@@ -90,9 +89,8 @@ test("event metadata ends at midnight the next day and gift access keeps its ori
   assert.equal(event.location.address.streetAddress, "ул. Марата, 1/71");
   assert.ok(!event.offers);
   const gifts = await readFile(new URL("../out/gifts/index.html", import.meta.url), "utf8");
-  assert.ok(gifts.includes("Соберите свой набор подарков"));
-  assert.ok(gifts.includes("Каталог открыт владельцам билетов"));
-  assert.ok(!gifts.includes("Каталог прошлой встречи МЖ"));
+  assert.ok(gifts.includes('id="gift-email"'));
+  assert.ok(!gifts.includes("Подарки откроются"));
 });
 
 
@@ -111,11 +109,12 @@ test("admission form contains the requested fields and explains moderation witho
 
 test("the approved city narrative runs from a personal question to participation", () => {
   const opening = section("festival-introduction");
-  for (const value of ["МЖ Сити.", "Тайная квартира", "Фестиваль отношений с собой, с людьми и с жизнью", "3 декабря 2026", "Марата, 1/71", "Подать заявку", "Посмотреть программу"]) assert.ok(opening.includes(value));
+  for (const value of ["МЖ Сити.", "Тайная квартира", "Фестиваль отношений с собой, с людьми и с жизнью", "3 декабря 2026", "Марата, 1/71", "Подать заявку", "Открыть двери"]) assert.ok(opening.includes(value));
   const order = [...html.matchAll(/<section class="[^"]*primary-section[^"]*" id="([^"]+)"/g)].map((match) => match[1]);
-  assert.deepEqual(order, ["festival-introduction", "reflection", "balance", "program", "consultations", "expo", "dating", "bonuses", "bar", "afterparty", "partners", "logistics", "pricing", "admission", "community"]);
+  assert.deepEqual(order, ["festival-introduction", "apartment", "program", "consultations", "expo", "balance", "dating", "bonuses", "bar", "afterparty", "partners", "logistics", "pricing", "admission", "community"]);
   assert.ok(!html.includes('class="city-proof"'));
-  assert.ok(section("reflection").includes("/venue/venue-cabinet.jpeg"));
+  assert.ok(section("apartment").includes("Выберите, с какой двери"));
+  assert.ok(!html.includes('id="reflection"'));
   assert.ok(!html.includes('id="connection-code"'));
   assert.ok(!html.includes("Код связи"));
   assert.ok(html.includes('id="questions"'));
@@ -133,8 +132,13 @@ test("the concept offers eight accessible directions and links to real festival 
   assert.ok(balance.includes('role="slider"'));
   assert.ok(balance.includes("Крутите колесо пальцем"));
   assert.ok(balance.includes('aria-live="polite"'));
+  assert.ok(balance.includes("Выберите сферу жизни"));
+  assert.ok(balance.includes("Евгения Цапина"));
+  assert.ok(balance.includes("Татьяна Пронина"));
+  assert.ok(balance.includes("Мария Рубинская"));
+  assert.ok(balance.includes("Разговор у бара"));
   for (const value of ["Я и внутренняя опора", "Любовь и близость", "Семья", "Друзья и общение", "Тело и энергия", "Дело и деньги", "Развитие", "Отдых и впечатления"]) assert.ok(balance.includes(value));
-  for (const value of ["Выступления", "Консультации", "Практики и игры", "Знакомства"]) assert.ok(balance.includes(value));
+  assert.ok(!balance.includes("Вечер в вашем ритме"));
   assert.ok(!balance.includes("Семь пространств"));
   assert.ok(!balance.includes("психологическая диагностика"));
 });
@@ -143,13 +147,16 @@ test("new experience blocks explain boundaries and gifts without inventing a vid
   const dating = section("dating");
   for (const value of ["Зелёный", "Открыт к знакомствам", "Красный", "Сегодня без знакомств", "Продолжать ли разговор — всегда решаете вы"]) assert.ok(dating.includes(value));
   const gifts = section("bonuses");
-  for (const value of ["50 000", "100 000", "номинальной стоимости", "не денежная выплата", "/gifts/"]) assert.ok(gifts.includes(value));
+  for (const value of ["50 000", "100 000", "номинальной стоимости", "не денежная выплата", "4 декабря", "Подарки не выдаются на фестивале", "/gifts/"]) assert.ok(gifts.includes(value));
+  assert.ok(html.includes('class="nav-gift-cta" href="#bonuses"'));
   assert.ok(section("bar").includes("бар с барменом"));
   assert.ok(!section("bar").includes("включены в билет"));
   assert.ok(section("afterparty").includes("Фестиваль до 00:00"));
   assert.ok(!section("afterparty").includes("22:00"));
   assert.ok(!section("community").includes("Смотреть видео"));
-  for (const value of ["Партнёры фестиваля", "Информационные партнёры", "не подтверждает участие проектов 3 декабря"]) assert.ok(section("partners").includes(value));
+  const partners = section("partners");
+  assert.equal((partners.match(/class="partner-card"/g) ?? []).length, 27);
+  for (const value of ["Партнёры МЖ", "Грелка", "Кваренги", "Бизнес Дельники", "Фонд ЭНБИ"]) assert.ok(partners.includes(value));
 });
 
 
