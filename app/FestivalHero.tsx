@@ -54,7 +54,7 @@ export default function FestivalHero() {
       <div className={styles.shade} data-hero-shade aria-hidden="true" />
       <div className={styles.copy} data-hero-offer>
         <p className={styles.eyebrow}>Частный вечер в сердце Петербурга</p>
-        <h1 id="festival-title" className={styles.title} ref={offerHeading} tabIndex={-1}>МЖ Сити.<br /><em>Тайная квартира</em></h1>
+        <h1 id="festival-title" className={styles.title} ref={offerHeading} tabIndex={-1}>МЖ Сити.<br /><em>Тайная резиденция</em></h1>
         <p className={styles.subtitle}>Фестиваль отношений с собой, с людьми и с жизнью</p>
         <p className={styles.lead}>Выступления о близости и выборе, личные консультации, выставка и новые знакомства. Бар и афтепати — до полуночи.</p>
         <div className={styles.facts} aria-label="Дата, место и стоимость участия">

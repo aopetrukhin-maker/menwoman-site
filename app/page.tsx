@@ -191,7 +191,7 @@ export default function Home() {
 
       <footer>
         <div className="container footer-grid">
-          <div><strong>МЖ</strong><p>МЖ Сити. Тайная квартира.<br />Фестиваль 3 декабря</p></div>
+          <div><strong>МЖ</strong><p>МЖ Сити. Тайная резиденция.<br />Фестиваль 3 декабря</p></div>
           <div><span>Задать вопрос</span><a href="tel:+79625759813">8 962 575-98-13</a><a href={telegramUrl} target="_blank" rel="noreferrer">Telegram: @redheadlitle</a><a href="mailto:noname.eventspb@gmail.com">noname.eventspb@gmail.com</a></div>
           <div><span>Адрес фестиваля МЖ</span><p>«{event.venue}»<br />{event.city}, {event.address}<br />Метро «{event.metro}»<br />{event.dateLabel} · {event.timeLabel}</p></div>
         </div>

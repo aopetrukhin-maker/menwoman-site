@@ -37,7 +37,7 @@ export default function HeroAnimation({ landing = "complete", paused = false, on
 
   return (
     <div className="festival-intro">
-      <div ref={art} className="eco-hero-art" data-landing={landing} data-paused={paused} role="img" aria-label="Тайная квартира МЖ: хрустальная люстра, золотая надпись и тёплый свет вечерних залов.">
+      <div ref={art} className="eco-hero-art" data-landing={landing} data-paused={paused} role="img" aria-label="Тайная резиденция МЖ: хрустальная люстра, золотая надпись и тёплый свет вечерних залов.">
         {["dark", "impact", "zone-1", "zone-2", "zone-3", "zone-4"].map((scene, index) => (
           <picture className={`eco-scene ${index === 0 ? "eco-scene-dark" : index === 1 ? "eco-scene-impact" : `eco-zone eco-${scene}`}`} key={scene}>
             <source media="(max-width: 760px)" srcSet={`/hero/secret-room-mobile-${index === 0 ? "dark" : "stage"}-room.webp`} />

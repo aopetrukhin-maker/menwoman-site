@@ -38,7 +38,7 @@ function Door({ room, index }: { room: typeof rooms[number]; index: number }) {
 
 export default function FestivalApartment() {
   return <section className={`${styles.apartment} section primary-section`} id="apartment"><div className="container">
-    <div className={styles.intro}><p className="section-label">02 / Тайная квартира · шесть дверей</p><h2>Выберите, с какой двери<br /><em>начнётся ваш вечер</em></h2><p>С Невского — в тайную квартиру МЖ. За дверями ждут выступления, личные разговоры, знакомства, выставка и музыка.</p><p className={styles.touchHint}>Прикоснитесь к двери, чтобы открыть</p></div>
+    <div className={styles.intro}><p className="section-label">02 / Тайная резиденция · шесть дверей</p><h2>Выберите, с какой двери<br /><em>начнётся ваш вечер</em></h2><p>С Невского — в тайную резиденцию МЖ. За дверями ждут выступления, личные разговоры, знакомства, выставка и музыка.</p><p className={styles.touchHint}>Прикоснитесь к двери, чтобы открыть</p></div>
     <FestivalCarousel label="Откройте двери фестиваля" className="apartment-carousel">{rooms.map((room, index) => <Door room={room} index={index} key={room.id} />)}</FestivalCarousel>
     <p className={styles.note}>Открывайте двери и выбирайте свой маршрут. На фотографиях — реальные интерьеры площадки; распределение программы по залам уточняется.</p>
   </div></section>;

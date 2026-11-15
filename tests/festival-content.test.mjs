@@ -109,7 +109,7 @@ test("admission form contains the requested fields and explains moderation witho
 
 test("the approved city narrative runs from a personal question to participation", () => {
   const opening = section("festival-introduction");
-  for (const value of ["МЖ Сити.", "Тайная квартира", "Фестиваль отношений с собой, с людьми и с жизнью", "3 декабря 2026", "Марата, 1/71", "Подать заявку", "Открыть двери"]) assert.ok(opening.includes(value));
+  for (const value of ["МЖ Сити.", "Тайная резиденция", "Фестиваль отношений с собой, с людьми и с жизнью", "3 декабря 2026", "Марата, 1/71", "Подать заявку", "Открыть двери"]) assert.ok(opening.includes(value));
   const order = [...html.matchAll(/<section class="[^"]*primary-section[^"]*" id="([^"]+)"/g)].map((match) => match[1]);
   assert.deepEqual(order, ["festival-introduction", "apartment", "program", "consultations", "expo", "balance", "dating", "bonuses", "bar", "afterparty", "partners", "logistics", "pricing", "admission", "community"]);
   assert.ok(!html.includes('class="city-proof"'));
