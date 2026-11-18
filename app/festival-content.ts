@@ -8,6 +8,7 @@ export type Speaker = {
   initials: string;
   tone: string;
   image?: string;
+  imageSecondary?: string;
   imagePosition?: string;
   links?: { label: string; href: string }[];
   sessionHighlights?: string[];
@@ -87,7 +88,7 @@ export const speakers: Speaker[] = [
     description: "Совместная практика со звучанием гонга и поющих чаш, сказкотерапией и временем для спокойного внимания к себе.",
     facts: ["Саша Бочар — предприниматель, наставник и преподаватель йоги с опытом более 16 лет", "Саша — основатель бренда «Сияние» и онлайн-клуба «Баланс»", "Олег Гром — практик звуковых сессий с гонгом и поющими чашами"],
     sessionFormat: "Совместная звуковая практика. Время и продолжительность согласуются.",
-    initials: "СБ", tone: "night",
+    initials: "СБ", tone: "night", image: "/speakers/sasha-bochar.jpeg", imageSecondary: "/speakers/oleg-grom.jpeg",
     links: [{ label: "Сообщество практики", href: "https://t.me/givoichat" }],
   },
   {

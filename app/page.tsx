@@ -204,7 +204,7 @@ export default function Home() {
             <button className="modal-close" onClick={() => setSelectedSpeaker(null)} aria-label="Закрыть">×</button>
             <div className={`modal-visual ${selectedSpeaker.tone}${selectedSpeaker.image ? " has-photo" : ""}`}>
               {selectedSpeaker.image ? (
-                <img src={selectedSpeaker.image} alt={selectedSpeaker.name} style={{ objectPosition: selectedSpeaker.imagePosition }} />
+                selectedSpeaker.imageSecondary ? <div className="participant-duo"><img src={selectedSpeaker.image} alt="Саша Бочар" /><img src={selectedSpeaker.imageSecondary} alt="Олег Гром" /></div> : <img src={selectedSpeaker.image} alt={selectedSpeaker.name} style={{ objectPosition: selectedSpeaker.imagePosition }} />
               ) : (
                 <span>{selectedSpeaker.initials}</span>
               )}
