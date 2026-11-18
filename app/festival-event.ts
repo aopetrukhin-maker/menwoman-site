@@ -2,7 +2,7 @@ export const festivalEvent = {
   name: "Фестиваль МЖ",
   dateLabel: "3 декабря 2026",
   dateShort: "03.12.2026",
-  timeLabel: "16:00–00:00",
+  timeLabel: "Сбор с 16:00 · программа с 17:00 · до 00:00",
   startDate: "2026-12-03T16:00:00+03:00",
   endDate: "2026-12-04T00:00:00+03:00",
   venue: "Антресоль и Перец",
