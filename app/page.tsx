@@ -88,10 +88,10 @@ function PricingSection() {
         <div className="section-heading center-heading">
           <p className="section-label">13 / Билеты и состав тарифов</p>
           <h2>Как вы хотите<br /><span>провести этот вечер?</span></h2>
-          <p>Оставьте заявку. После одобрения модератор сообщит, как купить выбранный билет.</p>
+          <p>Выберите формат и тариф. На странице Qtickets добавьте соответствующий билет в корзину.</p>
         </div>
         <div className="admission-actions">
-          <a className="primary-button" href="#application-form">Подать заявку</a>
+          <a className="primary-button" href="https://qtickets.ru/event/275542" target="_blank" rel="noreferrer">Купить билет</a>
         </div>
         <div className="ticket-format-choice" role="group" aria-label="Количество участников в билете"><button type="button" aria-pressed={purchaseFormat === "single"} onClick={() => setPurchaseFormat("single")}>Один</button><button type="button" aria-pressed={purchaseFormat === "pair"} onClick={() => setPurchaseFormat("pair")}>Вдвоём</button></div>
         <div className="pricing-grid">
@@ -102,7 +102,7 @@ function PricingSection() {
               <div className="ticket-highlight-list">{ticket.highlights.map((highlight) => <span key={highlight}>{highlight}</span>)}</div>
               <p>{ticket.description}</p>
               <details className="ticket-details"><summary>Полный состав тарифа <b>+</b></summary><ul>{ticket.items.map((item) => <li key={item}><b>✓</b>{item}</li>)}</ul></details>
-              <a href="#application-form" data-tier={ticket.tier} data-format={purchaseFormat} data-cta-location={`tariff-${ticket.tier}`}>Подать заявку <i className="button-icon"><ArrowIcon /></i></a>
+              <a href="https://qtickets.ru/event/275542" target="_blank" rel="noreferrer" data-tier={ticket.tier} data-format={purchaseFormat} data-cta-location={`tariff-${ticket.tier}`}>Перейти к выбору билета <i className="button-icon"><ArrowIcon /></i></a>
             </article>
           ))}
         </div>

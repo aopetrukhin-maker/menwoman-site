@@ -60,10 +60,10 @@ export default function FestivalHero() {
         <div className={styles.facts} aria-label="Дата, место и стоимость участия">
           <p><strong>{event.dateLabel}</strong><span>{event.timeLabel}</span></p>
           <p><strong>«{event.venue}»</strong><span>{event.address} · м. «{event.metro}»</span></p>
-          <p><strong>от {formatPrice(ticketPrices.start)}</strong><span>Билеты после одобрения заявки</span></p>
+          <p><strong>от {formatPrice(ticketPrices.start)}</strong><span>Билеты на Qtickets</span></p>
         </div>
         <div className={styles.actions}>
-          <a className={styles.primary} href="#application-form" data-cta-location="hero">Подать заявку</a>
+          <a className={styles.primary} href="https://qtickets.ru/event/275542" target="_blank" rel="noreferrer" data-cta-location="hero">Купить билет</a>
           <a className={styles.secondary} href="#apartment" data-cta-location="hero">Открыть двери</a>
         </div>
       </div>

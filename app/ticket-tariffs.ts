@@ -1,14 +1,14 @@
 export type TicketTier = "start" | "reload" | "vip";
 
-export const ticketPrices: Record<TicketTier, number> = { start: 1490, reload: 2990, vip: 5900 };
-export const pairPrices: Record<TicketTier, number> = { start: 2080, reload: 4180, vip: 8380 };
+export const ticketPrices: Record<TicketTier, number> = { start: 900, reload: 2320, vip: 4149 };
+export const pairPrices: Record<TicketTier, number> = { start: 1260, reload: 3250, vip: 5810 };
 export const formatPrice = (price: number) => `${new Intl.NumberFormat("ru-RU").format(price)} ₽`;
 
 export const tickets = [
   {
     name: "Старт",
     tier: "start" as TicketTier,
-    price: "990 ₽",
+    price: "900 ₽",
     note: "Количество билетов по этой цене ограничено",
     visualLabel: "Входит в стоимость",
     visualValue: "Полный день",
@@ -20,8 +20,6 @@ export const tickets = [
       { title: "Все форматы", note: "Выступления, практики и знакомства" },
     ],
     highlights: ["Вход на весь вечер", "Все выступления", "Все основные форматы"],
-    nextPrice: "1 490 ₽",
-    finalPrice: "1 990 ₽",
     description: "Для тех, кто хочет познакомиться с фестивалем, послушать экспертов и провести насыщенный вечер.",
     items: [
       "Вход на фестиваль на весь вечер",
@@ -35,7 +33,7 @@ export const tickets = [
   {
     name: "Перезагрузка",
     tier: "reload" as TicketTier,
-    price: "1 990 ₽",
+    price: "2 320 ₽",
     note: "Самый выгодный тариф",
     visualLabel: "Всё включено + бонусы",
     visualValue: "до 50 000 ₽",
@@ -47,8 +45,6 @@ export const tickets = [
       { title: "до 50 000 ₽", note: "Подарки и сертификаты" },
     ],
     highlights: ["Подарки до 50 000 ₽", "Мини-диагностики: формат уточняется", "Приоритетная зона"],
-    nextPrice: "2 990 ₽",
-    finalPrice: "3 990 ₽",
     description: "Для тех, кто хочет активно включиться, поработать со своими запросами и получить максимум пользы.",
     featured: true,
     items: [
@@ -70,7 +66,7 @@ export const tickets = [
   {
     name: "VIP",
     tier: "vip" as TicketTier,
-    price: "3 990 ₽",
+    price: "4 149 ₽",
     note: "Количество мест строго ограничено",
     visualLabel: "Максимум включено + бонусы",
     visualValue: "до 100 000 ₽",
@@ -83,8 +79,6 @@ export const tickets = [
       { title: "VIP-доступ", note: "Первые ряды и закрытый нетворкинг" },
     ],
     highlights: ["Подарки до 100 000 ₽", "Закрытый нетворкинг", "VIP-доступ и первые ряды"],
-    nextPrice: "5 990 ₽",
-    finalPrice: "7 990 ₽",
     description: "Максимальный уровень участия, личного общения и комфорта на фестивале.",
     items: [
       "Вход на фестиваль на весь вечер и доступ ко всем выступлениям",
