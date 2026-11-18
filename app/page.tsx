@@ -5,7 +5,6 @@ import FestivalHero from "./FestivalHero";
 import FestivalApartment from "./FestivalApartment";
 import FestivalGuestMarquee from "./FestivalGuestMarquee";
 import FestivalVenue from "./FestivalVenue";
-import FestivalAdmission from "./FestivalAdmission";
 import FestivalParticipation from "./FestivalExperience";
 import FestivalProgramme from "./FestivalProgramme";
 import SpeakerConsultationForm from "./SpeakerConsultationForm";
@@ -81,7 +80,7 @@ function BonusSection() {
 
 function AttendeeSection() {
   return <section className="section festival-history primary-section" id="community"><div className="container">
-    <div className="history-layout"><figure><img src="/history/festival-guests.jpg" alt="Гости и команда предыдущего фестиваля МЖ" width="2048" height="1365" loading="lazy" /><figcaption>Реальный кадр с предыдущего фестиваля МЖ</figcaption></figure><div><p className="section-label">После программы / Предыдущий фестиваль</p><h2>Так встречались<br /><span>в прошлый раз</span></h2><p>На сцене и в зале были живые разговоры, новые знакомства и люди, которые пришли со своим вопросом. Ниже — их фотографии и слова о том, зачем они шли на фестиваль.</p><a className="text-link" href="#application-form">Подать заявку на новую встречу</a></div></div>
+    <div className="history-layout"><figure><img src="/history/festival-guests.jpg" alt="Гости и команда предыдущего фестиваля МЖ" width="2048" height="1365" loading="lazy" /><figcaption>Реальный кадр с предыдущего фестиваля МЖ</figcaption></figure><div><p className="section-label">После программы / Предыдущий фестиваль</p><h2>Так встречались<br /><span>в прошлый раз</span></h2><p>На сцене и в зале были живые разговоры, новые знакомства и люди, которые пришли со своим вопросом. Ниже — их фотографии и слова о том, зачем они шли на фестиваль.</p><a className="text-link" href="#pricing">Выбрать билет на фестиваль</a></div></div>
     <FestivalGuestMarquee />
   </div></section>;
 }
@@ -174,7 +173,7 @@ export default function Home() {
         </a>
         <div className="nav-links"><a href="#apartment">Двери</a><a href="#program">Спикеры</a><a href="#consultations">Эксперты</a><a href="#expo">Выставка</a><a href="#join-team">Участвовать</a><a href="#pricing">Билеты</a></div>
         <a className="nav-gift-cta" href="#bonuses" aria-label="Подарочный фонд до 100 тысяч рублей"><span>Подарки</span><strong>до 100 000 ₽</strong></a>
-        <a className="nav-bonus-cta" href="#application-form" data-cta-location="header"><span className="nav-bonus-full">Подать заявку</span><span className="nav-bonus-short">Заявка</span></a>
+        <a className="nav-bonus-cta" href="#pricing" data-cta-location="header"><span className="nav-bonus-full">Купить билет</span><span className="nav-bonus-short">Билеты</span></a>
         <details className="mobile-nav">
           <summary aria-label="Открыть меню">Меню</summary>
           <div><a href="#apartment">Открыть двери</a><a href="#program">Спикеры</a><a href="#consultations">Экспертная зона</a><a href="#expo">Выставка</a><a href="#balance">Свой маршрут</a><a href="#dating">Знакомства</a><a href="#logistics">Площадка</a><a href="#pricing">Билеты</a><a href="#participation">Как попасть</a><a href="#join-team">Стать спикером / участником выставки</a><a href="#bonuses">Подарочный фонд</a></div>
@@ -195,7 +194,6 @@ export default function Home() {
       <FestivalPartners partners={partners} />
       <FestivalVenue />
       <PricingSection />
-      <FestivalAdmission />
       <AttendeeSection />
 
       <footer>
