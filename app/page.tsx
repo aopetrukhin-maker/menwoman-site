@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import FestivalHero from "./FestivalHero";
 import FestivalApartment from "./FestivalApartment";
 import FestivalGuestMarquee from "./FestivalGuestMarquee";
@@ -8,6 +8,7 @@ import FestivalVenue from "./FestivalVenue";
 import FestivalAdmission from "./FestivalAdmission";
 import FestivalParticipation from "./FestivalExperience";
 import FestivalProgramme from "./FestivalProgramme";
+import SpeakerConsultationForm from "./SpeakerConsultationForm";
 import FestivalExhibition, { FestivalConsultations } from "./FestivalSections";
 import FestivalConcept from "./FestivalConcept";
 import { FestivalDating, FestivalBar, FestivalAfterparty, FestivalPartners } from "./FestivalAtmosphere";
@@ -19,6 +20,7 @@ import "./festival-city.css";
 import "./festival-luxury.css";
 import "./festival-upgrades.css";
 import "./festival-gifts.css";
+import "./festival-recruitment.css";
 import { startAdmissionNavigation } from "./admission-context";
 import { tickets, ticketPrices, pairPrices, formatPrice } from "./ticket-tariffs";
 import { festivalEvent as event } from "./festival-event";
@@ -62,6 +64,10 @@ function ArrowIcon() {
       <path d="M5 12h13M13 6l6 6-6 6" />
     </svg>
   );
+}
+
+function JoinFestival() {
+  return <aside className="join-festival" id="join-team" aria-label="Участие в программе и выставке"><div className="container join-festival-inner"><div><small>МЖ открыт для новых участников</small><strong>Выйдите на сцену. Покажите свой проект.</strong></div><div className="join-festival-actions"><a className="recruitment-button" href="https://t.me/redheadlitle" target="_blank" rel="noreferrer" data-cta-location="join-speaker">Стать спикером</a><a className="recruitment-button" href="https://t.me/redheadlitle" target="_blank" rel="noreferrer" data-cta-location="join-exhibition">Стать участником выставки</a></div></div></aside>;
 }
 
 function BonusSection() {
@@ -114,6 +120,8 @@ function PricingSection() {
 
 export default function Home() {
   const [selectedSpeaker, setSelectedSpeaker] = useState<FestivalParticipant | null>(null);
+  const [consultationSpeaker, setConsultationSpeaker] = useState<string | null>(null);
+  const closeConsultation = useCallback(() => setConsultationSpeaker(null), []);
   const [cookieVisible, setCookieVisible] = useState(false);
   useEffect(() => startFunnelTracking(), []);
   useEffect(() => startAdmissionNavigation(), []);
@@ -164,19 +172,20 @@ export default function Home() {
           <strong>МЖ</strong>
           <span>{event.dateLabel}</span>
         </a>
-        <div className="nav-links"><a href="#apartment">Двери</a><a href="#program">Спикеры</a><a href="#consultations">Консультации</a><a href="#expo">Экспозона</a><a href="#balance">Маршрут</a><a href="#pricing">Билеты</a></div>
+        <div className="nav-links"><a href="#apartment">Двери</a><a href="#program">Спикеры</a><a href="#consultations">Эксперты</a><a href="#expo">Выставка</a><a href="#join-team">Участвовать</a><a href="#pricing">Билеты</a></div>
         <a className="nav-gift-cta" href="#bonuses" aria-label="Подарочный фонд до 100 тысяч рублей"><span>Подарки</span><strong>до 100 000 ₽</strong></a>
         <a className="nav-bonus-cta" href="#application-form" data-cta-location="header"><span className="nav-bonus-full">Подать заявку</span><span className="nav-bonus-short">Заявка</span></a>
         <details className="mobile-nav">
           <summary aria-label="Открыть меню">Меню</summary>
-          <div><a href="#apartment">Открыть двери</a><a href="#program">Спикеры</a><a href="#consultations">Консультации</a><a href="#expo">Выставка и экспозона</a><a href="#balance">Свой маршрут</a><a href="#dating">Знакомства</a><a href="#logistics">Площадка</a><a href="#pricing">Билеты</a><a href="#participation">Как попасть</a><a href="#application-form" data-cta-location="mobile-menu">Подать заявку</a><a href="#bonuses">Подарочный фонд</a></div>
+          <div><a href="#apartment">Открыть двери</a><a href="#program">Спикеры</a><a href="#consultations">Экспертная зона</a><a href="#expo">Выставка</a><a href="#balance">Свой маршрут</a><a href="#dating">Знакомства</a><a href="#logistics">Площадка</a><a href="#pricing">Билеты</a><a href="#participation">Как попасть</a><a href="#join-team">Стать спикером / участником выставки</a><a href="#bonuses">Подарочный фонд</a></div>
         </details>
       </nav>
 
       <FestivalHero />
+      <JoinFestival />
       <FestivalApartment />
-      <FestivalProgramme onSelect={setSelectedSpeaker} />
-      <FestivalConsultations onSelect={setSelectedSpeaker} />
+      <FestivalProgramme onSelect={setSelectedSpeaker} onConsultation={setConsultationSpeaker} />
+      <FestivalConsultations onSelect={setSelectedSpeaker} onConsultation={setConsultationSpeaker} />
       <FestivalExhibition onSelect={setSelectedSpeaker} />
       <FestivalConcept />
       <FestivalDating />
@@ -195,7 +204,7 @@ export default function Home() {
           <div><span>Задать вопрос</span><a href="tel:+79625759813">8 962 575-98-13</a><a href={telegramUrl} target="_blank" rel="noreferrer">Telegram: @redheadlitle</a><a href="mailto:noname.eventspb@gmail.com">noname.eventspb@gmail.com</a></div>
           <div><span>Адрес фестиваля МЖ</span><p>«{event.venue}»<br />{event.city}, {event.address}<br />Метро «{event.metro}»<br />{event.dateLabel} · {event.timeLabel}</p></div>
         </div>
-        <div className="container footer-bottom"><span>© 2026 Фестиваль «Мужчина и Женщина»</span><a href="/gifts/">Подарочный фонд · с 4 декабря</a><a href="#">Вернуться к началу</a></div>
+        <div className="container footer-bottom"><span>© 2026 Фестиваль «Мужчина и Женщина»</span><a href="#join-team">Стать спикером / участником выставки</a><a href="/gifts/">Подарочный фонд · с 4 декабря</a><a href="#">Вернуться к началу</a></div>
       </footer>
 
       {selectedSpeaker && (
@@ -221,11 +230,14 @@ export default function Home() {
               {selectedSpeaker.sessionOutcome && <div className="participant-session"><h3>С чем уйдёте</h3><p>{selectedSpeaker.sessionOutcome}</p></div>}
               {selectedSpeaker.sessionFormat && <div className="participant-session"><h3>Формат</h3><p>{selectedSpeaker.sessionFormat}</p></div>}
               <div className="participant-formats">{selectedSpeaker.appearances.map((appearance) => <article key={appearance.label}><h4>{appearance.label}</h4><p>{appearance.text}</p>{appearance.note && <p className="festival-pending">{appearance.note}</p>}</article>)}</div>
+              <button className="consultation-request-button" type="button" onClick={() => { setConsultationSpeaker(selectedSpeaker.name); setSelectedSpeaker(null); }}>Оставить запрос на консультацию</button>
               <div className="speaker-project-links">{selectedSpeaker.links?.map((link) => <a key={link.href} href={link.href} target="_blank" rel="noreferrer">{link.label}</a>)}</div>
             </div>
           </article>
         </div>
       )}
+
+      {consultationSpeaker && <SpeakerConsultationForm key={consultationSpeaker} speaker={consultationSpeaker} onClose={closeConsultation} />}
 
       {cookieVisible && (
         <div className="cookie-banner">

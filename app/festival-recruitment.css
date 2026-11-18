@@ -1,0 +1,61 @@
+.luxury-edition .join-festival { position: relative; overflow: hidden; padding: clamp(20px, 3vw, 34px) 0; border-block: 1px solid #e38c69; background: radial-gradient(circle at 82% 35%, #fdba7440, transparent 35%), linear-gradient(108deg, #651923, #a52732 52%, #6c1e26); color: #fff4de; }
+.luxury-edition .join-festival::before { position: absolute; inset: 0; content: ""; opacity: .17; background: repeating-linear-gradient(112deg, transparent 0 31px, #ffd3ab 32px, transparent 33px 64px); pointer-events: none; }
+.luxury-edition .join-festival-inner { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 28px; }
+.luxury-edition .join-festival small, .luxury-edition .recruitment-callout small { display: block; margin-bottom: 10px; color: #ffd39d; font-size: 11px; font-weight: 800; letter-spacing: .15em; text-transform: uppercase; }
+.luxury-edition .join-festival strong { display: block; font: 500 clamp(28px, 3.4vw, 46px)/1.08 var(--font-display), Georgia, serif; }
+.luxury-edition .join-festival-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; }
+.luxury-edition .recruitment-button { display: inline-flex; align-items: center; justify-content: center; min-height: 50px; padding: 13px 20px; border: 1px solid #ffc7a1; border-radius: 4px; background: linear-gradient(110deg, #d52539, #a80d26); color: #fffaf1; font-size: 14px; font-weight: 800; line-height: 1.25; text-align: center; text-decoration: none; box-shadow: 0 0 0 2px #ff9c7825, 0 12px 32px #1a090850; transition: transform .2s ease, box-shadow .2s ease, background .2s ease; }
+.luxury-edition .recruitment-button:hover { transform: translateY(-3px); background: linear-gradient(110deg, #ec3649, #c51931); box-shadow: 0 0 0 4px #ff9c783d, 0 15px 36px #1a090870; }
+.luxury-edition .recruitment-button:focus-visible { outline: 3px solid #fff4ca; outline-offset: 4px; }
+.luxury-edition .join-festival .recruitment-button { border-color: #ffe0ae; background: #221914; }
+.luxury-edition .join-festival .recruitment-button:hover { background: #3e241e; }
+.luxury-edition .recruitment-callout { display: flex; align-items: center; justify-content: space-between; gap: 30px; margin-top: 36px; padding: clamp(22px, 3vw, 36px); border: 1px solid #cd7070; border-left: 6px solid #ee394c; border-radius: 6px; background: radial-gradient(circle at 100% 15%, #c443454d, transparent 46%), linear-gradient(120deg, #381d20, #242018); box-shadow: 0 22px 48px #0004; }
+.luxury-edition .recruitment-callout strong { display: block; color: #fff1da; font: 500 clamp(32px, 3.2vw, 46px)/1.08 var(--font-display), Georgia, serif; }
+.luxury-edition .recruitment-callout p { max-width: 600px; margin: 11px 0 0; color: #e5d0be; line-height: 1.55; }
+.luxury-edition .exhibition-marquee { width: 100%; overflow: hidden; margin: 0 0 42px; border-block: 2px solid #f3b58a; background: #b31630; color: #fff1d4; transform: rotate(-1deg) scale(1.02); box-shadow: 0 13px 40px #0006; }
+.luxury-edition .exhibition-marquee-track { display: flex; width: max-content; white-space: nowrap; animation: exhibition-scroll 34s linear infinite; }
+.luxury-edition .exhibition-marquee-track span { flex: 0 0 auto; padding: 12px 0; font: 800 clamp(27px, 4.2vw, 56px)/1.1 var(--font-sans), Arial, sans-serif; letter-spacing: .035em; }
+.luxury-edition .exhibition-marquee-track b { color: #f0aa75; }
+@keyframes exhibition-scroll { to { transform: translateX(-50%); } }
+.luxury-edition .city-exhibition { background: radial-gradient(ellipse at 100% 18%, #82372278, transparent 43%), radial-gradient(ellipse at 0% 70%, #7b2f3b55, transparent 44%), #2b1819; }
+.luxury-edition .city-exhibition .conversion-section-heading h2 span { color: #ffc18c; }
+.luxury-edition .exhibition-invitation { display: flex; align-items: center; justify-content: space-between; gap: 28px; padding: 26px 30px; border: 1px solid #e9b77e75; border-radius: 6px; background: linear-gradient(115deg, #673423, #482125 62%, #341b1e); box-shadow: 0 18px 42px #0005; }
+.luxury-edition .exhibition-invitation p { max-width: 700px; margin: 0; color: #f6e2cb; font-size: clamp(17px, 1.65vw, 22px); line-height: 1.45; }
+.luxury-edition .exhibition-invitation strong { color: #ffd49d; }
+.luxury-edition .exhibition-feature { margin-top: 24px; }
+.luxury-edition .exhibition-bottom-cta { margin-top: 24px; }
+.luxury-edition .city-exhibition .city-exhibitor:nth-child(odd) { background: #3c2424; }
+.luxury-edition .city-exhibition .city-exhibitor:nth-child(even) { background: #33251d; }
+.luxury-edition .programme-section { background: radial-gradient(circle at 92% 8%, #9e365145, transparent 36%), #231922; }
+.luxury-edition .city-consultations { background: radial-gradient(circle at 5% 30%, #407a6c42, transparent 40%), #172522; }
+.luxury-edition .consultation-request-button { display: inline-flex; justify-content: center; align-items: center; width: 100%; min-height: 48px; margin-top: 15px; padding: 11px 16px; border: 1px solid #e98583; border-radius: 4px; background: linear-gradient(115deg, #ae1a30, #791b2c); color: #fff2df; font: 800 13px/1.35 var(--font-sans), Arial, sans-serif; text-align: center; cursor: pointer; box-shadow: 0 0 18px #d52b443a; }
+.luxury-edition .consultation-request-button:hover { background: #c52a3e; }
+.luxury-edition .consultation-request-button:focus-visible { outline: 3px solid #fff0c5; outline-offset: 3px; }
+.consultation-modal-backdrop { position: fixed; z-index: 1200; inset: 0; display: grid; place-items: center; padding: 18px; overflow-y: auto; background: #100e0ddd; }
+.consultation-modal { position: relative; width: min(100%, 650px); max-height: min(94vh, 900px); padding: clamp(23px, 4vw, 42px); overflow-y: auto; border: 1px solid #d4a86c; border-radius: 8px; background: radial-gradient(circle at 100% 0, #672c3555, transparent 50%), #261d1b; color: #f7e9d3; box-shadow: 0 30px 90px #000b; }
+.consultation-modal > small, .consultation-success > small { color: #f3b987; font-size: 11px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+.consultation-modal h2 { margin: 10px 35px 12px 0; color: #fff0d9; font: 500 clamp(36px, 5vw, 54px)/1.05 var(--font-display), Georgia, serif; }
+.consultation-modal > p, .consultation-success > p { margin: 0 0 22px; color: #e4d3bd; line-height: 1.55; }
+.consultation-modal-close { position: absolute; top: 13px; right: 17px; width: 42px; height: 42px; border: 1px solid #ddbb92; border-radius: 50%; background: transparent; color: #ffeed8; font-size: 28px; cursor: pointer; }
+.consultation-modal form { display: grid; gap: 15px; }
+.consultation-modal form label:not(.consultation-consent) { display: grid; gap: 6px; color: #f4d9b5; font-size: 13px; font-weight: 700; }
+.consultation-modal input:not([type="checkbox"]), .consultation-modal textarea { width: 100%; min-height: 46px; padding: 11px 12px; border: 1px solid #9d795d; border-radius: 3px; background: #fff9ef; color: #281e18; font: 15px/1.4 var(--font-sans), Arial, sans-serif; }
+.consultation-modal textarea { resize: vertical; }
+.consultation-form-contacts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.consultation-consent { display: flex; align-items: flex-start; gap: 10px; color: #e8d4bd; font-size: 12px; line-height: 1.5; }
+.consultation-consent input { flex: none; margin-top: 3px; accent-color: #c7273a; }
+.consultation-field-note { color: #c9b8a7; font-size: 12px; line-height: 1.5; }
+.consultation-form-error { margin: 0; padding: 10px; border-left: 3px solid #f29292; color: #ffe1e1; background: #91343966; font-size: 13px; }
+.consultation-honeypot { position: absolute; left: -10000px; }
+.consultation-modal .recruitment-button { cursor: pointer; width: fit-content; }
+.consultation-modal .recruitment-button:disabled { opacity: .65; cursor: wait; }
+@media (max-width: 760px) {
+  .luxury-edition .join-festival-inner, .luxury-edition .recruitment-callout, .luxury-edition .exhibition-invitation { align-items: stretch; flex-direction: column; }
+  .luxury-edition .join-festival-actions { justify-content: flex-start; }
+  .luxury-edition .join-festival-actions .recruitment-button { flex: 1 1 190px; }
+  .luxury-edition .recruitment-callout, .luxury-edition .exhibition-invitation { gap: 20px; }
+  .luxury-edition .exhibition-marquee { margin-bottom: 35px; }
+  .luxury-edition .exhibition-marquee-track span { padding: 10px 0; }
+  .consultation-form-contacts { grid-template-columns: minmax(0, 1fr); }
+}
+@media (prefers-reduced-motion: reduce) { .luxury-edition .exhibition-marquee-track { animation: none; } .luxury-edition .recruitment-button { transition: none; } }
