@@ -11,3 +11,5 @@ export const festivalEvent = {
   metro: "Маяковская",
   mapUrl: "https://yandex.ru/maps/?text=" + encodeURIComponent("Антресоль и Перец, Санкт-Петербург, ул. Марата, 1/71"),
 } as const;
+
+export const welcomeTreat = `Приветственный напиток и угощение от ресторана «${festivalEvent.venue}»`;

@@ -103,3 +103,57 @@
   .luxury-edition .mobile-nav summary { padding-inline: 9px; }
 }
 @media (prefers-reduced-motion: reduce) { .luxury-edition .nav-gift-cta { animation: none; } }
+
+.luxury-edition .gift-spotlight h1 {
+  margin: 0;
+  color: #fff7e8;
+  font: 500 clamp(47px, 7vw, 98px)/1 var(--font-display), Georgia, serif;
+  text-wrap: balance;
+}
+.luxury-edition .gift-spotlight-number strong {
+  font-size: clamp(2.05rem, 3.55vw, 3.9rem);
+}
+.luxury-edition .city-gifts .city-gift-tiers strong {
+  white-space: nowrap;
+  font-size: clamp(2.2rem, 6.6vw, 4.9rem);
+}
+.luxury-edition .city-gifts .city-gift-tiers article { min-height: 0; }
+.luxury-edition .gift-selection { margin: clamp(2rem, 5vw, 3.5rem) 0; }
+.luxury-edition .gift-selection h3, .luxury-edition .gift-history h3 {
+  margin: 0 0 .8rem;
+  color: #fff0d5;
+  font: 600 clamp(1.9rem, 4vw, 3rem)/1.1 var(--font-display), Georgia, serif;
+}
+.luxury-edition .gift-selection ol {
+  max-width: 54rem;
+  margin: 0;
+  padding-left: 1.3rem;
+  line-height: 1.7;
+}
+.luxury-edition .gift-selection li { padding-left: .4rem; margin-top: .3rem; }
+.luxury-edition .gift-selection li::marker { color: #ffce9c; font-weight: 800; }
+.luxury-edition .gift-selection p { margin-top: .85rem; color: #f2cfbf; }
+.luxury-edition .gift-history-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: .75rem;
+  margin: 1.25rem 0 .5rem;
+  padding: 0;
+  list-style: none;
+}
+.luxury-edition .gift-history-grid li {
+  padding: clamp(.85rem, 2vw, 1.3rem);
+  border: 1px solid #ffddba53;
+  border-radius: 7px;
+  background: #321520b8;
+}
+.luxury-edition .gift-history-grid h4 { margin: 0 0 .4rem; color: #fff0d5; font-size: 1rem; }
+.luxury-edition .gift-history-grid p { margin: 0; color: #f1d4c5; font-size: .92rem; line-height: 1.55; }
+.luxury-edition .gift-history-grid .gift-history-partner { margin-top: .7rem; color: #ffc58d; font-size: .86rem; }
+
+@media (max-width: 950px) {
+  .luxury-edition .gift-history-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 390px) {
+  .luxury-edition .gift-history-grid { grid-template-columns: minmax(0, 1fr); }
+}

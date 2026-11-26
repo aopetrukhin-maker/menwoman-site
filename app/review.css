@@ -1,0 +1,99 @@
+html { scroll-padding-top: 105px; }
+.review-filters { display:flex; gap:.7rem; flex-wrap:wrap; align-items:center; }
+.review-filters button,.review-block summary { min-height:44px; padding:.55rem .9rem; display:inline-flex; align-items:center; }
+.review-block { padding-block:2rem; }
+.review-block h2 { font-size:clamp(2rem,5vw,3.5rem); margin:0 0 .6em; }
+.review-filters button[aria-pressed=true] { background:#e5c6a1; color:#241711; }
+.review-note,.review-request { padding-block:1rem; }
+.review-request select { display:block; margin-top:.5rem; max-width:100%; min-height:44px; }
+.review-dialog { position:fixed; margin:auto; max-height:90dvh; overflow:auto; }
+.review-dialog::backdrop { background:#000b; }
+.page-restructured :focus-visible { outline:3px solid #e9bc84; outline-offset:3px; }
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}}
+
+.review-filters button { background:#352322; color:#fff1e3; border:1px solid #a98766; border-radius:8px; }
+#program .section-heading { margin-bottom:1.25rem; }
+#program .section-heading p { margin:.45rem 0 0; }
+@media (max-width:760px) { .review-filters { gap:.45rem; } .review-filters button { font-size:.9rem; padding:.4rem .65rem; } #program .speakers-carousel { margin-top:1rem; } }
+
+.review-pair-invite {
+  max-width: 54rem;
+  margin: 0 auto;
+  padding-block: 1.5rem;
+  line-height: 1.65;
+}
+.ticket-pair-note {
+  max-width: 44rem;
+  margin: 0 auto 1.5rem;
+  text-align: center;
+}
+.ticket-pair-note p { margin-top: .4rem; }
+.ticket-price-lines { margin: .75rem 0 0; }
+.ticket-price-lines dt { color: #e4d2b8; font-size: .95rem; }
+.price-card .ticket-price-lines dd { margin: 0; color: #fff0da; white-space: nowrap; }
+.ticket-total { font: 500 clamp(2.5rem, 5vw, 4rem)/1.1 var(--font-display), Georgia, serif; }
+.ticket-per-person { margin-top: .9rem; }
+.ticket-per-person dd { font-size: 1.25rem; font-weight: 700; }
+.ticket-comparison { flex: 1; margin: 1.15rem 0; }
+.ticket-comparison > p { margin: 0 0 .25rem; font-weight: 700; }
+.ticket-comparison ul { margin: 0; }
+.luxury-edition .pricing-grid .ticket-comparison li { font-size: .94rem; }
+.luxury-edition .pricing-grid .ticket-purchase-note { margin: 1rem 0 .65rem; font-size: .9rem; line-height: 1.5; }
+
+.luxury-edition #partners { padding-block: clamp(1.5rem, 4vw, 2.75rem); }
+#partners h2 { font-size: clamp(2rem, 4vw, 3rem); margin: 0 0 .45rem; }
+.review-partners:not([open]) > .partner-grid { display: none; }
+.review-partners summary,
+.review-doors > summary {
+  min-height: 44px;
+  padding-block: .55rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.review-partners summary { width: fit-content; }
+.review-partners .partner-grid { margin-top: 1.15rem; }
+.review-doors > summary { padding-block: 1rem; }
+.review-privacy-link { width: fit-content; color: #f5dab7; text-decoration: underline; }
+.luxury-edition .review-dialog {
+  position: fixed;
+  inset: 0;
+  width: min(calc(100% - 1.5rem), 650px);
+  max-height: calc(100vh - 1.5rem);
+  max-height: calc(100dvh - 1.5rem);
+  overscroll-behavior: contain;
+}
+.review-dialog input:not([type="checkbox"]), .review-dialog textarea { font-size: 16px; }
+.review-dialog .consultation-modal-close { width: 44px; height: 44px; }
+
+.luxury-edition .pricing-grid .price-card-reload.featured {
+  border-color: #eeac83;
+  background: radial-gradient(ellipse at 100% 0, #8c3545 0, transparent 60%), #391c25;
+  box-shadow: 0 14px 42px #36091370;
+}
+.luxury-edition .ticket-gift-feature {
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid #f7cd9a85;
+  border-radius: 6px;
+  color: #3d1a1f;
+  background: linear-gradient(125deg, #ffe9c4, #e3b690);
+}
+.luxury-edition .ticket-gift-feature p { margin: 0; line-height: 1.5; }
+.luxury-edition .ticket-gift-feature p:first-child { font-weight: 800; }
+.luxury-edition .ticket-gift-feature strong {
+  display: block;
+  margin: .15rem 0 .35rem;
+  color: #8a233c;
+  white-space: nowrap;
+  font: 700 clamp(2.35rem, 5vw, 3.6rem)/1.05 var(--font-display), Georgia, serif;
+}
+.luxury-edition .ticket-gift-feature a,
+.luxury-edition .ticket-comparison a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: inherit;
+  font-weight: 750;
+  text-decoration: underline;
+  text-underline-offset: .2em;
+}

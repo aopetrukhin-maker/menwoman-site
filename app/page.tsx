@@ -1,18 +1,15 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import FestivalHero from "./FestivalHero";
 import FestivalApartment from "./FestivalApartment";
 import FestivalGuestMarquee from "./FestivalGuestMarquee";
 import FestivalVenue from "./FestivalVenue";
-import FestivalParticipation from "./FestivalExperience";
 import FestivalProgramme from "./FestivalProgramme";
 import SpeakerConsultationForm from "./SpeakerConsultationForm";
 import FestivalExhibition, { FestivalConsultations } from "./FestivalSections";
-import FestivalConcept from "./FestivalConcept";
-import { FestivalDating, FestivalBar, FestivalAfterparty, FestivalPartners } from "./FestivalAtmosphere";
+import { FestivalDating, FestivalPartners } from "./FestivalAtmosphere";
 import { type FestivalParticipant } from "./festival-participants";
-import { startFunnelTracking } from "./funnel-tracking";
 import "./festival-conversion.css";
 import "./festival-structure.css";
 import "./festival-city.css";
@@ -20,8 +17,10 @@ import "./festival-luxury.css";
 import "./festival-upgrades.css";
 import "./festival-gifts.css";
 import "./festival-recruitment.css";
-import { startAdmissionNavigation } from "./admission-context";
-import { tickets, ticketPrices, pairPrices, formatPrice } from "./ticket-tariffs";
+import "./review.css";
+import FestivalPricing from "./FestivalPricing";
+import FestivalGifts from "./FestivalGifts";
+import { formatPrice, giftNominals } from "./ticket-tariffs";
 import { festivalEvent as event } from "./festival-event";
 
 const telegramUrl = "https://t.me/redheadlitle";
@@ -57,73 +56,17 @@ const partners = [
 ];
 
 
-function ArrowIcon() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M5 12h13M13 6l6 6-6 6" />
-    </svg>
-  );
-}
-
-function JoinFestival() {
-  return <aside className="join-festival" id="join-team" aria-label="Участие в программе и выставке"><div className="container join-festival-inner"><div><small>МЖ открыт для новых участников</small><strong>Выйдите на сцену. Покажите свой проект.</strong></div><div className="join-festival-actions"><a className="recruitment-button" href="https://t.me/redheadlitle" target="_blank" rel="noreferrer" data-cta-location="join-speaker">Стать спикером</a><a className="recruitment-button" href="https://t.me/redheadlitle" target="_blank" rel="noreferrer" data-cta-location="join-exhibition">Стать участником выставки</a></div></div></aside>;
-}
-
-function BonusSection() {
-  return <section className="section city-gifts primary-section" id="bonuses"><div className="container">
-    <div className="gift-spotlight"><div><p className="section-label">08 / Подарочный фонд</p><p className="gift-kicker">Для тарифов «Перезагрузка» и VIP</p><h2>Подарки, которые ждут вас <em>после фестиваля</em></h2><p className="gift-spotlight-lead">4 декабря, на следующий день после МЖ, владельцы этих билетов смогут выбрать подарки и сертификаты партнёров.</p><a className="gift-fund-link" href="/gifts/">Посмотреть условия фонда</a></div><div className="gift-spotlight-number"><span>Подарочный фонд VIP</span><strong><small>до</small> 100 000 <small>₽</small></strong><p>по номинальной стоимости выбранных предложений</p></div></div>
-    <div className="city-gift-tiers"><article><span>Тариф «Перезагрузка»</span><p>Подарки и сертификаты на ваш выбор</p><strong><small>до</small> 50 000 <small>₽</small></strong><span>Доступ к выбору — с 4 декабря</span></article><article><span>Тариф VIP</span><p>Расширенный выбор подарков</p><strong><small>до</small> 100 000 <small>₽</small></strong><span>Доступ к выбору — с 4 декабря</span></article></div>
-    <p className="gift-terms">Подарки не выдаются на фестивале. Выбор и получение начинаются 4 декабря, после события. Указанные суммы — лимиты номинальной стоимости предложений, не денежная выплата. Состав каталога, сроки и условия использования уточняются.</p>
-    <a className="gift-pricing-link" href="#pricing">Выбрать билет с подарками</a>
-  </div></section>;
-}
-
-function AttendeeSection() {
-  return <section className="section festival-history primary-section" id="community"><div className="container">
-    <div className="history-layout"><figure><img src="/history/festival-guests.jpg" alt="Гости и команда предыдущего фестиваля МЖ" width="2048" height="1365" loading="lazy" /><figcaption>Реальный кадр с предыдущего фестиваля МЖ</figcaption></figure><div><p className="section-label">После программы / Предыдущий фестиваль</p><h2>Так встречались<br /><span>в прошлый раз</span></h2><p>На сцене и в зале были живые разговоры, новые знакомства и люди, которые пришли со своим вопросом. Ниже — их фотографии и слова о том, зачем они шли на фестиваль.</p><a className="text-link" href="#pricing">Выбрать билет на фестиваль</a></div></div>
-    <FestivalGuestMarquee />
-  </div></section>;
-}
-
-function PricingSection() {
-  const [purchaseFormat, setPurchaseFormat] = useState<"single" | "pair">("single");
-  return (
-    <section className="section pricing-section primary-section" id="pricing">
-      <div className="container">
-        <div className="section-heading center-heading">
-          <p className="section-label">13 / Билеты и состав тарифов</p>
-          <h2>Как вы хотите<br /><span>провести этот вечер?</span></h2>
-          <p>Выберите формат и тариф. На странице Qtickets добавьте соответствующий билет в корзину.</p>
-        </div>
-        <div className="admission-actions">
-          <a className="primary-button" href="https://qtickets.ru/event/275542" target="_blank" rel="noreferrer">Купить билет</a>
-        </div>
-        <div className="ticket-format-choice" role="group" aria-label="Количество участников в билете"><button type="button" aria-pressed={purchaseFormat === "single"} onClick={() => setPurchaseFormat("single")}>Один</button><button type="button" aria-pressed={purchaseFormat === "pair"} onClick={() => setPurchaseFormat("pair")}>Вдвоём</button></div>
-        <div className="pricing-grid">
-          {tickets.map((ticket) => (
-            <article className={`price-card price-card-${ticket.tier} ${ticket.featured ? "featured" : ""}`} key={ticket.name}>
-              {ticket.featured && <div className="popular">Больше возможностей</div>}
-              <div className="price-head"><h3>{ticket.name}</h3><strong>{formatPrice((purchaseFormat === "pair" ? pairPrices : ticketPrices)[ticket.tier])}</strong><span>{purchaseFormat === "pair" ? "Цена за двоих" : "Цена за 1 билет"}</span></div>
-              <div className="ticket-highlight-list">{ticket.highlights.map((highlight) => <span key={highlight}>{highlight}</span>)}</div>
-              <p>{ticket.description}</p>
-              <details className="ticket-details"><summary>Полный состав тарифа <b>+</b></summary><ul>{ticket.items.map((item) => <li key={item}><b>✓</b>{item}</li>)}</ul></details>
-              <a href="https://qtickets.ru/event/275542" target="_blank" rel="noreferrer" data-tier={ticket.tier} data-format={purchaseFormat} data-cta-location={`tariff-${ticket.tier}`}>Перейти к выбору билета <i className="button-icon"><ArrowIcon /></i></a>
-            </article>
-          ))}
-        </div>
-        <FestivalParticipation />
-      </div>
-    </section>
-  );
-}
-
 export default function Home() {
   const [selectedSpeaker, setSelectedSpeaker] = useState<FestivalParticipant | null>(null);
-  const [consultationSpeaker, setConsultationSpeaker] = useState<string | null>(null);
-  const closeConsultation = useCallback(() => setConsultationSpeaker(null), []);
+  const profileTrigger = useRef<HTMLElement>(null);
+  const [consultation, setConsultation] = useState<{ speaker: string; trigger: HTMLElement } | null>(null);
+  const openProfile = (participant: FestivalParticipant, trigger: HTMLElement) => {
+    profileTrigger.current = trigger;
+    setSelectedSpeaker(participant);
+  };
+  const openConsultation = (speaker: string, trigger: HTMLElement) => setConsultation({ speaker, trigger });
+  const closeConsultation = useCallback(() => setConsultation(null), []);
   const [cookieVisible, setCookieVisible] = useState(false);
-  useEffect(() => startFunnelTracking(), []);
-  useEffect(() => startAdmissionNavigation(), []);
 
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => {
@@ -134,11 +77,12 @@ export default function Home() {
 
   useEffect(() => {
     if (!selectedSpeaker) return;
-    const previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const previousFocus = profileTrigger.current;
     const dialog = document.querySelector<HTMLElement>(".speaker-modal");
     const controls = () => [...(dialog?.querySelectorAll<HTMLElement>('button, a[href], [tabindex="0"]') ?? [])];
     controls()[0]?.focus();
     const handleKey = (event: KeyboardEvent) => {
+      if (document.querySelector(".review-dialog[open]")) return;
       if (event.key === "Escape") setSelectedSpeaker(null);
       if (event.key !== "Tab") return;
       const focusable = controls();
@@ -155,7 +99,7 @@ export default function Home() {
     return () => {
       document.body.style.overflow = "";
       document.removeEventListener("keydown", handleKey);
-      previousFocus?.focus();
+      previousFocus?.focus({ preventScroll: true });
     };
   }, [selectedSpeaker]);
 
@@ -171,30 +115,35 @@ export default function Home() {
           <strong>МЖ</strong>
           <span>{event.dateLabel}</span>
         </a>
-        <div className="nav-links"><a href="#apartment">Двери</a><a href="#program">Спикеры</a><a href="#consultations">Эксперты</a><a href="#expo">Выставка</a><a href="#join-team">Участвовать</a><a href="#pricing">Билеты</a></div>
-        <a className="nav-gift-cta" href="#bonuses" aria-label="Подарочный фонд до 100 тысяч рублей"><span>Подарки</span><strong>до 100 000 ₽</strong></a>
-        <a className="nav-bonus-cta" href="#pricing" data-cta-location="header"><span className="nav-bonus-full">Купить билет</span><span className="nav-bonus-short">Билеты</span></a>
-        <details className="mobile-nav">
-          <summary aria-label="Открыть меню">Меню</summary>
-          <div><a href="#apartment">Открыть двери</a><a href="#program">Спикеры</a><a href="#consultations">Экспертная зона</a><a href="#expo">Выставка</a><a href="#balance">Свой маршрут</a><a href="#dating">Знакомства</a><a href="#logistics">Площадка</a><a href="#pricing">Билеты</a><a href="#participation">Как попасть</a><a href="#join-team">Стать спикером / участником выставки</a><a href="#bonuses">Подарочный фонд</a></div>
-        </details>
+        <div className="nav-links"><a href="#program">Программа</a><a href="#consultations">Консультации</a><a href="#logistics">Площадка</a></div>
+        <a className="nav-gift-cta" href="#bonuses"><span>Подарки</span><strong>до {formatPrice(giftNominals.vip)}</strong></a>
+        <a className="nav-bonus-cta" href="#pricing">Билеты</a>
+        <details className="mobile-nav"><summary>Меню</summary><div>{[["program","Программа"],["dating","Браслеты и знакомства"],["consultations","Консультации"],["expo","Выставка"],["logistics","Площадка"],["pricing","Билеты"],["bonuses","Подарки от партнёров"]].map(([id,label]) => <a key={id} href={`#${id}`} onClick={e => e.currentTarget.closest("details")?.removeAttribute("open")}>{label}</a>)}</div></details>
       </nav>
-
       <FestivalHero />
-      <JoinFestival />
-      <FestivalApartment />
-      <FestivalProgramme onSelect={setSelectedSpeaker} onConsultation={setConsultationSpeaker} />
-      <FestivalConsultations onSelect={setSelectedSpeaker} onConsultation={setConsultationSpeaker} />
-      <FestivalExhibition onSelect={setSelectedSpeaker} />
-      <FestivalConcept />
+      <p className="container review-pair-invite">Приходите вдвоём ради вашего совместного вечера: выступлений о близости, отношениях и семье. Можно слушать, обсуждать важное для вашей пары и проводить время вместе. Новые знакомства необязательны.</p>
+      <FestivalProgramme onSelect={openProfile} onConsultation={openConsultation} />
       <FestivalDating />
-      <BonusSection />
-      <FestivalBar />
-      <FestivalAfterparty />
-      <FestivalPartners partners={partners} />
+      <FestivalConsultations onSelect={openProfile} onConsultation={openConsultation} />
+      <FestivalExhibition onSelect={openProfile} />
       <FestivalVenue />
-      <PricingSection />
-      <AttendeeSection />
+      <p className="container review-note" id="afterparty">После программы можно остаться на музыку и пообщаться у бара.</p>
+      <FestivalPricing />
+      <FestivalGifts />
+      <section className="container review-block" id="questions"><h2>Частые вопросы</h2>
+        <details><summary>Обязательно знакомиться?</summary><p>Нет. Вы можете прийти ради программы и провести вечер в своём кругу.</p></details>
+        <details><summary>Что даёт парный билет?</summary><p>Два места по выбранному тарифу. На странице Qtickets повторите выбор тарифа и формата.</p></details>
+        <details><summary>Запрос на консультацию подтверждает запись?</summary><p>Нет. Запись требует отдельного подтверждения команды фестиваля. Команда свяжется с вами по указанному контакту.</p></details>
+        <p><a className="primary-button" href="#pricing">Выбрать билет</a></p>
+      </section>
+      <FestivalPartners partners={partners} />
+      <section className="container review-block" id="guest-stories" aria-labelledby="guest-stories-title">
+        <FestivalGuestMarquee />
+      </section>
+      <details className="review-doors">
+        <summary className="container">Открыть двери Тайной резиденции</summary>
+        <FestivalApartment />
+      </details>
 
       <footer>
         <div className="container footer-grid">
@@ -202,7 +151,7 @@ export default function Home() {
           <div><span>Задать вопрос</span><a href="tel:+79625759813">8 962 575-98-13</a><a href={telegramUrl} target="_blank" rel="noreferrer">Telegram: @redheadlitle</a><a href="mailto:noname.eventspb@gmail.com">noname.eventspb@gmail.com</a></div>
           <div><span>Адрес фестиваля МЖ</span><p>«{event.venue}»<br />{event.city}, {event.address}<br />Метро «{event.metro}»<br />{event.dateLabel} · {event.timeLabel}</p></div>
         </div>
-        <div className="container footer-bottom"><span>© 2026 Фестиваль «Мужчина и Женщина»</span><a href="#join-team">Стать спикером / участником выставки</a><a href="/gifts/">Подарочный фонд · с 4 декабря</a><a href="#">Вернуться к началу</a></div>
+        <div className="container footer-bottom"><span>© 2026 Фестиваль «Мужчина и Женщина»</span><a href={telegramUrl} target="_blank" rel="noreferrer">Партнёрам и медиа</a><a href="#bonuses">Подарки</a><a href="#">Вернуться к началу</a></div>
       </footer>
 
       {selectedSpeaker && (
@@ -228,14 +177,15 @@ export default function Home() {
               {selectedSpeaker.sessionOutcome && <div className="participant-session"><h3>С чем уйдёте</h3><p>{selectedSpeaker.sessionOutcome}</p></div>}
               {selectedSpeaker.sessionFormat && <div className="participant-session"><h3>Формат</h3><p>{selectedSpeaker.sessionFormat}</p></div>}
               <div className="participant-formats">{selectedSpeaker.appearances.map((appearance) => <article key={appearance.label}><h4>{appearance.label}</h4><p>{appearance.text}</p>{appearance.note && <p className="festival-pending">{appearance.note}</p>}</article>)}</div>
-              <button className="consultation-request-button" type="button" onClick={() => { setConsultationSpeaker(selectedSpeaker.name); setSelectedSpeaker(null); }}>Оставить запрос на консультацию</button>
+              <p className="consultation-field-note" id="profile-consultation-note">Запрос не подтверждает запись. Команда отвечает по телефону или в Telegram.</p>
+              <button className="consultation-request-button" type="button" aria-describedby="profile-consultation-note" onClick={event => openConsultation(selectedSpeaker.name, event.currentTarget)}>Оставить запрос на консультацию</button>
               <div className="speaker-project-links">{selectedSpeaker.links?.map((link) => <a key={link.href} href={link.href} target="_blank" rel="noreferrer">{link.label}</a>)}</div>
             </div>
           </article>
         </div>
       )}
 
-      {consultationSpeaker && <SpeakerConsultationForm key={consultationSpeaker} speaker={consultationSpeaker} onClose={closeConsultation} />}
+      {consultation && <SpeakerConsultationForm key={consultation.speaker} {...consultation} onClose={closeConsultation} />}
 
       {cookieVisible && (
         <div className="cookie-banner">

@@ -6,11 +6,11 @@ import styles from "./festival-apartment.module.css";
 
 const rooms = [
   { id: "talks", name: "Гостиная разговоров", label: "Выступления", image: "/venue/venue-stage.jpeg", alt: "Камерная сцена и кресла в ресторане «Антресоль и Перец»", title: "Разговоры, которые остаются с вами", text: "Близость, отношения, выбор себя и новые возможности. Найдите выступление, которое отвечает на ваш вопрос.", href: "#program", action: "Темы и спикеры" },
-  { id: "personal", name: "Время для себя", label: "Консультации", image: "/venue/venue-cabinet.jpeg", alt: "Интерьер кабинета с деревянным столом, креслами и люстрой", title: "Ваш вопрос — личный разговор", text: "Поговорите со специалистом об отношениях, близости или внутренней опоре. Консультации для гостей бесплатны при наличии свободных мест.", href: "#consultations", action: "Выбрать специалиста" },
-  { id: "practice", name: "Новый взгляд", label: "Практики и игры", image: "/venue/venue-main.jpeg", alt: "Свет люстр, старинная мебель и большие окна ресторана", title: "Попробуйте новый подход", text: "Игры, практики и личные разборы. Выберите интересный формат и узнайте условия участия.", href: "#consultation-workshops", action: "Посмотреть практики" },
+  { id: "personal", name: "Время для себя", label: "Консультации", image: "/venue/venue-cabinet.jpeg", alt: "Интерьер кабинета с деревянным столом, креслами и люстрой", title: "Ваш вопрос — личный разговор", text: "Поговорите со специалистом об отношениях, близости или внутренней опоре. Количество мест ограничено.", href: "#consultations", action: "Выбрать специалиста" },
+  { id: "practice", name: "Новый взгляд", label: "Практики и игры", image: "/venue/venue-main.jpeg", alt: "Свет люстр, старинная мебель и большие окна ресторана", title: "Попробуйте новый подход", text: "Игры, практики и личные разборы. Выберите интересный формат и узнайте условия участия.", href: "#program", action: "Посмотреть программу" },
   { id: "meeting", name: "Место притяжения", label: "Знакомства", image: "/venue/venue-tea.jpeg", alt: "Вечерний зал с мягкими креслами и тёплым освещением", title: "Знакомьтесь в своём темпе", text: "Зелёный браслет — открыты к знакомствам. Красный — сегодня без них. Выбор всегда за вами.", href: "#dating", action: "Как знакомиться" },
   { id: "style", name: "Предметы желания", label: "Выставка и стиль", image: "/venue/venue-main.jpeg", alt: "Детали интерьера ресторана «Антресоль и Перец»", title: "Вещи, которые хочется примерить", text: "Украшения, одежда и ароматы. Рассмотрите вблизи и познакомьтесь с авторами.", href: "#expo", action: "Участники выставки" },
-  { id: "evening", name: "Остаться до полуночи", label: "Бар и афтепати", image: "/venue/venue-tea.jpeg", alt: "Камерный вечерний интерьер с креслами и небольшими столами", title: "Оставайтесь до полуночи", text: "После выступлений — бар, музыка, танцы и свободное общение.", href: "#afterparty", action: "Посмотреть афтепати" },
+  { id: "evening", name: "Остаться до полуночи", label: "Бар и афтепати", image: "/venue/venue-tea.jpeg", alt: "Камерный вечерний интерьер с креслами и небольшими столами", title: "Оставайтесь до полуночи", text: "После выступлений — бар, музыка, танцы и свободное общение.", href: "#afterparty", action: "Музыка и бар" },
 ];
 
 function Door({ room, index }: { room: typeof rooms[number]; index: number }) {
@@ -38,8 +38,8 @@ function Door({ room, index }: { room: typeof rooms[number]; index: number }) {
 
 export default function FestivalApartment() {
   return <section className={`${styles.apartment} section primary-section`} id="apartment"><div className="container">
-    <div className={styles.intro}><p className="section-label">02 / Тайная резиденция · шесть дверей</p><h2>Выберите, с какой двери<br /><em>начнётся ваш вечер</em></h2><p>С Невского — в тайную резиденцию МЖ. За дверями ждут выступления, личные разговоры, знакомства, выставка и музыка.</p><p className={styles.touchHint}>Прикоснитесь к двери, чтобы открыть</p></div>
+    <div className={styles.intro}><h2>Шесть дверей Тайной резиденции</h2><p>Откройте любую, чтобы заглянуть внутрь фестиваля.</p></div>
     <FestivalCarousel label="Откройте двери фестиваля" className="apartment-carousel">{rooms.map((room, index) => <Door room={room} index={index} key={room.id} />)}</FestivalCarousel>
-    <p className={styles.note}>Открывайте двери и выбирайте свой маршрут. На фотографиях — реальные интерьеры площадки; распределение программы по залам уточняется.</p>
+    <p className={styles.note}>На фотографиях — интерьеры ресторана «Антресоль и Перец».</p>
   </div></section>;
 }

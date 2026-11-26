@@ -1,12 +1,15 @@
 export type TicketTier = "start" | "reload" | "vip";
 
+export const ticketNames = { start: "Старт", reload: "Резиденция", vip: "VIP" } as const;
+export const giftNominals = { reload: 50000, vip: 100000 } as const;
+
 export const ticketPrices: Record<TicketTier, number> = { start: 900, reload: 2320, vip: 4149 };
 export const pairPrices: Record<TicketTier, number> = { start: 1260, reload: 3250, vip: 5810 };
-export const formatPrice = (price: number) => `${new Intl.NumberFormat("ru-RU").format(price)} ₽`;
+export const formatPrice = (price: number) => `${new Intl.NumberFormat("ru-RU").format(price)}\u00a0₽`;
 
 export const tickets = [
   {
-    name: "Старт",
+    name: ticketNames.start,
     tier: "start" as TicketTier,
     price: "900 ₽",
     note: "Количество билетов по этой цене ограничено",
@@ -31,20 +34,20 @@ export const tickets = [
     ],
   },
   {
-    name: "Перезагрузка",
+    name: ticketNames.reload,
     tier: "reload" as TicketTier,
     price: "2 320 ₽",
     note: "Самый выгодный тариф",
     visualLabel: "Всё включено + бонусы",
-    visualValue: "до 50 000 ₽",
+    visualValue: formatPrice(giftNominals.reload),
     visualNote: "Приоритетный доступ и подарки партнёров",
     mockupImage: "/visuals/tariff-reload-v2.webp",
     mockupAlt: "Билет, приоритетный доступ и подарочные сертификаты",
     mockupItems: [
       { title: "Приоритет", note: "Зона перед сценой и быстрая регистрация" },
-      { title: "до 50 000 ₽", note: "Подарки и сертификаты" },
+      { title: formatPrice(giftNominals.reload), note: "Подарки и сертификаты" },
     ],
-    highlights: ["Подарки до 50 000 ₽", "Мини-диагностики: формат уточняется", "Приоритетная зона"],
+    highlights: [`Подарки на ${formatPrice(giftNominals.reload)}`, "Мини-диагностики: формат уточняется", "Приоритетная зона"],
     description: "Для тех, кто хочет активно включиться, поработать со своими запросами и получить максимум пользы.",
     featured: true,
     items: [
@@ -58,13 +61,13 @@ export const tickets = [
       "Отдельная быстрая регистрация без общей очереди",
       "Доступность и условия практик с ограниченным числом мест уточняются",
       "Формат мини-диагностик и возможность предварительного выбора уточняются",
-      "Индивидуальная корзина подарков и сертификатов на сумму до 50 000 ₽",
+      `Подарки от спонсоров на выбор после фестиваля. Номинал корзины ${formatPrice(giftNominals.reload)}`,
       "Доступ в закрытый Telegram-чат участников",
       "Полезные материалы от спикеров после события",
     ],
   },
   {
-    name: "VIP",
+    name: ticketNames.vip,
     tier: "vip" as TicketTier,
     price: "4 149 ₽",
     note: "Количество мест строго ограничено",

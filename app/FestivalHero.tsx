@@ -6,7 +6,7 @@ import { festivalEvent as event } from "./festival-event";
 import { formatPrice, ticketPrices } from "./ticket-tariffs";
 import styles from "./festival-hero.module.css";
 
-type Phase = "pending" | "playing" | "hold" | "offer";
+type Phase = "pending" | "playing" | "offer";
 
 export default function FestivalHero() {
   const [phase, setPhase] = useState<Phase>("pending");
@@ -28,8 +28,8 @@ export default function FestivalHero() {
   }, []);
 
   useEffect(() => {
-    if (phase !== "playing" && phase !== "hold") return;
-    const timer = window.setTimeout(() => setPhase(phase === "playing" ? "hold" : "offer"), phase === "playing" ? 8400 : 800);
+    if (phase !== "playing") return;
+    const timer = window.setTimeout(() => setPhase("offer"), 9200);
     return () => window.clearTimeout(timer);
   }, [phase]);
 
@@ -53,26 +53,20 @@ export default function FestivalHero() {
       </div>
       <div className={styles.shade} data-hero-shade aria-hidden="true" />
       <div className={styles.copy} data-hero-offer>
-        <p className={styles.eyebrow}>Частный вечер в сердце Петербурга</p>
+        <p className={styles.eyebrow}>Фестиваль об отношениях в Петербурге</p>
         <h1 id="festival-title" className={styles.title} ref={offerHeading} tabIndex={-1}>МЖ Сити.<br /><em>Тайная резиденция</em></h1>
-        <p className={styles.subtitle}>Фестиваль отношений с собой, с людьми и с жизнью</p>
-        <p className={styles.lead}>Выступления о близости и выборе, личные консультации, выставка и новые знакомства. Бар и афтепати — до полуночи.</p>
-        <div className={styles.facts} aria-label="Дата, место и стоимость участия">
-          <p><strong>{event.dateLabel}</strong><span>{event.timeLabel}</span></p>
-          <p><strong>«{event.venue}»</strong><span>{event.address} · м. «{event.metro}»</span></p>
-          <p><strong>от {formatPrice(ticketPrices.start)}</strong><span>Билеты на Qtickets</span></p>
-        </div>
+        <ul className={styles.benefits} aria-label="Что вас ждёт на фестивале">
+          <li><strong>Бесплатная консультация с психологом</strong> прямо на фестивале. Выберите специалиста и оставьте запрос. Количество мест ограничено.</li>
+          <li><strong>Выступления об отношениях:</strong> близость, ссоры в паре, знакомство и выбор партнёра.</li>
+          <li><strong>Живые знакомства по желанию.</strong> Можно прийти одному или вдвоём.</li>
+        </ul>
+        <p className={styles.place}>{event.dateLabel} · «{event.venue}» · от {formatPrice(ticketPrices.start)}</p>
         <div className={styles.actions}>
-          <a className={styles.primary} href="https://qtickets.ru/event/275542" target="_blank" rel="noreferrer" data-cta-location="hero">Купить билет</a>
-          <a className={styles.secondary} href="#apartment" data-cta-location="hero">Открыть двери</a>
+          <a className={styles.primary} href="#pricing">Выбрать билет</a>
+          <a className={styles.secondary} href="#choose-psychologist">Выбрать психолога</a>
         </div>
+        {phase === "playing" && <button type="button" className={styles.skip} onClick={showOffer}>Пропустить анимацию</button>}
       </div>
-      {phase !== "offer" && (
-        <div className={styles.controls} data-hero-controls>
-          <span className={styles.openingLabel}>МЖ Сити <span aria-hidden="true">/</span> Двери открываются</span>
-          <button type="button" className={styles.control} onClick={showOffer}>Смотреть фестиваль</button>
-        </div>
-      )}
       <noscript><style>{`
         [data-festival-hero] [data-hero-offer] { opacity: 1 !important; visibility: visible !important; transform: none !important; }
         [data-festival-hero] [data-hero-shade] { opacity: 1 !important; }

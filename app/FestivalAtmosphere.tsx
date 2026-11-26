@@ -1,12 +1,42 @@
 export function FestivalDating() {
-  return <section className="section city-dating primary-section" id="dating"><div className="container dating-introduction"><div><p className="section-label">07 / Знакомства</p><h2>Иногда всё начинается<br /><span>с простого «привет»</span></h2><p className="city-lead">На МЖ можно прийти одному, с партнёром или с друзьями. Можно искать новые знакомства — или просто наслаждаться вечером в своём кругу.</p><p>Чтобы обозначить свой настрой, выберите браслет.</p><div className="bracelet-meaning"><article><span className="bracelet-dot green" /><div><h3>Зелёный</h3><p>Открыт к знакомствам.</p></div></article><article><span className="bracelet-dot red" /><div><h3>Красный</h3><p>Сегодня без знакомств.</p></div></article></div><p className="city-fine-print">Браслет помогает сделать первый шаг и уважать границы друг друга. Продолжать ли разговор — всегда решаете вы.</p></div><figure><img src="/visuals/bracelets-red-green.webp" alt="Зелёный и красный браслеты для обозначения настроя на знакомства" width="1200" height="900" loading="lazy" /></figure></div></section>;
+  return <section className="section city-dating primary-section" id="dating">
+    <div className="container dating-introduction">
+      <div>
+        <h2>Знакомства по желанию</h2>
+        <p className="city-lead">На фестивале действуют браслеты. Выберите цвет по своему настроению.</p>
+        <div className="bracelet-meaning">
+          <article><span className="bracelet-dot green" aria-hidden="true" /><div><h3>Зелёный</h3><p>Можно подойти и познакомиться.</p></div></article>
+          <article><span className="bracelet-dot red" aria-hidden="true" /><div><h3>Красный</h3><p>Сегодня без новых знакомств.</p></div></article>
+        </div>
+        <p className="city-fine-print">С любым браслетом можно смотреть программу, приходить с партнёром или проводить вечер в своём кругу.</p>
+      </div>
+      <figure><img src="/visuals/bracelets-red-green.webp" alt="Зелёный и красный браслеты фестиваля" width="1200" height="900" loading="lazy" /></figure>
+    </div>
+  </section>;
 }
 export function FestivalBar() {
-  return <section className="section city-bar primary-section" id="bar"><div className="container atmosphere-layout"><div className="bar-mark" aria-hidden="true"><svg viewBox="0 0 200 220"><path d="M30 35h140L100 115 30 35Zm70 80v70m-40 0h80M140 25l15-20"/><circle cx="123" cy="56" r="11"/></svg><span>МЖ · БАР</span></div><div><p className="section-label">09 / Бар</p><h2>Разговоры<br /><span>продолжаются у бара</span></h2><p className="city-lead">Сделайте паузу между выступлениями, выберите напиток и продолжите разговор. На площадке работает бар с барменом.</p></div></div></section>;
+  return <section className="section city-bar primary-section" id="bar"><div className="container atmosphere-layout"><div className="bar-mark" aria-hidden="true"><svg viewBox="0 0 200 220"><path d="M30 35h140L100 115 30 35Zm70 80v70m-40 0h80M140 25l15-20"/><circle cx="123" cy="56" r="11"/></svg><span>МЖ · БАР</span></div><div><p className="section-label">Бар</p><h2>Разговоры<br /><span>продолжаются у бара</span></h2><p className="city-lead">Сделайте паузу между выступлениями, выберите напиток и продолжите разговор. На площадке работает бар с барменом.</p></div></div></section>;
 }
 export function FestivalAfterparty() {
-  return <section className="section city-afterparty primary-section" id="afterparty"><div className="party-orbits" aria-hidden="true"><i/><i/><i/></div><div className="container"><p className="section-label">10 / Афтепати</p><h2>Ближе к ночи<br /><em>меняем ритм.</em></h2><div className="party-description"><p>После программы — музыка, танцы и свободное общение. Оставайтесь до полуночи.</p><span>Фестиваль до 00:00</span></div></div></section>;
+  return <section className="section city-afterparty primary-section" id="afterparty"><div className="party-orbits" aria-hidden="true"><i/><i/><i/></div><div className="container"><p className="section-label">Афтепати</p><h2>Ближе к ночи<br /><em>меняем ритм.</em></h2><div className="party-description"><p>После программы — музыка, танцы и свободное общение. Оставайтесь до полуночи.</p><span>Фестиваль до 00:00</span></div></div></section>;
 }
 export function FestivalPartners({ partners }: { partners: { name: string; image: string }[] }) {
-  return <section className="section city-partners primary-section" id="partners"><div className="container"><div className="section-heading split-heading"><div><p className="section-label">11 / Партнёры МЖ</p><h2>Люди и бренды,<br /><span>которые с нами</span></h2></div><p>Проекты, сообщества и медиа, которые поддерживают фестиваль. Знакомьтесь с ними по логотипам и находите своих.</p></div><div className="partner-grid festival-partner-grid">{partners.map((partner) => <div className="partner-card" key={partner.name}><img src={partner.image} alt={`Логотип или изображение партнёра ${partner.name}`} loading="lazy" /><strong>{partner.name}</strong></div>)}</div><div className="partner-invitations"><article><span>Партнёрам</span><h3>Стать частью вечера</h3><p>Обсудите с командой участие бренда, проект в экспозоне или совместную активность.</p><a className="text-link" href="https://t.me/redheadlitle" target="_blank" rel="noreferrer">Обсудить партнёрство</a></article><article><span>Медиа и сообществам</span><h3>Рассказать о МЖ</h3><p>Для медиа и сообществ, которым близки темы отношений, развития и живого общения.</p><a className="text-link" href="https://t.me/redheadlitle" target="_blank" rel="noreferrer">Связаться с командой</a></article></div></div></section>;
+  return (
+    <section className="section city-partners primary-section" id="partners">
+      <div className="container">
+        <h2>Партнёры МЖ</h2>
+        <details className="review-partners">
+          <summary>Все партнёры</summary>
+          <div className="partner-grid festival-partner-grid">
+            {partners.map(partner => (
+              <div className="partner-card" key={partner.name}>
+                <img src={partner.image} alt="" loading="lazy" />
+                <strong>{partner.name}</strong>
+              </div>
+            ))}
+          </div>
+        </details>
+      </div>
+    </section>
+  );
 }
