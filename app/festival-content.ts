@@ -72,10 +72,6 @@ const newSpeakers: { speaker: Speaker; consultation: Omit<FestivalCard, "name"> 
     },
     consultation: { hook: "Задайте вопрос о личном бренде", text: "Оставьте запрос, если хотите обсудить развитие личного бренда." },
   },
-  {
-    speaker: { name: "Галина", role: "Спикер фестиваля", facts: [], initials: "Г", tone: "night" },
-    consultation: { hook: "Запрос на консультацию", text: "Оставьте запрос, чтобы команда фестиваля уточнила возможность встречи." },
-  },
 ];
 
 export const speakers: Speaker[] = [
