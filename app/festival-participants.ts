@@ -11,6 +11,7 @@ const suppliedRoles: Record<string, string> = {
   "Юлия Кропивницкая": "Стильные восточные изделия от «Узбекские халаты»",
 };
 const suppliedImages: Record<string, string> = {
+  "Катрин Голубка": "/speakers/katrin-golubka.webp",
   "Мечислав Жильцов": "/speakers/mechislav-zhiltsov.webp",
   "Татьяна Пронина": "/speakers/tatyana-pronina.webp",
   "Валерия Мирсалимова": "/speakers/valeria-mirsalimova-cutout.png",
