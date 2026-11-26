@@ -19,6 +19,28 @@ html { scroll-padding-top: 105px; }
 #program .programme-timing { margin-top: .8rem; }
 @media (max-width:760px) { .review-filters { gap:.45rem; } .review-filters button { font-size:.9rem; padding:.4rem .65rem; } #program .speakers-carousel { margin-top:1rem; } }
 .programme-card-actions { margin-top: auto; }
+.luxury-edition .exhibitor-with-poster .participant-portrait,
+.luxury-edition .speaker-modal-poster .modal-visual {
+  min-height: 0;
+  aspect-ratio: 16 / 9;
+  background: #ead5c5;
+}
+.luxury-edition .exhibitor-with-poster .participant-portrait img,
+.luxury-edition .speaker-modal-poster .modal-visual img {
+  object-fit: contain;
+  filter: none;
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+.luxury-edition .exhibitor-with-poster .participant-portrait::after,
+.luxury-edition .speaker-modal-poster .modal-visual::after { display: none; }
+.luxury-edition .speaker-modal-poster { grid-template-columns: minmax(0, 1fr); }
+.luxury-edition .exhibitor-with-poster .exhibitor-poster-link {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  color: #f0d2a4;
+}
 .speaker-distinction {
   align-self: flex-start;
   display: inline-block;

@@ -157,7 +157,7 @@ export default function Home() {
 
       {selectedSpeaker && (
         <div className="modal-backdrop" role="presentation" onMouseDown={() => setSelectedSpeaker(null)}>
-          <article className="speaker-modal" role="dialog" aria-modal="true" aria-labelledby="speaker-modal-title" onMouseDown={(event) => event.stopPropagation()}>
+          <article className={`speaker-modal${selectedSpeaker.poster ? " speaker-modal-poster" : ""}`} role="dialog" aria-modal="true" aria-labelledby="speaker-modal-title" onMouseDown={(event) => event.stopPropagation()}>
             <button className="modal-close" onClick={() => setSelectedSpeaker(null)} aria-label="Закрыть">×</button>
             <div className={`modal-visual ${selectedSpeaker.tone}${selectedSpeaker.image ? " has-photo" : ""}`}>
               {selectedSpeaker.image ? (

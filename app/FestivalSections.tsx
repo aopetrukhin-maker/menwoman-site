@@ -44,7 +44,19 @@ export default function FestivalExhibition({ onSelect }: Props) {
   const exhibition = expoGroups[0].cards;
   return <section className="section city-exhibition primary-section" id="expo"><div className="container">
     <div className="section-heading"><h2>Выставка фестиваля</h2><p>Примерьте украшения и одежду, познакомьтесь с авторами и брендами, загляните на демонстрации и мастер-классы.</p></div>
-    <FestivalCarousel label="Участники выставки" className="expo-carousel">{exhibition.map((card) => <article className="city-exhibitor festival-info-card" key={card.name}><ParticipantPortrait participant={participantProfiles[card.name]} /><h3>{card.hook ?? card.name}</h3><p className="exhibitor-name">{card.name}</p><p>{card.text}</p>{card.note && <p className="festival-pending">{card.note}</p>}<ProfileAction card={card} onSelect={onSelect} />{card.link && <a href={card.link.href} target="_blank" rel="noreferrer">{card.link.label}</a>}</article>)}</FestivalCarousel>
+    <FestivalCarousel label="Участники выставки" className="expo-carousel">{exhibition.map((card) => {
+      const participant = participantProfiles[card.name];
+      return <article className={`city-exhibitor festival-info-card${participant.poster ? " exhibitor-with-poster" : ""}`} key={card.name}>
+        <ParticipantPortrait participant={participant} />
+        <h3>{card.hook ?? card.name}</h3>
+        <p className="exhibitor-name">{card.name}</p>
+        <p>{card.text}</p>
+        {card.note && <p className="festival-pending">{card.note}</p>}
+        {participant.poster && participant.image && <a className="exhibitor-poster-link" href={participant.image} target="_blank" rel="noreferrer">Открыть афишу в полном размере</a>}
+        <ProfileAction card={card} onSelect={onSelect} />
+        {card.link && <a href={card.link.href} target="_blank" rel="noreferrer">{card.link.label}</a>}
+      </article>;
+    })}</FestivalCarousel>
     <p className="city-fine-print">Мастер-классы, демонстрации и другие активности указываются в карточках после согласования условий.</p>
   </div></section>;
 }
