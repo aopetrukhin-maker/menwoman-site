@@ -72,7 +72,7 @@ export default function FestivalPricing() {
                 </dl>
               </div>
               {tier === "reload" && <div className="ticket-gift-feature">
-                <p>Подарки от спонсоров</p>
+                <p>Бонус тарифа: подарки от спонсоров</p>
                 <strong>{formatPrice(giftNominals.reload)}</strong>
                 <p>Номинал корзины. После фестиваля выберите для неё услуги и сертификаты.</p>
                 <a href="#bonuses">Посмотреть подарки</a>

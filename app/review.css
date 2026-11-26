@@ -14,7 +14,18 @@ html { scroll-padding-top: 105px; }
 .review-filters button { background:#352322; color:#fff1e3; border:1px solid #a98766; border-radius:8px; }
 #program .section-heading { margin-bottom:1.25rem; }
 #program .section-heading p { margin:.45rem 0 0; }
+.luxury-edition #program { padding-bottom: clamp(1.75rem, 4vw, 3rem); }
+.luxury-edition #dating { padding-top: clamp(1.75rem, 4vw, 3rem); }
+#program .programme-timing { margin-top: .8rem; }
 @media (max-width:760px) { .review-filters { gap:.45rem; } .review-filters button { font-size:.9rem; padding:.4rem .65rem; } #program .speakers-carousel { margin-top:1rem; } }
+.programme-card-actions { margin-top: auto; }
+@media (max-width:760px) {
+  #program .speakers-carousel [role="list"] { align-items: stretch; }
+  #program .speakers-carousel [role="listitem"] { align-self: stretch; }
+  #program .city-speaker { align-self: stretch; }
+  #program .city-speaker .participant-portrait.has-initials { aspect-ratio: 1; }
+  #dating .dating-introduction figure { order: 0; }
+}
 
 .review-pair-invite {
   max-width: 54rem;
@@ -37,7 +48,23 @@ html { scroll-padding-top: 105px; }
 .ticket-comparison { flex: 1; margin: 1.15rem 0; }
 .ticket-comparison > p { margin: 0 0 .25rem; font-weight: 700; }
 .ticket-comparison ul { margin: 0; }
-.luxury-edition .pricing-grid .ticket-comparison li { font-size: .94rem; }
+.luxury-edition .pricing-grid .ticket-comparison li {
+  display: block;
+  position: relative;
+  padding-inline-start: 1.05rem;
+  font-size: .94rem;
+  line-height: 1.5;
+}
+.luxury-edition .pricing-grid .ticket-comparison li::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  top: .62em;
+  width: .34rem;
+  height: .34rem;
+  border-radius: 50%;
+  background: #e6b580;
+}
 .luxury-edition .pricing-grid .ticket-purchase-note { margin: 1rem 0 .65rem; font-size: .9rem; line-height: 1.5; }
 
 .luxury-edition #partners { padding-block: clamp(1.5rem, 4vw, 2.75rem); }

@@ -3,12 +3,12 @@ export function FestivalDating() {
     <div className="container dating-introduction">
       <div>
         <h2>Знакомства по желанию</h2>
-        <p className="city-lead">На фестивале действуют браслеты. Выберите цвет по своему настроению.</p>
+        <p className="city-lead">Приходите самостоятельно или вдвоём. Система браслетов помогает понять, кто открыт к разговору, дружеским, романтическим или деловым знакомствам.</p>
         <div className="bracelet-meaning">
-          <article><span className="bracelet-dot green" aria-hidden="true" /><div><h3>Зелёный</h3><p>Можно подойти и познакомиться.</p></div></article>
-          <article><span className="bracelet-dot red" aria-hidden="true" /><div><h3>Красный</h3><p>Сегодня без новых знакомств.</p></div></article>
+          <article><span className="bracelet-dot green" aria-hidden="true" /><div><h3>Зелёный</h3><p>Я открыт к общению. Можно подойти и познакомиться.</p></div></article>
+          <article><span className="bracelet-dot red" aria-hidden="true" /><div><h3>Красный</h3><p>Сегодня хочу провести вечер без новых знакомств.</p></div></article>
         </div>
-        <p className="city-fine-print">С любым браслетом можно смотреть программу, приходить с партнёром или проводить вечер в своём кругу.</p>
+        <p className="city-fine-print">Выбирайте цвет по настроению. С любым браслетом можно слушать выступления и проводить вечер в своём кругу.</p>
       </div>
       <figure><img src="/visuals/bracelets-red-green.webp" alt="Зелёный и красный браслеты фестиваля" width="1200" height="900" loading="lazy" /></figure>
     </div>

@@ -1,5 +1,14 @@
 import { formatPrice, giftNominals, ticketNames } from "./ticket-tariffs";
 
+const giftCategories = [
+  { title: "SPA и отдых", detail: "Баня, массаж и спа-процедуры." },
+  { title: "Рестораны", detail: "Сертификаты в рестораны." },
+  { title: "Здоровье и красота", detail: "Услуги по уходу за собой и программы о здоровье." },
+  { title: "Одежда и стиль", detail: "Подарочные сертификаты на одежду." },
+  { title: "Занятия и мастер-классы", detail: "Пробные занятия, абонементы и практикумы." },
+  { title: "Подарки для дома", detail: "Свечи, масла и сертификаты на аренду вещей и техники." },
+];
+
 const previousGifts = [
   {
     title: "Посещение бани",
@@ -7,9 +16,14 @@ const previousGifts = [
     detail: "Сертификат на бесплатный визит.",
   },
   {
-    title: "Четыре занятия",
+    title: "Абонемент на четыре занятия",
     partner: "Храм Женщин",
-    detail: "Абонементы, пробные занятия, свечи и масла.",
+    detail: "Четыре посещения по одному абонементу.",
+  },
+  {
+    title: "Пробное занятие и онлайн-платформа",
+    partner: "Храм Женщин",
+    detail: "Разовое занятие и доступ к онлайн-платформе.",
   },
   {
     title: "Практикум по самомассажу",
@@ -17,9 +31,19 @@ const previousGifts = [
     detail: "Три видео с техниками самомассажа в программе «Диалог с кожей».",
   },
   {
-    title: "Подарочные сертификаты на одежду",
-    partner: "Мелдей и MONTANA",
-    detail: `Сертификат «Мелдей» на одежду на ${formatPrice(3000)} и подарочный сертификат MONTANA.`,
+    title: "Видеокурс «Навигатор по здоровью»",
+    partner: "Елена Забанова",
+    detail: "13 видеоуроков о том, как меняется тело с возрастом.",
+  },
+  {
+    title: "Сертификат на одежду",
+    partner: "Мелдей",
+    detail: `Подарочный сертификат на ${formatPrice(3000)}.`,
+  },
+  {
+    title: "Сертификат MONTANA",
+    partner: "MONTANA",
+    detail: "Электронный подарочный сертификат.",
   },
   {
     title: "Посещение мастер-класса",
@@ -32,9 +56,9 @@ const previousGifts = [
     detail: `Сертификат на аренду на ${formatPrice(1000)}.`,
   },
   {
-    title: "Разбор личного бренда",
-    partner: "Виктория Орженевская",
-    detail: `Индивидуальная онлайн-встреча по развитию личного бренда. Номинал ${formatPrice(15000)}.`,
+    title: "Индивидуальная игра",
+    partner: "Инна Мартынова",
+    detail: `Сертификат на трансформационную игру на ${formatPrice(20000)}.`,
   },
   {
     title: "Старт своей SPA-студии",
@@ -51,7 +75,7 @@ export default function FestivalGifts({ standalone = false }: { standalone?: boo
         <div className="gift-spotlight">
           <div>
             <Heading id="gift-title">Подарки от партнёров</Heading>
-            <p className="gift-spotlight-lead">Выберите подарки, которые хотите использовать. После фестиваля гости с билетами «{ticketNames.reload}» и VIP смогут собрать свою корзину из услуг и сертификатов партнёров. В каталоге будут SPA, сертификаты в рестораны, услуги для здоровья и красоты и многое другое.</p>
+            <p className="gift-spotlight-lead">После фестиваля соберите свою корзину подарков. Гости с билетами «{ticketNames.reload}» и VIP смогут выбрать услуги и сертификаты партнёров в пределах номинала своего тарифа.</p>
           </div>
           <div className="gift-spotlight-number">
             <span>Подарочная корзина VIP</span>
@@ -73,6 +97,24 @@ export default function FestivalGifts({ standalone = false }: { standalone?: boo
             <span>Общий номинал подарков на выбор</span>
           </article>
         </div>
+
+        <details className="gift-box-panel">
+          <summary>
+            <span className="gift-box-visual" aria-hidden="true">
+              <span className="gift-box-shadow" />
+              <span className="gift-box-base" />
+              <span className="gift-box-lid"><span className="gift-box-bow" /></span>
+            </span>
+            <span className="gift-box-copy">
+              <span className="gift-box-kicker">Бонус к билету</span>
+              <strong>Что в подарочной коробке?</strong>
+              <span className="gift-box-action"><span className="gift-box-open">Открыть коробку</span><span className="gift-box-close">Закрыть коробку</span><span aria-hidden="true">↓</span></span>
+            </span>
+          </summary>
+          <ul className="gift-category-grid">
+            {giftCategories.map(({ title, detail }) => <li key={title}><strong>{title}</strong><p>{detail}</p></li>)}
+          </ul>
+        </details>
 
         <div className="gift-selection">
           <h3>Как собрать корзину</h3>

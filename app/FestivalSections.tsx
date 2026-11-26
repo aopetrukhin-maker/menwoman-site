@@ -14,15 +14,14 @@ export function FestivalConsultations({ onSelect, onConsultation }: Props) {
   return <section className="section city-consultations primary-section" id="consultations"><div className="container">
     <div className="section-heading consultation-heading" id="choose-psychologist">
       <h2>Бесплатная консультация с психологом</h2>
-      <p>Выберите специалиста. Количество мест ограничено. Запрос не подтверждает запись: команда фестиваля свяжется с вами по телефону или в Telegram.</p>
+      <p>Можно выбрать психолога для бесплатной консультации или другого специалиста для личного разбора. Количество мест ограничено. После запроса команда фестиваля свяжется с вами по телефону или в Telegram, чтобы уточнить возможность встречи.</p>
       {onConsultation && <div className="review-request">
-        <label htmlFor="expert-select">Выбрать психолога</label>
+        <label htmlFor="expert-select">Выбрать специалиста</label>
         <select id="expert-select" value="" onChange={event => {
           if (event.currentTarget.value) onConsultation(event.currentTarget.value, event.currentTarget);
         }}>
           <option value="">Выберите из списка</option>
-          {consultations.filter(card => /^психолог|^семейный психолог/i.test(participantProfiles[card.name]?.role ?? ""))
-            .map(card => <option key={card.name} value={card.name}>{card.name}</option>)}
+          {consultations.map(card => <option key={card.name} value={card.name}>{card.name}</option>)}
         </select>
       </div>}
     </div>
