@@ -9,6 +9,7 @@ import FestivalProgramme from "./FestivalProgramme";
 import SpeakerConsultationForm from "./SpeakerConsultationForm";
 import FestivalExhibition, { FestivalConsultations } from "./FestivalSections";
 import { FestivalDating, FestivalPartners } from "./FestivalAtmosphere";
+import { consultations } from "./festival-content";
 import { type FestivalParticipant } from "./festival-participants";
 import "./festival-conversion.css";
 import "./festival-structure.css";
@@ -179,8 +180,10 @@ export default function Home() {
               {selectedSpeaker.sessionOutcome && <div className="participant-session"><h3>С чем уйдёте</h3><p>{selectedSpeaker.sessionOutcome}</p></div>}
               {selectedSpeaker.sessionFormat && <div className="participant-session"><h3>Формат</h3><p>{selectedSpeaker.sessionFormat}</p></div>}
               <div className="participant-formats">{selectedSpeaker.appearances.map((appearance) => <article key={appearance.label}><h4>{appearance.label}</h4><p>{appearance.text}</p>{appearance.note && <p className="festival-pending">{appearance.note}</p>}</article>)}</div>
-              <p className="consultation-field-note" id="profile-consultation-note">Запрос не подтверждает запись. Команда отвечает по телефону или в Telegram.</p>
-              <button className="consultation-request-button" type="button" aria-describedby="profile-consultation-note" onClick={event => openConsultation(selectedSpeaker.name, event.currentTarget)}>Оставить запрос на консультацию</button>
+              {(selectedSpeaker.stage || consultations.some(card => card.name === selectedSpeaker.name)) && <>
+                <p className="consultation-field-note" id="profile-consultation-note">Запрос не подтверждает запись. Команда отвечает по телефону или в Telegram.</p>
+                <button className="consultation-request-button" type="button" aria-describedby="profile-consultation-note" onClick={event => openConsultation(selectedSpeaker.name, event.currentTarget)}>Оставить запрос на консультацию</button>
+              </>}
               <div className="speaker-project-links">{selectedSpeaker.links?.map((link) => <a key={link.href} href={link.href} target="_blank" rel="noreferrer">{link.label}</a>)}</div>
             </div>
           </article>
