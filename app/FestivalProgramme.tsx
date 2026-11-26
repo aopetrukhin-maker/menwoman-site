@@ -12,7 +12,7 @@ const categories = [
   { label: "Личный выбор и развитие", names: ["Наталья Ванюшкина", "Ангелина Росла", "Татьяна Ситникова", "Евгения Цапина"] },
   { label: "Звуковая практика", names: ["Саша Бочар и Олег Гром"] },
 ];
-const priority = ["Ольга Васильева", "Злата Нечаева", "Светлана Лапухина"];
+const priority = ["Татьяна Ситникова", "Ольга Васильева", "Злата Нечаева", "Светлана Лапухина"];
 const order = [...priority, ...speakers.map(speaker => speaker.name).filter(name => !priority.includes(name))];
 
 export default function FestivalProgramme({ onSelect, onConsultation }: { onSelect: (participant: FestivalParticipant, trigger: HTMLElement) => void; onConsultation: (name: string, trigger: HTMLElement) => void }) {
@@ -28,6 +28,7 @@ export default function FestivalProgramme({ onSelect, onConsultation }: { onSele
     <p className="city-fine-print" id="programme-consultation-note">Запрос на консультацию не подтверждает запись. Команда отвечает по телефону или в Telegram.</p>
     <FestivalCarousel key={category} label="Спикеры фестиваля" className="speakers-carousel">{results.map((speaker) => <article className={`city-speaker ${speaker.topic ? "topic-confirmed" : "topic-pending"}`} key={speaker.name}>
       <ParticipantPortrait participant={participantProfiles[speaker.name]} />
+      {speaker.distinction && <span className="speaker-distinction">{speaker.distinction}</span>}
       {speaker.topic ? <><h3 className="speaker-offer">{speaker.topic}</h3><p className="speaker-person">{speaker.name}</p><p className="city-speaker-role">{speaker.role}</p></> : <><h3>{speaker.name}</h3><p className="city-speaker-role">{speaker.role}</p><p className="city-speaker-topic">Тему объявим отдельно</p></>}
       {speaker.note && <p className="programme-note">{speaker.note}</p>}
       <div className="programme-card-actions">

@@ -166,7 +166,9 @@ export default function Home() {
               )}
             </div>
             <div className="modal-copy">
-              <p className="section-label">Участник фестиваля</p>
+              {selectedSpeaker.distinction
+                ? <span className="speaker-distinction">{selectedSpeaker.distinction}</span>
+                : <p className="section-label">Участник фестиваля</p>}
               <h2 id="speaker-modal-title">{selectedSpeaker.name}</h2>
               <p className="modal-role">{selectedSpeaker.role}</p>
               {selectedSpeaker.stage && <div className="modal-topic"><span>Тема выступления</span><strong>{selectedSpeaker.topic ?? "Тему объявим после согласования"}</strong></div>}

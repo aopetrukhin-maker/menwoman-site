@@ -19,6 +19,17 @@ html { scroll-padding-top: 105px; }
 #program .programme-timing { margin-top: .8rem; }
 @media (max-width:760px) { .review-filters { gap:.45rem; } .review-filters button { font-size:.9rem; padding:.4rem .65rem; } #program .speakers-carousel { margin-top:1rem; } }
 .programme-card-actions { margin-top: auto; }
+.speaker-distinction {
+  align-self: flex-start;
+  display: inline-block;
+  margin: 0 0 .85rem;
+  padding: .34rem .65rem;
+  border: 1px solid #ffe5ab;
+  border-radius: 4px;
+  color: #3c2017;
+  background: linear-gradient(115deg, #f9e3b3, #d7a064);
+  font: 750 .78rem/1.35 var(--font-sans), sans-serif;
+}
 @media (max-width:760px) {
   #program .speakers-carousel [role="list"] { align-items: stretch; }
   #program .speakers-carousel [role="listitem"] { align-self: stretch; }

@@ -8,13 +8,11 @@ const suppliedRoles: Record<string, string> = {
   "Валерия Мирсалимова": "Семейный психолог",
   "Татьяна Пронина": "Семейный психолог, эмоциональный терапевт",
   "Яна Якушева": "Дизайнер украшений ручной работы",
-  "Ольга Цвик": "Ароматестирование и индивидуальный подбор ароматов",
   "Юлия Кропивницкая": "Стильные восточные изделия от «Узбекские халаты»",
 };
 const suppliedImages: Record<string, string> = {
   "Мечислав Жильцов": "/speakers/mechislav-zhiltsov.webp",
   "Татьяна Пронина": "/speakers/tatyana-pronina.webp",
-  "Ольга Цвик": "/speakers/olga-tsvik-aroma.webp",
   "Валерия Мирсалимова": "/speakers/valeria-mirsalimova-cutout.png",
   "Яна Якушева": "/exhibitors/yana-yakusheva.jpeg",
   "Юлия Кропивницкая": "/exhibitors/yulia-kropivnitskaya.jpeg",

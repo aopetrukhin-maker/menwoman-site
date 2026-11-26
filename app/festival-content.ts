@@ -2,6 +2,7 @@ export type Speaker = {
   name: string;
   role: string;
   topic?: string;
+  distinction?: string;
   note?: string;
   description?: string;
   facts: string[];
@@ -23,7 +24,7 @@ const newSpeakers: { speaker: Speaker; consultation: Omit<FestivalCard, "name"> 
       topic: "«Ты меня не слышишь!» Почему мы ссоримся и как разорвать этот круг",
       description: "Почему одна фраза партнёра может вызвать сильную реакцию и что помогает выйти из повторяющихся ссор.",
       facts: ["15 лет в психологии и изучении отношений — по анкете"],
-      initials: "ЗН", tone: "plum",
+      initials: "ЗН", tone: "plum", image: "/speakers/zlata-nechaeva.jpeg", imagePosition: "center 22%",
     },
     consultation: { hook: "Разберите повторяющуюся ссору", text: "Можно обсудить, что запускает спор и почему разговор снова идёт по тому же кругу." },
   },
@@ -33,7 +34,7 @@ const newSpeakers: { speaker: Speaker; consultation: Omit<FestivalCard, "name"> 
       topic: "«Вы даже не представляете, сколько вам можно!»",
       description: "Как заметить, что вы действуете по привычной роли, и дать себе возможность выбирать.",
       facts: ["Автор программы «Возвращение к себе»", "Ведущая игры-тренинга «Раппорт.ЖиваЯ»"],
-      initials: "НВ", tone: "rose",
+      initials: "НВ", tone: "rose", image: "/speakers/natalya-vanyushkina.webp", imagePosition: "center 23%",
     },
     consultation: { hook: "Разберите одну привычную реакцию", text: "Можно обсудить ситуацию, в которой вы поступаете по привычке и хотите попробовать другой подход." },
   },
@@ -43,7 +44,7 @@ const newSpeakers: { speaker: Speaker; consultation: Omit<FestivalCard, "name"> 
       topic: "В отношениях нас двое — или всё-таки больше? Как вернуть в отношения формат «нас двое»",
       description: "Как семейные истории и привычные реакции влияют на разговор с партнёром и близость в паре.",
       facts: ["Автор метода «Геометрия поля» и программы «Лад Души»"],
-      initials: "ЕА", tone: "violet",
+      initials: "ЕА", tone: "violet", image: "/speakers/elena-afanasieva.jpeg", imagePosition: "center 31%",
     },
     consultation: { hook: "Обсудите семейные сценарии", text: "Можно разобрать, как привычные реакции и ожидания семьи отражаются на отношениях в паре." },
   },
@@ -53,16 +54,21 @@ const newSpeakers: { speaker: Speaker; consultation: Omit<FestivalCard, "name"> 
       topic: "Архитектор реальности: 5 ключей манифестации",
       description: "Как сформулировать личную цель в отношениях, работе или семье и выбрать первый шаг.",
       facts: [],
-      initials: "АР", tone: "ruby",
+      initials: "АР", tone: "ruby", image: "/speakers/angelina-rosla.jpeg", imagePosition: "center 15%",
     },
     consultation: { hook: "Сформулируйте цель", text: "Можно обсудить своё намерение и наметить конкретный первый шаг." },
   },
   {
     speaker: {
-      name: "Татьяна Ситникова", role: "Спикер о личном бренде",
+      name: "Татьяна Ситникова", role: "Бизнес-наставник и продюсер",
+      distinction: "Специальный гость",
       topic: "Физика личного бренда: почему у женщин и мужчин разные законы роста",
-      facts: [],
-      initials: "ТС", tone: "coral",
+      facts: [
+        "Учредитель делового журнала и сообщества SUCCESS WORLD",
+        "Учредитель ежегодной всероссийской премии SUCCESS AWARDS «Лидер года»",
+        "Автор подкаста «Точка зрения»",
+      ],
+      initials: "ТС", tone: "coral", image: "/speakers/tatyana-sitnikova.jpeg", imagePosition: "center 23%",
     },
     consultation: { hook: "Задайте вопрос о личном бренде", text: "Оставьте запрос, если хотите обсудить развитие личного бренда." },
   },
@@ -157,7 +163,6 @@ export type FestivalCard = {
 export const expoGroups: { title: string; cards: FestivalCard[] }[] = [
   { title: "Товары, стиль и творчество", cards: [
     { name: "Яна Якушева", hook: "Найдите украшение под свой характер", text: "Мужские и женские украшения ручной работы из натуральных камней. Индивидуальный подбор для разных образов, мастер-классы по созданию украшений.", note: "Розыгрыш украшений и скидки запланированы в анкете; условия уточняются.", link: { label: "YY Jewellery", href: "https://t.me/yyjewellery" } },
-    { name: "Ольга Цвик", hook: "Познакомьтесь со своим ароматом", text: "Сообщество «Ароматное пространство»: ароматестирование, индивидуальный подбор ароматов и знакомство с натуральными эфирными маслами.", link: { label: "Ароматное пространство", href: "https://t.me/aromaprost" } },
     { name: "Юлия Кропивницкая", hook: "Примерьте вещь с характером", text: "Стильные восточные изделия от «Узбекские халаты».", note: "Возможный показ мод требует отдельного согласования.", link: { label: "Узбекские халаты", href: "https://t.me/uzb_halat" } },
   ] },
 ];
